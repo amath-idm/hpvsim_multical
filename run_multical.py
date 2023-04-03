@@ -20,7 +20,6 @@ import numpy as np
 
 # Imports from this repository
 import run_sim as rs
-import utils as ut
 import calibration as cal
 
 # Comment out to not run
@@ -183,9 +182,9 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     filename = f'multical{filestem}'
     if do_plot:
         for location in locations:
-            calib.plot(slabel=location, do_save=True, fig_path=f'{ut.figfolder}/{filename}_{location}.png')
+            calib.plot(slabel=location, do_save=True, fig_path=f'figures/{filename}_{location}.png')
     if do_save:
-        sc.saveobj(f'{ut.resfolder}/{filename}.obj', calib)
+        sc.saveobj(f'results/{filename}.obj', calib)
 
     print(f'Best pars are {calib.best_pars}')
 
@@ -198,13 +197,13 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
 def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 
     filename = rs.mc_filename
-    calib = sc.load(f'{ut.resfolder}/{filename}.obj')
+    calib = sc.load(f'results/{filename}.obj')
     age_bin_edges = np.array([0, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 100])
 
     if save_pars:
         sims = []
         for location in locations:
-            pars_file = f'{ut.resfolder}/{location}_{filename}_pars.obj'
+            pars_file = f'results/{location}_{filename}_pars.obj'
             calib_pars = calib.trial_pars_to_sim_pars(slabel=location, which_pars=which_pars)
             sc.save(pars_file, calib_pars)
 
@@ -230,7 +229,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
             fig = calib.plot(slabel=location, res_to_plot=20, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'{ut.figfolder}/{filename}_{location}.png')
+            fig.savefig(f'figures/{filename}_{location}.png')
 
 
     return calib, sims
@@ -249,7 +248,7 @@ if __name__ == '__main__':
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
         calib, sims = load_calib(locations=locations, do_plot=True, save_pars=True)
-        ut.plot_multical(locations=locations, filename='multical_apr01')
+        # ut.plot_multical(locations=locations, filename='multical_apr01')
 
 
     T.toc('Done')

@@ -16,7 +16,6 @@ import pylab as pl
 
 # Imports from this repository
 import pars_data as dp
-import utils as ut
 
 
 #%% Settings and filepaths
@@ -92,7 +91,7 @@ def run_sim(location=None, analyzers=None, calib_pars=None,
     sim.shrink()
         
     if do_save:
-        sim.save(f'{ut.resfolder}/{location}.sim')
+        sim.save(f'results/{location}.sim')
     
     return sim
 
