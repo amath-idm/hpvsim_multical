@@ -32,12 +32,19 @@ to_run = [
 
 # Comment out locations to not run
 locations = [
-    'nigeria',  # 1
-    'india',    # 0
-    'tanzania', # 2
+    'nigeria',
+    'india',
+    'tanzania',
+    'bangladesh',
+    'drc',
+    'ethiopia',
+    'indonesia',
+    'kenya',
+    'myanmar',
+    'uganda'
 ]
 
-debug = False # Smaller runs
+debug = True # Smaller runs
 do_save = True
 
 # if not debug:
