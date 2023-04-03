@@ -44,7 +44,7 @@ locations = [
     'uganda'
 ]
 
-debug = True # Smaller runs
+debug = False # Smaller runs
 do_save = True
 
 # if not debug:
