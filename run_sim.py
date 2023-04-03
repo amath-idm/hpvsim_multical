@@ -54,7 +54,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         mixing         = dp.mixing[sbl],
         layer_probs    = dp.layer_probs[sbl],
         partners       = dp.partners[sbl],
-        init_hpv_dist  = dp.init_genotype_dist[location],
+        init_hpv_dist  = dp.init_genotype_dist[sbl],
         init_hpv_prev  = {
             'age_brackets'  : np.array([  12,   17,   24,   34,  44,   64,    80, 150]),
             'm'             : np.array([ 0.0, 0.25, 0.6, 0.25, 0.05, 0.01, 0.0005, 0]),
