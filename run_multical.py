@@ -46,13 +46,90 @@ do_save = True
 #     from sqlalchemy.pool import NullPool
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [2000, 2][debug]  # How many trials to run for calibration
+n_trials    = [200, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
 ########################################################################
 # Run calibration
 ########################################################################
+def make_unique_priors(locations=None):
+    ''' Make priors for the parameters that vary across settings '''
+
+    unique_pars = dict()
+    for location in locations:
+        unique_pars[location] = dict(
+            calib_pars = dict(
+                beta = [0.15, 0.1, 0.25],
+                sev_dist = dict(
+                    par1 = [1, 0.5, 1.5]
+                ),
+            ),
+            genotype_pars = dict(
+                hrhpv=dict(
+                    sev_fn=dict(
+                        k=[0.2, 0.1, 0.3],
+                    ),
+                    dur_episomal=dict(
+                        par1=[2, 1.5, 3],  #
+                    ),
+                    transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+                ),
+            )
+        )
+    return unique_pars
+
+def make_datafiles(locations):
+    ''' Get the relevant datafiles for the selected locations '''
+    all_datafiles = dict(
+        bangladesh = [
+            'data/bangladesh_cancer_cases.csv',
+        ],
+        drc = [
+            'data/drc_cancer_cases.csv',
+        ],
+        ethiopia = [
+            'data/ethiopia_cancer_cases.csv',
+            'data/ethiopia_cancer_types.csv',
+        ],
+        india = [
+            'data/india_cancer_cases.csv',
+            'data/india_cin1_types.csv',
+            'data/india_cin3_types.csv',
+            'data/india_cancer_types.csv',
+        ],
+        indonesia = [
+            'data/indonesia_cancer_cases.csv',
+            'data/indonesia_cancer_types.csv',
+        ],
+        kenya = [
+            'data/kenya_cancer_cases.csv',
+            'data/kenya_cancer_types.csv',
+        ],
+        myanmar = [
+            'data/myanmar_cancer_cases.csv',
+        ],
+        nigeria = [
+            'data/nigeria_cancer_cases.csv',
+            'data/nigeria_cin3_types.csv',
+            'data/nigeria_cancer_types.csv',
+        ],
+        tanzania = [
+            'data/tanzania_cancer_cases.csv',
+            'data/tanzania_cancer_types.csv',
+            'data/tanzania_cin3_types.csv',
+        ],
+        uganda=[
+            'data/uganda_cancer_cases.csv',
+            'data/uganda_cancer_types.csv',
+        ],
+    )
+
+    datafiles = {location:all_datafiles[location] for location in locations}
+    return datafiles
+
+
+
 def run_calib(locations=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
 
@@ -80,92 +157,20 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
         ),
     )
 
-    unique_pars = dict(
-        nigeria = dict(
-            calib_pars = dict(
-                beta = [0.15, 0.1, 0.25],
-            ),
-            genotype_pars = dict(
-                hrhpv=dict(
-                    sev_fn=dict(
-                        k=[0.2, 0.1, 0.3],
-                    ),
-                    dur_episomal=dict(
-                        par1=[2, 1.5, 3], #
-                    ),
-                    transform_prob=[2/1e10, 1/1e10, 3/1e10],
-                ),
-            ),
-        ),
-        tanzania=dict(
-            calib_pars=dict(
-                beta=[0.15, 0.1, 0.25],
-            ),
-            genotype_pars=dict(
-                hrhpv=dict(
-                    sev_fn=dict(
-                        k=[0.2, 0.1, 0.3],
-                    ),
-                    dur_episomal=dict(
-                        par1=[2, 1.5, 3], #
-                    ),
-                    transform_prob=[2/1e10, 1/1e10, 3/1e10],
-                ),
-            ),
-        ),
-        india=dict(
-            calib_pars = dict(
-                beta = [0.25, 0.2, 0.3],
-                sev_dist=dict(
-                    par1=[1.5, 1.1, 2.5],
-                ),
-            ),
-            genotype_pars=dict(
-                hrhpv=dict(
-                    sev_fn=dict(
-                        k=[0.2, 0.1, 0.3],
-                    ),
-                    dur_episomal=dict(
-                        par1=[2, 1.5, 3], #
-                    ),
-                    transform_prob=[2/1e10, 1/1e10, 3/1e10],
-                ),
-            ),
-        ),
-    )
+    unique_pars = make_unique_priors(locations)
 
     sims = []
     for location in locations:
-        sim = rs.make_sim(location, datafile=f'data/{location}_data.csv')
+        sim = rs.make_sim(location)
         sim.label = location
         sims.append(sim)
-
-    # Datafiles
-    datafiles = dict(
-        nigeria = [
-            'data/nigeria_cancer_cases.csv',
-            'data/nigeria_cin3_types.csv',
-            'data/nigeria_cancer_types.csv',
-        ],
-        india = [
-            'data/india_cancer_cases.csv',
-            'data/india_cin1_types.csv',
-            'data/india_cin3_types.csv',
-            'data/india_cancer_types.csv',
-        ],
-        tanzania = [
-            'data/tanzania_cancer_cases.csv',
-            'data/tanzania_cancer_types.csv',
-            'data/tanzania_cin3_types.csv',
-        ],
-    )
 
     calib = cal.MultiCal(
         sims,
         common_pars=common_pars,
         unique_pars=unique_pars,
         name=f'multical0104',
-        datafiles=datafiles,
+        datafiles=make_datafiles(locations),
         load_if_exists=True,
         db_name='multical0104.db',
         total_trials=n_trials,
@@ -235,7 +240,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_de'
+    filestem = '_apr03'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
