@@ -24,10 +24,10 @@ import calibration as cal
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
+    # 'run_calibration',
     # 'load_tmp_files',
     # 'plot_tmp_files',
-    # 'plot_calibration',
+    'plot_calibration',
 ]
 
 # Comment out locations to not run
@@ -69,7 +69,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [200, 2][debug]  # How many trials to run for calibration
+n_trials    = [2000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -130,21 +130,9 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                sev_fn=dict(
-                    k=[0.25, 0.2, 0.3],
-                ),
-                dur_episomal=dict(
-                    par1=[2.2, 2, 3]
-                ),
                 transform_prob=[7/1e10, 6/1e10, 8/1e10]
             ),
             hpv18=dict(
-                sev_fn=dict(
-                    k=[0.2, 0.15, 0.3],
-                ),
-                dur_episomal=dict(
-                    par1=[2.2, 2, 3]
-                ),
                 transform_prob=[2/1e10, 1/1e10, 3/1e10],
             ),
         ),
