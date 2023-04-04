@@ -38,6 +38,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
     # Parameters
     sbl = 'nigeria' # sexual behavior location
+    if location == 'cote divoire': location = "côte d'ivoire"
     pars = dict(
         n_agents       = [10e3,1e3][debug],
         dt             = [0.25,1.0][debug],
