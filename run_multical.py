@@ -38,7 +38,7 @@ locations = [
     'burundi',      # 3
     'cameroon',     # 4
     'chad',         # 5
-    'cote divoire', # 6
+    'cote_divoire', # 6
     'drc',          # 7
     'ethiopia',     # 8
     'ghana',        # 9
@@ -52,10 +52,10 @@ locations = [
     'nigeria',      # 17
     'rwanda',       # 18
     'senegal',      # 19
-    'sierra leone', # 20
+    'sierra_leone', # 20
     'somalia',      # 21
-    'south africa', # 22
-    'south sudan',  # 23
+    'south_africa', # 22
+    'south_sudan',  # 23
     'sudan',        # 24
     'tanzania',     # 25
     'togo',         # 26
@@ -105,9 +105,9 @@ def make_unique_priors(locations=None):
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
     datafiles = dict()
-    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda']
-    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south africa', 'tanzania']
-    cin1_type_locs      = ['guinea', 'senegal', 'south africa']
+    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south_africa', 'tanzania', 'uganda']
+    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south_africa', 'tanzania']
+    cin1_type_locs      = ['guinea', 'senegal', 'south_africa']
 
     for location in locations:
         datafiles[location] = [f'data/{location}_cancer_cases.csv']
