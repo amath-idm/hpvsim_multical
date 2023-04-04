@@ -32,24 +32,41 @@ to_run = [
 
 # Comment out locations to not run
 locations = [
-    'nigeria',
-    'india',
-    'tanzania',
-    'bangladesh',
-    'drc',
-    'ethiopia',
-    'indonesia',
-    'kenya',
-    'myanmar',
-    'uganda'
+    'angola',       # 0
+    'benin',        # 1
+    'burkina faso', # 2
+    'burundi',      # 3
+    'cameroon',     # 4
+    'chad'          # 5
+    'cote divoire'  # 6
+    'drc',          # 7
+    'ethiopia',     # 8
+    'ghana',        # 9
+    'guinea',       # 10
+    'kenya',        # 11
+    'madagascar',   # 12
+    'malawi',       # 13
+    'mali',         # 14
+    'mozambique',   # 15
+    'niger',        # 16
+    'nigeria',      # 17
+    'rwanda',       # 18
+    'senegal',      # 19
+    'sierra leone', # 20
+    'somalia',      # 21
+    'south africa', # 22
+    'south sudan',  # 23
+    'sudan',        # 24
+    'tanzania',     # 25
+    'togo',         # 26
+    'uganda',       # 27
+    'zambia',       # 28
+    'zimbabwe',     # 29
 ]
 
 debug = False # Smaller runs
 do_save = True
 
-# if not debug:
-#     import optuna
-#     from sqlalchemy.pool import NullPool
 
 # Run settings for calibration (dependent on debug)
 n_trials    = [200, 2][debug]  # How many trials to run for calibration
@@ -87,51 +104,21 @@ def make_unique_priors(locations=None):
 
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
-    all_datafiles = dict(
-        bangladesh = [
-            'data/bangladesh_cancer_cases.csv',
-        ],
-        drc = [
-            'data/drc_cancer_cases.csv',
-        ],
-        ethiopia = [
-            'data/ethiopia_cancer_cases.csv',
-            'data/ethiopia_cancer_types.csv',
-        ],
-        india = [
-            'data/india_cancer_cases.csv',
-            'data/india_cin1_types.csv',
-            'data/india_cin3_types.csv',
-            'data/india_cancer_types.csv',
-        ],
-        indonesia = [
-            'data/indonesia_cancer_cases.csv',
-            'data/indonesia_cancer_types.csv',
-        ],
-        kenya = [
-            'data/kenya_cancer_cases.csv',
-            'data/kenya_cancer_types.csv',
-        ],
-        myanmar = [
-            'data/myanmar_cancer_cases.csv',
-        ],
-        nigeria = [
-            'data/nigeria_cancer_cases.csv',
-            'data/nigeria_cin3_types.csv',
-            'data/nigeria_cancer_types.csv',
-        ],
-        tanzania = [
-            'data/tanzania_cancer_cases.csv',
-            'data/tanzania_cancer_types.csv',
-            'data/tanzania_cin3_types.csv',
-        ],
-        uganda=[
-            'data/uganda_cancer_cases.csv',
-            'data/uganda_cancer_types.csv',
-        ],
-    )
+    datafiles = dict()
+    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda']
+    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south africa', 'tanzania']
+    cin1_type_locs      = ['guinea', 'senegal', 'south africa']
 
-    datafiles = {location:all_datafiles[location] for location in locations}
+    for location in locations:
+        datafiles[location] = [f'data/{location}_cancer_cases.csv']
+
+        if location in cancer_type_locs:
+            datafiles[location] += [f'data/{location}_cancer_types.csv']
+        if location in cin3_type_locs:
+            datafiles[location] += [f'data/{location}_cin3_types.csv']
+        if location in cin1_type_locs:
+            datafiles[location] += [f'data/{location}_cin1_types.csv']
+
     return datafiles
 
 

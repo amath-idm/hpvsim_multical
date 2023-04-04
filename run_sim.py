@@ -20,13 +20,8 @@ import pars_data as dp
 
 #%% Settings and filepaths
 
-# Locations -- comment out a line to not run
-locations = [
-    # 'india',        # 0
-    'nigeria',      # 1
-    # 'tanzania',     # 2
-]
-mc_filename = 'multical_apr03'
+
+mc_filename = 'multical_apr04'
 
 # Debug switch
 debug = 0 # Run with smaller population sizes and in serial
@@ -44,7 +39,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
     # Parameters
     sbl = 'nigeria' # sexual behavior location
     pars = dict(
-        n_agents       = [20e3,1e3][debug],
+        n_agents       = [10e3,1e3][debug],
         dt             = [0.25,1.0][debug],
         start          = [1960,1980][debug],
         end            = 2020,
