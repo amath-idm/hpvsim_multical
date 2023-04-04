@@ -24,10 +24,10 @@ import calibration as cal
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
+    'run_calibration',
     # 'load_tmp_files',
     # 'plot_tmp_files',
-    'plot_calibration',
+    # 'plot_calibration',
 ]
 
 # Comment out locations to not run
