@@ -34,7 +34,7 @@ to_run = [
 locations = [
     'angola',       # 0
     'benin',        # 1
-    'burkina faso', # 2
+    'burkina_faso', # 2
     'burundi',      # 3
     'cameroon',     # 4
     'chad',         # 5
