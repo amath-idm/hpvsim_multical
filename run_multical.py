@@ -38,7 +38,7 @@ locations = [
     'burundi',      # 3
     'cameroon',     # 4
     'chad',         # 5
-    'cote divoire'  # 6
+    'cote divoire', # 6
     'drc',          # 7
     'ethiopia',     # 8
     'ghana',        # 9
