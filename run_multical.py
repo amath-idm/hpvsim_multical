@@ -90,12 +90,12 @@ def make_unique_priors(locations=None):
             ),
             genotype_pars = dict(
                 hrhpv=dict(
-                    sev_fn=dict(
-                        k=[0.2, 0.1, 0.3],
-                    ),
-                    dur_episomal=dict(
-                        par1=[2, 1.5, 3],  #
-                    ),
+                    # sev_fn=dict(
+                    #     k=[0.2, 0.1, 0.3],
+                    # ),
+                    # dur_episomal=dict(
+                    #     par1=[2, 1.5, 3],  #
+                    # ),
                     transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
                 ),
             )
