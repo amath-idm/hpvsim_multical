@@ -55,9 +55,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     calib.calibrate()
     filename = f'{location}_calib{filestem}'
     if do_plot:
-        calib.plot(do_save=True, fig_path=f'{ut.figfolder}/{filename}.png')
+        calib.plot(do_save=True, fig_path=f'figures/{filename}.png')
     if do_save:
-        sc.saveobj(f'{ut.resfolder}/{filename}.obj', calib)
+        sc.saveobj(f'results/{filename}.obj', calib)
 
     print(f'Best pars are {calib.best_pars}')
 
@@ -70,23 +70,19 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, do_plot_additional=False, filestem=''):
 
     filename = f'{location}_calib{filestem}'
-    calib = sc.load(f'{ut.resfolder}/{filename}.obj')
+    calib = sc.load(f'results/{filename}.obj')
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
         fig = calib.plot(res_to_plot=50, plot_type='sns.boxplot', do_save=True,
-                         fig_path=f'{ut.figfolder}/{filename}')
+                         fig_path=f'figures/{filename}')
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
         fig.savefig(f'{ut.figfolder}/{filename}.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
-        sc.save(f'{ut.resfolder}/{location}_pars{filestem}.obj', calib_pars)
-
-    if do_plot_additional:
-        fig = ut.plot_trend(calib)
-        ut.plot_best(calib).fig.show()
+        sc.save(f'results/{location}_pars{filestem}.obj', calib_pars)
 
     return calib
 
