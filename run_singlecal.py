@@ -95,6 +95,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, do_plo
 if __name__ == '__main__':
 
     T = sc.timer()
+    locations = ['drc', 'south_africa', 'kenya', 'uganda']
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
