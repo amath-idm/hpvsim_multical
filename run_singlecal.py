@@ -32,7 +32,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
 
     sim = rs.make_sim(location)
-    datafiles = ut.make_datafiles(location)
+    datafiles = ut.make_datafiles(location)[location]
 
     # Define the calibration parameters
     calib_pars = dict(
@@ -96,40 +96,15 @@ if __name__ == '__main__':
 
     T = sc.timer()
     locations = ['drc', 'south_africa', 'kenya', 'uganda']
+    filestem = '_apr03'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
         for location in locations:
-            sim, calib = run_calib(location=location, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem='_india')
+            sim, calib = run_calib(location=location, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib = load_calib(location='nigeria', do_plot=True, save_pars=True, do_plot_additional=False, filestem='_india')
-
-        ut.plot_calibration(locations=locations, filestem='_india')
-
-        # calib_pars = calib.trial_pars_to_sim_pars(slabel='nigeria', which_pars=0)
-
-        # pardict = dict(
-        #     beta='beta',
-        #     sev_dist_par1='sev_dist_par1',
-        #     # dur_transformed_par1='dur_transformed',
-        #     # hpv16_dur_episomal_par1='dur_episomal, HPV16',
-        #     # hpv16_sev_fn_k='sev rate, HPV16',
-        #     # hpv16_sev_fn_s='sev asymmetry, HPV16',
-        #     # hpv16_sev_fn_x_infl='sev inflection, HPV16',
-        #     #
-        #     # hpv18_dur_episomal_par1='dur_episomal, HPV18',
-        #     # hpv18_sev_fn_k='sev rate, HPV18',
-        #     # hpv18_sev_fn_s='sev asymmetry, HPV18',
-        #     # hpv18_sev_fn_x_infl='sev inflection, HPV18',
-        #     # hpv18_transform_prob='transform prob, HPV18',
-        #     #
-        #     hrhpv_dur_episomal_par1='dur_episomal, hrHPV',
-        #     hrhpv_sev_fn_k='sev rate, hrHPV',
-        #     hrhpv_sev_fn_s='sev asymmetry, hrHPV',
-        #     hrhpv_sev_fn_x_infl='sev inflection, hrHPV',
-        # )
-
+        calib = load_calib(location='nigeria', do_plot=True, save_pars=True, do_plot_additional=False, filestem=filestem)
     
     T.toc('Done')
