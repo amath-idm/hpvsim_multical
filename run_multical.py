@@ -24,10 +24,10 @@ import calibration as cal
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
+    # 'run_calibration',
     # 'load_tmp_files',
     # 'plot_tmp_files',
-    # 'plot_calibration',
+    'plot_calibration',
 ]
 
 # Comment out locations to not run
@@ -230,7 +230,5 @@ if __name__ == '__main__':
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
         calib, sims = load_calib(locations=locations, do_plot=True, save_pars=True)
-        # ut.plot_multical(locations=locations, filename='multical_apr01')
-
 
     T.toc('Done')
