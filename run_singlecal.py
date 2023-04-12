@@ -12,8 +12,8 @@ import utils as ut
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -67,22 +67,21 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 ########################################################################
 # Load pre-run calibration
 ########################################################################
-def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, do_plot_additional=False, filestem=''):
+def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem=''):
 
     filename = f'{location}_calib{filestem}'
     calib = sc.load(f'results/{filename}.obj')
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
-        fig = calib.plot(res_to_plot=50, plot_type='sns.boxplot', do_save=True,
-                         fig_path=f'figures/{filename}')
+        fig = calib.plot(res_to_plot=50, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'{ut.figfolder}/{filename}.png')
+        fig.savefig(f'figures/{filename}_sc.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
-        sc.save(f'results/{location}_pars{filestem}.obj', calib_pars)
+        sc.save(f'results/{location}_pars{filestem}_sc.obj', calib_pars)
 
     return calib
 
@@ -101,6 +100,7 @@ if __name__ == '__main__':
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib = load_calib(location='nigeria', do_plot=True, save_pars=True, do_plot_additional=False, filestem=filestem)
+        for location in locations:
+            calib = load_calib(location=location, do_plot=True, save_pars=True, filestem=filestem)
     
     T.toc('Done')

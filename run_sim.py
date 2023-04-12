@@ -16,7 +16,7 @@ import pylab as pl
 
 # Imports from this repository
 import pars_data as dp
-
+import utils as ut
 
 #%% Settings and filepaths
 
@@ -37,10 +37,9 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
     ''' Define parameters, analyzers, and interventions for the simulation -- not the sim itself '''
 
     # Parameters
-    sbl = 'nigeria' # sexual behavior location
-
     location = location.replace('_', ' ')
     if location =='cote divoire': location = "cote d'ivoire"
+    sbl = 'nigeria'
 
     pars = dict(
         n_agents       = [10e3,1e3][debug],
@@ -49,7 +48,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         end            = 2020,
         network        = 'default',
         location       = location,
-        debut          = dp.debut[sbl],
+        debut          = ut.make_sb_data(location),
         mixing         = dp.mixing[sbl],
         layer_probs    = dp.layer_probs[sbl],
         partners       = dp.partners[sbl],
@@ -110,55 +109,62 @@ if __name__ == '__main__':
 
     T = sc.timer()
 
-    location = 'angola'
-
-    cpfiles = dict(
-        default=None,
-        jamie=f'results/{location}_pars_flex_sev_v6_march17.obj',
-        multical=f'results/{location}_{mc_filename}_pars.obj',
-    )
-
-    which = 'multical'
-    # calib_pars_jc = sc.loadobj(cpfiles['jamie'])
-    calib_pars_mc = sc.loadobj(cpfiles['multical'])
-    if location == 'south_africa': calib_pars_mc['sev_dist']['par1'] = 1.
-    if location == 'senegal': calib_pars_mc['sev_dist']['par1'] = 1.
-    if location == 'drc': calib_pars_mc['sev_dist']['par1'] = 1.
-    if location == 'angola': calib_pars_mc['sev_dist']['par1'] = 1.
-
-    az = hpv.age_results(
-        result_args=sc.objdict(
-            cancers_by_genotype=sc.objdict(
-                years=2020,
-                edges=np.array([ 0., 15., 20., 25., 30., 35., 40., 45., 50., 55., 60., 65., 70., 75., 80., 85.]),
-            ),
-            cancers=sc.objdict(
-                years=2020,
-                edges=np.array([0., 15., 20., 25., 30., 35., 40., 45., 50., 55., 60., 65., 70., 75., 80., 85.]),
-            )
-        )
-    )
-
-    # calib_pars_mc['genotype_pars']['hpv16']['dur_episomal'] = calib_pars_jc['genotype_pars']['hpv16']['dur_episomal']
-    # calib_pars_de['genotype_pars']['hpv16']['dur_episomal'] = calib_pars_jc['genotype_pars']['hpv16']['dur_episomal']
-    # calib_pars_de['genotype_pars']['hrhpv']['transform_prob'] = calib_pars_jc['genotype_pars']['hrhpv']['transform_prob']
-
-    fig, ax = pl.subplots(1,2)
-    for which,cpars in {'mc':calib_pars_mc}.items():#, 'jc':calib_pars_jc}.items():
-        sim = make_sim(location=location, calib_pars=cpars, analyzers=[az])
-        sim.run(verbose=0.1)
-        azz = sim.get_analyzer('age_results')
-        res = azz.results['cancers_by_genotype']
-        res1 = azz.results['cancers']
-        age_bins = res['bins']
-        for ng, gtype in enumerate(azz.glabels):
-            ax[0].plot(age_bins, res[2020][:, ng], label=f'{gtype=}, {which=}')
-        ax[0].legend()
-        ax[1].plot(age_bins, res1[2020][:])
-
+    location = 'south_africa'
+    sim = make_sim(location, analyzers=[ut.AFS()])
+    sim.run()
+    a = sim.get_analyzer()
+    a.prop_active_f
+    fig, ax = pl.subplots(1,1)
+    ax.plot(a.bins, a.prop_active_f)
     pl.show()
-    # sim.plot()
 
+    # cpfiles = dict(
+    #     default=None,
+    #     jamie=f'results/{location}_pars_flex_sev_v6_march17.obj',
+    #     multical=f'results/{location}_{mc_filename}_pars.obj',
+    # )
+    #
+    # which = 'multical'
+    # # calib_pars_jc = sc.loadobj(cpfiles['jamie'])
+    # calib_pars_mc = sc.loadobj(cpfiles['multical'])
+    # # if location == 'south_africa': calib_pars_mc['sev_dist']['par1'] = 1.
+    # # if location == 'senegal': calib_pars_mc['sev_dist']['par1'] = 1.
+    # # if location == 'drc': calib_pars_mc['sev_dist']['par1'] = 1.
+    # # if location == 'angola': calib_pars_mc['sev_dist']['par1'] = 1.
+    #
+    # az = hpv.age_results(
+    #     result_args=sc.objdict(
+    #         cancers_by_genotype=sc.objdict(
+    #             years=2020,
+    #             edges=np.array([ 0., 15., 20., 25., 30., 35., 40., 45., 50., 55., 60., 65., 70., 75., 80., 85.]),
+    #         ),
+    #         cancers=sc.objdict(
+    #             years=2020,
+    #             edges=np.array([0., 15., 20., 25., 30., 35., 40., 45., 50., 55., 60., 65., 70., 75., 80., 85.]),
+    #         )
+    #     )
+    # )
+    #
+    # # calib_pars_mc['genotype_pars']['hpv16']['dur_episomal'] = calib_pars_jc['genotype_pars']['hpv16']['dur_episomal']
+    # # calib_pars_de['genotype_pars']['hpv16']['dur_episomal'] = calib_pars_jc['genotype_pars']['hpv16']['dur_episomal']
+    # # calib_pars_de['genotype_pars']['hrhpv']['transform_prob'] = calib_pars_jc['genotype_pars']['hrhpv']['transform_prob']
+    #
+    # fig, ax = pl.subplots(1,2)
+    # for which,cpars in {'mc':calib_pars_mc}.items():#, 'jc':calib_pars_jc}.items():
+    #     sim = make_sim(location=location, calib_pars=cpars, analyzers=[az])
+    #     sim.run(verbose=0.1)
+    #     azz = sim.get_analyzer('age_results')
+    #     res = azz.results['cancers_by_genotype']
+    #     res1 = azz.results['cancers']
+    #     age_bins = res['bins']
+    #     for ng, gtype in enumerate(azz.glabels):
+    #         ax[0].plot(age_bins, res[2020][:, ng], label=f'{gtype=}, {which=}')
+    #     ax[0].legend()
+    #     ax[1].plot(age_bins, res1[2020][:])
+    #
+    # pl.show()
+    # # sim.plot()
+    #
 
     T.toc('Done')
 
