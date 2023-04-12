@@ -69,12 +69,15 @@ def make_sb_data(location=None):
     sb_data_f = pd.read_csv('data/sb_pars_women.csv')
     sb_data_m = pd.read_csv('data/sb_pars_men.csv')
     sb_location = map_sb_loc(location)
-    distf = sb_data_f.loc[sb_data_f["location"]==sb_location,"dist"].iloc[0]
-    par1f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par1"].iloc[0]
-    par2f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par2"].iloc[0]
-    distm = sb_data_m.loc[sb_data_m["location"]==sb_location,"dist"].iloc[0]
-    par1m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par1"].iloc[0]
-    par2m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par2"].iloc[0]
+    try:
+        distf = sb_data_f.loc[sb_data_f["location"]==sb_location,"dist"].iloc[0]
+        par1f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par1"].iloc[0]
+        par2f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par2"].iloc[0]
+        distm = sb_data_m.loc[sb_data_m["location"]==sb_location,"dist"].iloc[0]
+        par1m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par1"].iloc[0]
+        par2m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par2"].iloc[0]
+    except:
+        print(f'No data for {sb_location=}, {location=}')
     debut = dict(
         f=dict(dist=distf, par1=par1f, par2=par2f),
         m=dict(dist=distm, par1=par1m, par2=par2m),
