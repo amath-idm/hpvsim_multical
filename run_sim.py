@@ -37,8 +37,6 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
     ''' Define parameters, analyzers, and interventions for the simulation -- not the sim itself '''
 
     # Parameters
-    location = location.replace('_', ' ')
-    if location =='cote divoire': location = "cote d'ivoire"
     sbl = 'nigeria'
 
     pars = dict(
@@ -48,7 +46,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         end            = 2020,
         network        = 'default',
         location       = location,
-        debut          = ut.make_sb_data(location),
+        debut          = ut.make_sb_data(location=location),
         mixing         = dp.mixing[sbl],
         layer_probs    = dp.layer_probs[sbl],
         partners       = dp.partners[sbl],
@@ -74,12 +72,12 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
 
 #%% Simulation running functions
-def run_sim(location=None, analyzers=None, calib_pars=None,
-            debug=0, seed=0, verbose=0.1, end=None,
+def run_sim(location=None, analyzers=None,
+            debug=0, seed=0, verbose=0.1,
             do_save=False, die=False):
 
     # Make sim
-    sim = make_sim(location=location, calib_pars=calib_pars, debug=debug, analyzers=analyzers, datafile=f'data/{location}_data.csv')
+    sim = make_sim(location=location, debug=debug, analyzers=analyzers)
     sim['rand_seed'] = seed # Set seed
     sim.label = f'{location}--{seed}' # Set label
 
@@ -97,7 +95,7 @@ def run_sim(location=None, analyzers=None, calib_pars=None,
 def run_sims(locations=None, *args, **kwargs):
     ''' Run multiple simulations in parallel '''
     
-    kwargs = sc.mergedicts(dict(use_calib_pars=True, debug=debug), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location:sim for location,sim in zip(locations, simlist)}) # Convert from a list to a dict
     
@@ -113,10 +111,7 @@ if __name__ == '__main__':
     sim = make_sim(location, analyzers=[ut.AFS()])
     sim.run()
     a = sim.get_analyzer()
-    a.prop_active_f
-    fig, ax = pl.subplots(1,1)
-    ax.plot(a.bins, a.prop_active_f)
-    pl.show()
+
 
     # cpfiles = dict(
     #     default=None,

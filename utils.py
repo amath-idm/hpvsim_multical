@@ -43,27 +43,39 @@ locations = [
     'zimbabwe',     # 29
 ]
 
+nosbdata_locations = ['cote_divoire', 'somalia', 'south_sudan', 'sudan']
 
-def sb_location_mapper(location):
+def map_sb_loc(location):
     ''' Map between different representations of country names '''
-    sb_location = location.capitalize()
-    if sb_location == "Drc": sb_location = 'Congo Democratic Republic'
-    if sb_location == 'Sierra leone': sb_location = 'Sierra Leone'
-    if sb_location == 'South africa': sb_location = 'South Africa'
-    return sb_location
+    location = location.replace('_', ' ')
+    if location =='cote divoire': location = "cote d'ivoire"
+    location = location.title()
+    if location == "Drc": location = 'Congo Democratic Republic'
+    return location
 
 
-def make_sb_data(location):
+def rev_map_sb_loc(location):
+    ''' Map between different representations of country names '''
+    location = location.replace(' ', '_')
+    if location =="cote d'ivoire": location = 'cote divoire'
+    location = location.lower()
+    if location == 'congo_democratic_republic': location = "drc"
+    return location
+
+
+def make_sb_data(location=None):
     sb_data_f = pd.read_csv('data/sb_pars_women.csv')
     sb_data_m = pd.read_csv('data/sb_pars_men.csv')
-    sb_location = sb_location_mapper(location)
+    sb_location = map_sb_loc(location)
+    distf = sb_data_f.loc[sb_data_f["location"]==sb_location,"dist"].iloc[0]
     par1f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par1"].iloc[0]
     par2f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par2"].iloc[0]
+    distm = sb_data_m.loc[sb_data_m["location"]==sb_location,"dist"].iloc[0]
     par1m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par1"].iloc[0]
     par2m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par2"].iloc[0]
     debut = dict(
-        f=dict(dist='normal', par1=par1f, par2=par2f),
-        m=dict(dist='normal', par1=par1m, par2=par2m),
+        f=dict(dist=distf, par1=par1f, par2=par2f),
+        m=dict(dist=distm, par1=par1m, par2=par2m),
     )
     return debut
 
