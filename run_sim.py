@@ -38,6 +38,8 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
     # Parameters
     sbl = 'nigeria'
+    location = location.replace('_', ' ')
+    if location =='cote divoire': location = "cote d'ivoire"
 
     pars = dict(
         n_agents       = [10e3,1e3][debug],
