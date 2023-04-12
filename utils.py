@@ -67,7 +67,7 @@ def make_sb_data(location=None):
 
     # Deal with missing countries and different spelling conventions
     if location in nosbdata_locations:
-        sb_location = 'ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
+        sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
     else:
         sb_location = map_sb_loc(location)
 
