@@ -64,6 +64,8 @@ def rev_map_sb_loc(location):
 
 
 def make_sb_data(location=None):
+    if location in nosbdata_locations:
+        location = 'ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
     sb_data_f = pd.read_csv('data/sb_pars_women.csv')
     sb_data_m = pd.read_csv('data/sb_pars_men.csv')
     sb_location = map_sb_loc(location)
