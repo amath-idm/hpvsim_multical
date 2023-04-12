@@ -64,11 +64,17 @@ def rev_map_sb_loc(location):
 
 
 def make_sb_data(location=None):
+
+    # Deal with missing countries and different spelling conventions
     if location in nosbdata_locations:
-        location = 'ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
+        sb_location = 'ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
+    else:
+        sb_location = map_sb_loc(location)
+
+    # Read in data
     sb_data_f = pd.read_csv('data/sb_pars_women.csv')
     sb_data_m = pd.read_csv('data/sb_pars_men.csv')
-    sb_location = map_sb_loc(location)
+
     try:
         distf = sb_data_f.loc[sb_data_f["location"]==sb_location,"dist"].iloc[0]
         par1f = sb_data_f.loc[sb_data_f["location"]==sb_location,"par1"].iloc[0]
@@ -78,10 +84,12 @@ def make_sb_data(location=None):
         par2m = sb_data_m.loc[sb_data_m["location"]==sb_location,"par2"].iloc[0]
     except:
         print(f'No data for {sb_location=}, {location=}')
+
     debut = dict(
         f=dict(dist=distf, par1=par1f, par2=par2f),
         m=dict(dist=distm, par1=par1m, par2=par2m),
     )
+    
     return debut
 
 
