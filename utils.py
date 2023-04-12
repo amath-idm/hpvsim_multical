@@ -43,7 +43,7 @@ locations = [
     'zimbabwe',     # 29
 ]
 
-nosbdata_locations = ['cote_divoire', 'somalia', 'south_sudan', 'sudan']
+nosbdata_locations = ["cote d'ivoire", "somalia", "south sudan", "sudan"]
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
@@ -89,7 +89,7 @@ def make_sb_data(location=None):
         f=dict(dist=distf, par1=par1f, par2=par2f),
         m=dict(dist=distm, par1=par1m, par2=par2m),
     )
-    
+
     return debut
 
 
