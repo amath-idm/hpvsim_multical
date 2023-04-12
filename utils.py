@@ -47,8 +47,8 @@ nosbdata_locations = ['cote_divoire', 'somalia', 'south_sudan', 'sudan']
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
-    location = location.replace('_', ' ')
-    if location =='cote divoire': location = "cote d'ivoire"
+    # location = location.replace('_', ' ')
+    # if location =='cote divoire': location = "cote d'ivoire"
     location = location.title()
     if location == "Drc": location = 'Congo Democratic Republic'
     return location
