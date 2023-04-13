@@ -117,35 +117,39 @@ def make_datafiles(locations):
 
 
 class AFS(hpv.Analyzer):
-    def __init__(self, bins=None, start=None, end=None):
+    def __init__(self, bins=None, cohort_starts=None):
         self.bins = bins or np.arange(12,31,1)
-        self.prop_active_f = []
-        self.prop_active_m = []
-        self.start = start
-        self.end = end
+        self.cohort_starts = cohort_starts
         self.binspan = self.bins[-1]-self.bins[0]
 
     def initialize(self, sim):
         super().initialize()
-        if self.start is None and self.end is None:
-            self.end = sim['end']
-            self.start = sim['end']-self.binspan
-        self.years = sc.inclusiverange(self.start, self.end)
+        if self.cohort_starts is None:
+            first_cohort = sim['start'] + sim['burnin'] - 5
+            last_cohort = sim['end']-self.binspan
+            self.cohort_starts = sc.inclusiverange(first_cohort, last_cohort)
+            self.cohort_ends = self.cohort_starts+self.binspan
+            self.n_cohorts = len(self.cohort_starts)
+            self.cohort_years = np.array([sc.inclusiverange(i,i+self.binspan) for i in self.cohort_starts])
 
+        self.prop_active_f = np.zeros((self.n_cohorts,self.binspan+1))
+        self.prop_active_m = np.zeros((self.n_cohorts,self.binspan+1))
 
     def apply(self, sim):
-        if sim.yearvec[sim.t] in self.years:
-            age_ind = sc.findinds(self.years, sim.yearvec[sim.t])[0]
-            bin = self.bins[age_ind]
+        if sim.yearvec[sim.t] in self.cohort_years:
+            cohort_inds, bin_inds = sc.findinds(self.cohort_years, sim.yearvec[sim.t])
+            for ci,cohort_ind in enumerate(cohort_inds):
+                bin_ind = bin_inds[ci]
+                bin = self.bins[bin_ind]
 
-            conditions_f = sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
-            denom_inds_f = hpu.true(conditions_f)
-            num_conditions_f = conditions_f * (sim.people.n_rships.sum(axis=0)>0)
-            num_inds_f = hpu.true(num_conditions_f)
-            self.prop_active_f.append(len(num_inds_f)/len(denom_inds_f))
+                conditions_f = sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
+                denom_inds_f = hpu.true(conditions_f)
+                num_conditions_f = conditions_f * (sim.people.n_rships.sum(axis=0)>0)
+                num_inds_f = hpu.true(num_conditions_f)
+                self.prop_active_f[cohort_ind,bin_ind] = len(num_inds_f)/len(denom_inds_f)
 
-            conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
-            denom_inds_m = hpu.true(conditions_m)
-            num_conditions_m = conditions_m * (sim.people.n_rships.sum(axis=0)>0)
-            num_inds_m = hpu.true(num_conditions_m)
-            self.prop_active_m.append(len(num_inds_m)/len(denom_inds_m))
+                conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
+                denom_inds_m = hpu.true(conditions_m)
+                num_conditions_m = conditions_m * (sim.people.n_rships.sum(axis=0)>0)
+                num_inds_m = hpu.true(num_conditions_m)
+                self.prop_active_m[ci,bin_ind] = len(num_inds_m)/len(denom_inds_m)
