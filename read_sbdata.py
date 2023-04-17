@@ -272,7 +272,7 @@ if __name__ == '__main__':
 
     # plot_sb(make_sb_pars=True, dist_type='lognormal')
     # alldf = prop_ever_from_sims()
-    df = get_sb_from_sims('prop_married')
-    # plot_prop_married()
+    # df = get_sb_from_sims('prop_married')
+    plot_prop_married()
 
     print('Done.')
