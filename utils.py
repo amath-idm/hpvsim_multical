@@ -56,10 +56,10 @@ def map_sb_loc(location):
 
 def rev_map_sb_loc(location):
     ''' Map between different representations of country names '''
-    location = location.replace(' ', '_')
-    if location =="cote d'ivoire": location = 'cote divoire'
     location = location.lower()
+    location = location.replace(' ', '_')
     if location == 'congo_democratic_republic': location = "drc"
+    if location == "cote_d'ivoire": location = 'cote_divoire'
     return location
 
 
@@ -117,7 +117,8 @@ def make_datafiles(locations):
 
 
 class AFS(hpv.Analyzer):
-    def __init__(self, bins=None, cohort_starts=None):
+    def __init__(self, bins=None, cohort_starts=None, **kwargs):
+        super().__init__(**kwargs)
         self.bins = bins or np.arange(12,31,1)
         self.cohort_starts = cohort_starts
         self.binspan = self.bins[-1]-self.bins[0]
@@ -153,3 +154,46 @@ class AFS(hpv.Analyzer):
                 num_conditions_m = conditions_m * (sim.people.n_rships.sum(axis=0)>0)
                 num_inds_m = hpu.true(num_conditions_m)
                 self.prop_active_m[ci,bin_ind] = len(num_inds_m)/len(denom_inds_m)
+        return
+
+
+class prop_married(hpv.Analyzer):
+    def __init__(self, bins=None, years=None, includelast=True, yearstride=5, binspan=5, **kwargs):
+        super().__init__(**kwargs)
+        self.bins = bins or np.arange(15,50,binspan)
+        self.years = years
+        self.dfs = sc.autolist()
+        self.df = None
+        self.includelast = includelast
+        self.yearstride = yearstride
+        self.binspan = binspan
+
+    def initialize(self, sim):
+        super().initialize()
+        if self.years is None:
+            start = sim['start'] + sim['burnin']
+            end = sim['end']
+            self.years = np.arange(start, end, self.yearstride)
+            if self.includelast:
+                if end not in self.years:
+                    self.years = np.append(self.years, end)
+
+    def apply(self, sim):
+        if sim.yearvec[sim.t] in self.years:
+
+            conditions = dict()
+            for ab in self.bins:
+                conditions[ab] = (sim.people.age >= ab) & (sim.people.age < ab+self.binspan)
+
+            prop_married = sc.autolist()
+            for age_cond in conditions.values():
+                num_condition = age_cond & (sim.people.current_partners[0,:]>0)
+                prop_married += len(hpv.true(num_condition))/len(hpv.true(age_cond))
+
+            d = dict(age=self.bins, val=prop_married)
+            df = pd.DataFrame().from_dict(d)
+            df['year'] = sim.yearvec[sim.t]
+            self.dfs += df
+
+    def finalize(self, sim):
+        self.df = pd.concat(self.dfs)

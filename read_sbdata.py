@@ -43,7 +43,7 @@ def logn_percentiles_to_pars(x1, p1, x2, p2):
     return s, scale
 
 
-def read_data(save_pars=True, dist_type='lognormal'):
+def read_debut_data(save_pars=True, dist_type='lognormal'):
     '''
     Read in dataframes taken from DHS and return them in a plot-friendly format,
     optionally saving the distribution parameters
@@ -124,35 +124,50 @@ def read_data(save_pars=True, dist_type='lognormal'):
     return countries, dff, df2, rvs
 
 
-def prop_ever_from_sims():
+def read_marriage_data():
+    '''
+    Read in dataframes taken from DHS and return them in a plot-friendly format,
+    optionally saving the distribution parameters
+    '''
+
+    dfraw = pd.read_csv('data/prop_married.csv')
+    df = dfraw.melt(id_vars=['Country', 'Survey'], value_name='Percentage', var_name='AgeRange')
+    return df
+
+
+def get_sb_from_sims(which='prop_married'):
     '''
     Run sims with the sexual debut parameters inferred from DHA data, and save
     the proportion of people of each age who've ever had sex
     '''
 
-    # countries,_,_,_  = read_data(save_pars=make_sb_pars, dist_type=dist_type)
     locations = ut.locations
     dataless_locations = ut.nosbdata_locations
     data_locations = [loc for loc in locations if loc not in dataless_locations]
-    countries_to_run = data_locations
-    sims = rs.run_sims(locations=countries_to_run, analyzers=[ut.AFS()], debug=False)
+    countries_to_run = locations
+    sims = rs.run_sims(locations=countries_to_run, analyzers=[ut.AFS(),ut.prop_married()], debug=False)
 
     # Prepare to save model output
     dfs = sc.autolist()
 
     for country in countries_to_run:
-        a = sims[country].get_analyzer()
-        for cs,cohort_start in enumerate(a.cohort_starts):
-            df = pd.DataFrame()
-            df['age'] = a.bins
-            df['cohort'] = cohort_start
-            df['model_prop_f'] = a.prop_active_f[cs,:]
-            df['model_prop_m'] = a.prop_active_m[cs,:]
+        a = sims[country].get_analyzer(which)
+        if which=='AFS':
+            for cs,cohort_start in enumerate(a.cohort_starts):
+                df = pd.DataFrame()
+                df['age'] = a.bins
+                df['cohort'] = cohort_start
+                df['model_prop_f'] = a.prop_active_f[cs,:]
+                df['model_prop_m'] = a.prop_active_m[cs,:]
+                df['country'] = country
+                dfs += df
+        elif which=='prop_married':
+            df = a.df
             df['country'] = country
             dfs += df
 
     alldf = pd.concat(dfs)
-    sc.saveobj(f'results/model_sb.obj', alldf)
+    sc.saveobj(f'results/model_sb_{which}.obj', alldf)
 
     return alldf
 
@@ -162,8 +177,8 @@ def plot_sb(make_sb_pars=True, dist_type='lognormal'):
     Create plots of sexual behavior inputs and outputs
     '''
 
-    countries, dff, df2, rvs = read_data(save_pars=make_sb_pars, dist_type=dist_type)
-    alldf = sc.loadobj(f'results/model_sb.obj')
+    countries, dff, df2, rvs = read_debut_data(save_pars=make_sb_pars, dist_type=dist_type)
+    alldf = sc.loadobj(f'results/model_sb_AFS.obj')
     n_countries = len(countries)
     n_rows, n_cols = sc.get_rows_cols(n_countries)
 
@@ -182,11 +197,12 @@ def plot_sb(make_sb_pars=True, dist_type='lognormal'):
             rv = rvs[sex][pn]
             xx = np.arange(12,30.1,0.1)
             xxx = np.arange(12,31,1)
-            ax.plot(xx, rv.cdf(xx)*100, 'b:', lw=2)
+            ax.plot(xx, rv.cdf(xx)*100, 'k--', lw=2)
 
             location = ut.rev_map_sb_loc(country)
-            modely = np.array(alldf.loc[alldf["country"]==location][f'model_prop_{sk}'])
-            ax.plot(xxx, modely*100, 'k-', lw=2)
+            for cohort in alldf["cohort"].unique():
+                modely = np.array(alldf.loc[(alldf["country"]==location)&(alldf["cohort"]==cohort)][f'model_prop_{sk}'])
+                ax.plot(xxx, modely*100, 'b-', lw=1)
             title_country = country
             if title_country == 'Congo Democratic Republic':
                 title_country = 'DRC'
@@ -201,11 +217,62 @@ def plot_sb(make_sb_pars=True, dist_type='lognormal'):
     return
 
 
+def plot_prop_married():
+    '''
+    Create plots of sexual behavior inputs and outputs
+    '''
+
+    # Read in data and model results
+    df = read_marriage_data()
+    modeldf = sc.loadobj(f'results/model_sb_prop_married.obj')
+    modeldf.reset_index()
+
+    # Plot
+    countries = df.Country.unique()
+    n_countries = len(countries)
+    n_rows, n_cols = sc.get_rows_cols(n_countries)
+    colors = sc.gridcolors(1)
+
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(8, 11))
+    axes = axes.flatten()
+
+    for pn, country in enumerate(countries):
+        ax = axes[pn]
+
+        # Plot data
+        dfplot_d = df.loc[(df["Country"] == country)]
+        sns.scatterplot(ax=ax, data=dfplot_d, x="AgeRange", y="Percentage")
+
+        # Plot model
+        location = ut.rev_map_sb_loc(country)
+        dfplot_m = modeldf.loc[modeldf['country']==location]
+        # dfplot_m['val'] = dfplot_m['val'].multiply(100)
+        dfplot_m['val'] = dfplot_m['val'].apply(lambda x: x * 100)
+        sns.boxplot(data=dfplot_m, x="age", y="val", color=colors[0], ax=ax)
+
+        title_country = country
+        if title_country == 'Congo Democratic Republic':
+            title_country = 'DRC'
+
+        ax.set_title(title_country)
+        ax.set_ylabel('')
+        ax.set_xlabel('')
+
+    fig.tight_layout()
+    pl.savefig(f"figures/fig_prop_married.png", dpi=100)
+
+    return
+
+
+
+
 #%% Run as a script
 if __name__ == '__main__':
 
 
     # plot_sb(make_sb_pars=True, dist_type='lognormal')
-    alldf = prop_ever_from_sims()
+    # alldf = prop_ever_from_sims()
+    df = get_sb_from_sims('prop_married')
+    # plot_prop_married()
 
     print('Done.')
