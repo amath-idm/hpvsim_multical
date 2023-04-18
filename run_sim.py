@@ -33,13 +33,15 @@ save_plots = True
 
 
 #%% Simulation creation functions
-def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=None, seed=1):
+def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=None, seed=1, dist_type='lognormal'):
     ''' Define parameters, analyzers, and interventions for the simulation -- not the sim itself '''
 
-    # Parameters
-    sbl = 'nigeria'
-    location = location.replace('_', ' ')
-    if location =='cote divoire': location = "cote d'ivoire"
+    # # Parameters
+    # location = location.replace('_', ' ')
+    # if location =='cote divoire':
+    #     sb_location = "cote d'ivoire"
+    # else:
+    #     sb_location = location
 
     pars = dict(
         n_agents       = [10e3,1e3][debug],
@@ -48,11 +50,11 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         end            = 2020,
         network        = 'default',
         location       = location,
-        debut          = ut.make_sb_data(location=location),
-        mixing         = dp.mixing[sbl],
-        layer_probs    = dp.layer_probs[sbl],
-        partners       = dp.partners[sbl],
-        init_hpv_dist  = dp.init_genotype_dist[sbl],
+        debut          = ut.make_sb_data(location=location, dist_type=dist_type),
+        mixing         = dp.mixing[location],
+        layer_probs    = dp.layer_probs[location],
+        partners       = dp.partners[location],
+        init_hpv_dist  = dp.init_genotype_dist[location],
         init_hpv_prev  = {
             'age_brackets'  : np.array([  12,   17,   24,   34,  44,   64,    80, 150]),
             'm'             : np.array([ 0.0, 0.25, 0.6, 0.25, 0.05, 0.01, 0.0005, 0]),
@@ -75,11 +77,11 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
 #%% Simulation running functions
 def run_sim(location=None, analyzers=None,
-            debug=0, seed=0, verbose=0.1,
-            do_save=False, die=False):
+            debug=0, seed=0, verbose=0.2,
+            do_save=False, dist_type='lognormal', die=False):
 
     # Make sim
-    sim = make_sim(location=location, debug=debug, analyzers=analyzers)
+    sim = make_sim(location=location, debug=debug, analyzers=analyzers, dist_type=dist_type)
     sim['rand_seed'] = seed # Set seed
     sim.label = f'{location}--{seed}' # Set label
 
@@ -94,10 +96,10 @@ def run_sim(location=None, analyzers=None,
     return sim
 
 
-def run_sims(locations=None, *args, **kwargs):
+def run_sims(locations=None, debug=False, verbose=-1, dist_type='lognormal', *args, **kwargs):
     ''' Run multiple simulations in parallel '''
     
-    kwargs = sc.mergedicts(dict(debug=debug), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, dist_type=dist_type), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location:sim for location,sim in zip(locations, simlist)}) # Convert from a list to a dict
     

@@ -13,11 +13,11 @@ import numpy as np
 locations = [
     'angola',       # 0
     'benin',        # 1
-    'burkina_faso', # 2
+    'burkina faso', # 2
     'burundi',      # 3
     'cameroon',     # 4
     'chad',         # 5
-    'cote_divoire', # 6
+    'cote divoire', # 6
     'drc',          # 7
     'ethiopia',     # 8
     'ghana',        # 9
@@ -31,10 +31,10 @@ locations = [
     'nigeria',      # 17
     'rwanda',       # 18
     'senegal',      # 19
-    'sierra_leone', # 20
+    'sierra leone', # 20
     'somalia',      # 21
-    'south_africa', # 22
-    'south_sudan',  # 23
+    'south africa', # 22
+    'south sudan',  # 23
     'sudan',        # 24
     'tanzania',     # 25
     'togo',         # 26
@@ -43,13 +43,12 @@ locations = [
     'zimbabwe',     # 29
 ]
 
-nosbdata_locations = ["cote d'ivoire", "somalia", "south sudan", "sudan"]
+nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan", "sudan"]
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
-    # location = location.replace('_', ' ')
-    # if location =='cote divoire': location = "cote d'ivoire"
     location = location.title()
+    if location == "Cote Divoire": location = "Cote d'Ivoire"
     if location == "Drc": location = 'Congo Democratic Republic'
     return location
 
@@ -57,13 +56,13 @@ def map_sb_loc(location):
 def rev_map_sb_loc(location):
     ''' Map between different representations of country names '''
     location = location.lower()
-    location = location.replace(' ', '_')
-    if location == 'congo_democratic_republic': location = "drc"
-    if location == "cote_d'ivoire": location = 'cote_divoire'
+    # location = location.replace(' ', '_')
+    if location == 'congo democratic republic': location = "drc"
+    if location == "cote d'ivoire": location = 'cote divoire'
     return location
 
 
-def make_sb_data(location=None):
+def make_sb_data(location=None, dist_type='lognormal'):
 
     # Deal with missing countries and different spelling conventions
     if location in nosbdata_locations:
@@ -72,8 +71,8 @@ def make_sb_data(location=None):
         sb_location = map_sb_loc(location)
 
     # Read in data
-    sb_data_f = pd.read_csv('data/sb_pars_women.csv')
-    sb_data_m = pd.read_csv('data/sb_pars_men.csv')
+    sb_data_f = pd.read_csv(f'data/sb_pars_women_{dist_type}.csv')
+    sb_data_m = pd.read_csv(f'data/sb_pars_men_{dist_type}.csv')
 
     try:
         distf = sb_data_f.loc[sb_data_f["location"]==sb_location,"dist"].iloc[0]

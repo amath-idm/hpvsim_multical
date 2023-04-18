@@ -43,7 +43,7 @@ def logn_percentiles_to_pars(x1, p1, x2, p2):
     return s, scale
 
 
-def read_debut_data(save_pars=True, dist_type='lognormal'):
+def read_debut_data(dist_type='lognormal'):
     '''
     Read in dataframes taken from DHS and return them in a plot-friendly format,
     optionally saving the distribution parameters
@@ -90,94 +90,89 @@ def read_debut_data(save_pars=True, dist_type='lognormal'):
 
         dff[sex] = dfw
 
-        # Optionally save the distribution parameters
-        if save_pars:
-            res = dict()
-            res["location"] = []
-            res["par1"] = []
-            res["par2"] = []
-            res["dist"] = []
-            for pn,country in enumerate(countries):
-                dfplot = dfw.loc[(dfw["Country"] == country) & (dfw["AgeStr"] != f'{sex} never') & (dfw["AgeStr"] != f'{sex} 60')]
-                x1 = 15
-                p1 = dfplot.loc[dfplot["Age"] == x1, 'Percentage'].iloc[0] / 100
-                x2 = 25
-                p2 = dfplot.loc[dfplot["Age"] == x2, 'Percentage'].iloc[0] / 100
-                res["location"].append(country)
-                res["dist"].append(dist_type)
+        res = dict()
+        res["location"] = []
+        res["par1"] = []
+        res["par2"] = []
+        res["dist"] = []
+        for pn,country in enumerate(countries):
+            dfplot = dfw.loc[(dfw["Country"] == country) & (dfw["AgeStr"] != f'{sex} never') & (dfw["AgeStr"] != f'{sex} 60')]
+            x1 = 15
+            p1 = dfplot.loc[dfplot["Age"] == x1, 'Percentage'].iloc[0] / 100
+            x2 = 25
+            p2 = dfplot.loc[dfplot["Age"] == x2, 'Percentage'].iloc[0] / 100
+            res["location"].append(country)
+            res["dist"].append(dist_type)
 
-                if dist_type=='normal':
-                    loc, scale = percentiles_to_pars(x1, p1, x2, p2)
-                    rv = norm(loc=loc, scale=scale)
-                    res["par1"].append(loc)
-                    res["par2"].append(scale)
-                elif dist_type=='lognormal':
-                    s, scale = logn_percentiles_to_pars(x1, p1, x2, p2)
-                    rv = lognorm(s=s, scale=scale)
-                    res["par1"].append(rv.mean())
-                    res["par2"].append(rv.std())
+            if dist_type=='normal':
+                loc, scale = percentiles_to_pars(x1, p1, x2, p2)
+                rv = norm(loc=loc, scale=scale)
+                res["par1"].append(loc)
+                res["par2"].append(scale)
+            elif dist_type=='lognormal':
+                s, scale = logn_percentiles_to_pars(x1, p1, x2, p2)
+                rv = lognorm(s=s, scale=scale)
+                res["par1"].append(rv.mean())
+                res["par2"].append(rv.std())
 
-                rvs[sex].append(rv)
+            rvs[sex].append(rv)
 
-            pd.DataFrame.from_dict(res).to_csv(f'data/sb_pars_{sex.lower()}.csv')
+        pd.DataFrame.from_dict(res).to_csv(f'data/sb_pars_{sex.lower()}_{dist_type}.csv')
 
     return countries, dff, df2, rvs
 
 
 def read_marriage_data():
-    '''
-    Read in dataframes taken from DHS and return them in a plot-friendly format,
-    optionally saving the distribution parameters
-    '''
-
     dfraw = pd.read_csv('data/prop_married.csv')
     df = dfraw.melt(id_vars=['Country', 'Survey'], value_name='Percentage', var_name='AgeRange')
     return df
 
 
-def get_sb_from_sims(which='prop_married'):
+def get_sb_from_sims(dist_type='lognormal'):
     '''
     Run sims with the sexual debut parameters inferred from DHA data, and save
     the proportion of people of each age who've ever had sex
     '''
 
     locations = ut.locations
-    dataless_locations = ut.nosbdata_locations
-    data_locations = [loc for loc in locations if loc not in dataless_locations]
+    # dataless_locations = ut.nosbdata_locations
+    # data_locations = [loc for loc in locations if loc not in dataless_locations]
     countries_to_run = locations
-    sims = rs.run_sims(locations=countries_to_run, analyzers=[ut.AFS(),ut.prop_married()], debug=False)
+    sims = rs.run_sims(locations=countries_to_run, analyzers=[ut.AFS(),ut.prop_married()], debug=False, dist_type=dist_type)
 
     # Prepare to save model output
     dfs = sc.autolist()
-
     for country in countries_to_run:
-        a = sims[country].get_analyzer(which)
-        if which=='AFS':
-            for cs,cohort_start in enumerate(a.cohort_starts):
-                df = pd.DataFrame()
-                df['age'] = a.bins
-                df['cohort'] = cohort_start
-                df['model_prop_f'] = a.prop_active_f[cs,:]
-                df['model_prop_m'] = a.prop_active_m[cs,:]
-                df['country'] = country
-                dfs += df
-        elif which=='prop_married':
-            df = a.df
+        a = sims[country].get_analyzer('AFS')
+        for cs,cohort_start in enumerate(a.cohort_starts):
+            df = pd.DataFrame()
+            df['age'] = a.bins
+            df['cohort'] = cohort_start
+            df['model_prop_f'] = a.prop_active_f[cs,:]
+            df['model_prop_m'] = a.prop_active_m[cs,:]
             df['country'] = country
             dfs += df
+    afs_df = pd.concat(dfs)
+    sc.saveobj(f'results/model_sb_AFS.obj', afs_df)
 
-    alldf = pd.concat(dfs)
-    sc.saveobj(f'results/model_sb_{which}.obj', alldf)
+    dfs = sc.autolist()
+    for country in countries_to_run:
+        a = sims[country].get_analyzer('prop_married')
+        df = a.df
+        df['country'] = country
+        dfs += df
+    pm_df = pd.concat(dfs)
+    sc.saveobj(f'results/model_sb_prop_married.obj', pm_df)
 
-    return alldf
+    return sims, afs_df, pm_df
 
 
-def plot_sb(make_sb_pars=True, dist_type='lognormal'):
+def plot_sb(dist_type='lognormal'):
     '''
     Create plots of sexual behavior inputs and outputs
     '''
 
-    countries, dff, df2, rvs = read_debut_data(save_pars=make_sb_pars, dist_type=dist_type)
+    countries, dff, df2, rvs = read_debut_data(dist_type=dist_type)
     alldf = sc.loadobj(f'results/model_sb_AFS.obj')
     n_countries = len(countries)
     n_rows, n_cols = sc.get_rows_cols(n_countries)
@@ -269,10 +264,10 @@ def plot_prop_married():
 #%% Run as a script
 if __name__ == '__main__':
 
-
-    # plot_sb(make_sb_pars=True, dist_type='lognormal')
-    # alldf = prop_ever_from_sims()
-    # df = get_sb_from_sims('prop_married')
-    plot_prop_married()
+    dist_type = 'normal'
+    # countries, dff, df2, rvs = read_debut_data(dist_type=dist_type)
+    df, sims = get_sb_from_sims(dist_type=dist_type)
+    # plot_sb(dist_type=dist_type)
+    # plot_prop_married()
 
     print('Done.')
