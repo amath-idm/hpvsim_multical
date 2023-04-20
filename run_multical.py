@@ -65,19 +65,20 @@ def make_unique_priors(locations=None):
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
     datafiles = dict()
-    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south_africa', 'tanzania', 'uganda']
-    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south_africa', 'tanzania']
-    cin1_type_locs      = ['guinea', 'senegal', 'south_africa']
+    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda']
+    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south africa', 'tanzania']
+    cin1_type_locs      = ['guinea', 'senegal', 'south africa']
 
     for location in locations:
-        datafiles[location] = [f'data/{location}_cancer_cases.csv']
+        dflocation = location.replace(' ','_')
+        datafiles[location] = [f'data/{dflocation}_cancer_cases.csv']
 
         if location in cancer_type_locs:
-            datafiles[location] += [f'data/{location}_cancer_types.csv']
+            datafiles[location] += [f'data/{dflocation}_cancer_types.csv']
         if location in cin3_type_locs:
-            datafiles[location] += [f'data/{location}_cin3_types.csv']
+            datafiles[location] += [f'data/{dflocation}_cin3_types.csv']
         if location in cin1_type_locs:
-            datafiles[location] += [f'data/{location}_cin1_types.csv']
+            datafiles[location] += [f'data/{dflocation}_cin1_types.csv']
 
     return datafiles
 
