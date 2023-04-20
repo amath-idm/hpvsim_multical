@@ -50,18 +50,12 @@ def make_unique_priors(locations=None):
         unique_pars[location] = dict(
             calib_pars = dict(
                 beta = [0.15, 0.1, 0.25],
-                # sev_dist = dict(
-                #     par1 = [1, 0.5, 1.5]
-                # ),
+                sev_dist = dict(
+                    par1 = [1.0, 0.9, 1.1]
+                ),
             ),
             genotype_pars = dict(
                 hrhpv=dict(
-                    # sev_fn=dict(
-                    #     k=[0.2, 0.1, 0.3],
-                    # ),
-                    # dur_episomal=dict(
-                    #     par1=[2, 1.5, 3],  #
-                    # ),
                     transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
                 ),
             )
@@ -187,11 +181,11 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr03'
+    filestem = '_apr20'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+        sims, calib = run_calib(locations=set.locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:

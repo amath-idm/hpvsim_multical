@@ -198,7 +198,7 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
         snapshot = sims[country].get_analyzer('snapshot')
         ppl = snapshot.snapshots[0]
         conditions = {}
-        general_conditions = ppl.is_female * ppl.alive * ppl.level0
+        general_conditions = ppl.is_female * ppl.alive * ppl.level0 * ppl.is_active
         for ab in bins:
             conditions[ab] = (ppl.age >= ab) * (ppl.age < ab + binspan) * general_conditions
 
@@ -388,6 +388,8 @@ def plot_casuals():
 
     ut.set_font(12)
     casual_df = sc.loadobj(f'results/model_casual.obj')
+    data_df = pd.read_excel(f'data/casuals.xlsx')
+    data_df = data_df.melt(id_vars=['Country', 'Survey'], value_name='Percentage', var_name='AgeStr')
 
     # Plot
     countries = casual_df.country.unique()
@@ -406,8 +408,14 @@ def plot_casuals():
         else:
             ax = axes
 
+        # Plot data
+        data_country = ut.map_sb_loc(country)
+        dfplot_d = data_df.loc[data_df['Country']==data_country]
+        sns.scatterplot(data=dfplot_d, x="AgeStr", y="Percentage", ax=ax, marker="D", color="k")
+
         # Plot model
         dfplot_m = casual_df.loc[casual_df['country']==country]
+        dfplot_m['shares'] = dfplot_m['shares'].apply(lambda x: x * 100)
         sns.barplot(data=dfplot_m.loc[dfplot_m['partners'] > 0], x="bins", y="shares", hue="partners", ax=ax)
         if pn != n_countries-1:
             ax.legend([], [], frameon=False)
@@ -440,14 +448,14 @@ if __name__ == '__main__':
             dist_type=dist_type,
             marriage_scale=1,
             debut_bias=[-1,-1],
-            debug=True,
+            debug=False,
             verbose=0.1
         )
 
     # Plotting functions
-    plot_sb(dist_type=dist_type)
-    plot_prop_married()
-    plot_age_diffs()
+    # plot_sb(dist_type=dist_type)
+    # plot_prop_married()
+    # plot_age_diffs()
     plot_casuals()
 
     print('Done.')
