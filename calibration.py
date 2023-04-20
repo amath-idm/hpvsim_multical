@@ -444,7 +444,8 @@ class MultiCal(sc.prettyobj):
             # Store results in temporary files (TODO: consider alternatives)
             if save:
                 results = dict(sim=sim_results, age=age_results, calib_pars=calib_pars, genotype_pars=genotype_pars, mismatch=total_fit, runtime=sim.timer.timings[0])
-                filename = self.tmp_filename % (slabel, trial.number)
+                fileslabel = slabel.replace(' ', '_')
+                filename = self.tmp_filename % (fileslabel, trial.number)
                 sc.save(filename, results)
 
             # Add this sim fit to total fit
@@ -545,7 +546,8 @@ class MultiCal(sc.prettyobj):
                 for trial in study.trials:
                     n = trial.number
                     try:
-                        filename = self.tmp_filename % (slabel, trial.number)
+                        fileslabel = slabel.replace(' ', '_')
+                        filename = self.tmp_filename % (fileslabel, trial.number)
                         results = sc.load(filename)
                         self.sim_results[slabel].append(results['sim'])
                         self.age_results[slabel].append(results['age'])
