@@ -21,48 +21,14 @@ import numpy as np
 # Imports from this repository
 import run_sim as rs
 import calibration as cal
+import settings as set
 
 # Comment out to not run
 to_run = [
     'run_calibration',
-    # 'load_tmp_files',
-    # 'plot_tmp_files',
     # 'plot_calibration',
 ]
 
-# Comment out locations to not run
-locations = [
-    'angola',       # 0
-    'benin',        # 1
-    'burkina_faso', # 2
-    'burundi',      # 3
-    'cameroon',     # 4
-    'chad',         # 5
-    'cote_divoire', # 6
-    'drc',          # 7
-    'ethiopia',     # 8
-    'ghana',        # 9
-    'guinea',       # 10
-    'kenya',        # 11
-    'madagascar',   # 12
-    'malawi',       # 13
-    'mali',         # 14
-    'mozambique',   # 15
-    'niger',        # 16
-    'nigeria',      # 17
-    'rwanda',       # 18
-    'senegal',      # 19
-    'sierra_leone', # 20
-    'somalia',      # 21
-    'south_africa', # 22
-    'south_sudan',  # 23
-    'sudan',        # 24
-    'tanzania',     # 25
-    'togo',         # 26
-    'uganda',       # 27
-    'zambia',       # 28
-    'zimbabwe',     # 29
-]
 
 debug = False # Smaller runs
 do_save = True

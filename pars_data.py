@@ -7,7 +7,7 @@ with high HPV burden, for use in HPVsim.
 #%% Initialization
 
 import numpy as np
-import utils as ut
+import settings as set
 
 # Initialize objects with per-country results
 layer_probs          = dict()
@@ -36,16 +36,12 @@ default_layer_probs = dict(
     ),
 )
 
-for location in ut.locations:
+for location in set.locations:
     layer_probs[location] = default_layer_probs
-
-# Replace layers
-layer_probs['benin']['m'][1]        = np.array([0, 0, 0.05, 0.5, 0.99, 0.99, 0.95, 0.7, 0.75, 0.65, 0.55, 0.4, 0.4, 0.4, 0.4, 0.4])
-layer_probs['burkina faso']['m'][1] = np.array([0, 0, 0.05, 0.5, 0.99, 0.99, 0.95, 0.7, 0.75, 0.65, 0.55, 0.4, 0.4, 0.4, 0.4, 0.4])
 
 #%% INIT GENOTYPE DISTRIBUTION
 default_init_genotype_dist = dict(hpv16=0.4, hpv18=0.25, hrhpv=0.35)
-for location in ut.locations:
+for location in set.locations:
     init_genotype_dist[location] = default_init_genotype_dist
 
 # Replace for some
@@ -59,33 +55,33 @@ default_partners = dict(
         c=dict(dist='poisson', par1=0.5),
         o=dict(dist='poisson', par1=0.0),
 )
-for location in ut.locations:
+for location in set.locations:
     partners[location] = default_partners
 
 
 #%% MIXING
 default_mixing_all = np.array([
-    #       0,  5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75
-    [0,     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [5,     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [10,    0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [15,    0,  0,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [20,    0,  0, .5,  1,  1, .5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [25,    0,  0,  0, .5,  1,  1, .5,  0,  0,  0,  0,  0,  0,  0,  0,  0],
-    [30,    0,  0,  0,  0, .5,  1,  1, .5,  0,  0,  0,  0,  0,  0,  0,  0],
-    [35,    0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0,  0,  0,  0,  0,  0],
-    [40,    0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0,  0,  0,  0,  0],
-    [45,    0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0,  0,  0,  0],
-    [50,    0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0,  0,  0],
-    [55,    0,  0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0,  0],
-    [60,    0,  0,  0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0,  0],
-    [65,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5,  0],
-    [70,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1, .5],
-    [75,    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, .1, .5,  1,  1],
+    #       0,  5, 10, 15, 20,  25,  30,  35,  40,  45,  50,  55,  60,  65,  70,  75
+    [0,     0,  0,  0,  0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [5,     0,  0,  0,  0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [10,    0,  0,  1,  0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [15,    0,  0,  1,  1,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [20,    0,  0, .5,  1,  1, .01,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [25,    0,  0,  0, .5,  1,   1, .01,   0,   0,   0,   0,   0,   0,   0,   0,   0],
+    [30,    0,  0,  0,  0, .5,   1,   1, .01,   0,   0,   0,   0,   0,   0,   0,   0],
+    [35,    0,  0,  0,  0, .1,  .5,   1,   1, .01,   0,   0,   0,   0,   0,   0,   0],
+    [40,    0,  0,  0,  0,  0,  .1,  .5,   1,   1, .01,   0,   0,   0,   0,   0,   0],
+    [45,    0,  0,  0,  0,  0,   0,  .1,  .5,   1,   1, .01,   0,   0,   0,   0,   0],
+    [50,    0,  0,  0,  0,  0,   0,   0,  .1,  .5,   1,   1,  .01,  0,   0,   0,   0],
+    [55,    0,  0,  0,  0,  0,   0,   0,   0,  .1,  .5,   1,   1, .01,   0,   0,   0],
+    [60,    0,  0,  0,  0,  0,   0,   0,   0,   0,  .1,  .5,   1,   1, .01,   0,   0],
+    [65,    0,  0,  0,  0,  0,   0,   0,   0,   0,   0,  .1,  .5,   1,   1, .01,   0],
+    [70,    0,  0,  0,  0,  0,   0,   0,   0,   0,   0,   0,  .1,  .5,   1,   1, .01],
+    [75,    0,  0,  0,  0,  0,   0,   0,   0,   0,   0,   0,   0,  .1,  .5,   1,   1],
 ])
 
 default_mixing = dict()
 for k in ['m','c','o']: default_mixing[k] = default_mixing_all
-for location in ut.locations:
+for location in set.locations:
     mixing[location] = default_mixing
 

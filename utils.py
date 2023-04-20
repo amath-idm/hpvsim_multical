@@ -9,41 +9,14 @@ import hpvsim.utils as hpu
 import pandas as pd
 import numpy as np
 
-# Comment out locations to not run
-locations = [
-    'angola',       # 0
-    'benin',        # 1
-    'burkina faso', # 2
-    'burundi',      # 3
-    'cameroon',     # 4
-    'chad',         # 5
-    'cote divoire', # 6
-    'drc',          # 7
-    'ethiopia',     # 8
-    'ghana',        # 9
-    'guinea',       # 10
-    'kenya',        # 11
-    'madagascar',   # 12
-    'malawi',       # 13
-    'mali',         # 14
-    'mozambique',   # 15
-    'niger',        # 16
-    'nigeria',      # 17
-    'rwanda',       # 18
-    'senegal',      # 19
-    'sierra leone', # 20
-    'somalia',      # 21
-    'south africa', # 22
-    'south sudan',  # 23
-    'sudan',        # 24
-    'tanzania',     # 25
-    'togo',         # 26
-    'uganda',       # 27
-    'zambia',       # 28
-    'zimbabwe',     # 29
-]
+import settings as set
+import pars_data as dp
 
-nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan", "sudan"]
+def set_font(size=None, font='Libertinus Sans'):
+    ''' Set a custom font '''
+    sc.fonts(add=sc.thisdir(aspath=True) / 'assets' / 'LibertinusSans-Regular.otf')
+    sc.options(font=font, fontsize=size)
+    return
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
@@ -62,10 +35,10 @@ def rev_map_sb_loc(location):
     return location
 
 
-def make_sb_data(location=None, dist_type='lognormal'):
+def make_sb_data(location=None, dist_type='lognormal', debut_bias=[0,0]):
 
     # Deal with missing countries and different spelling conventions
-    if location in nosbdata_locations:
+    if location in set.nosbdata_locations:
         sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
     else:
         sb_location = map_sb_loc(location)
@@ -85,11 +58,62 @@ def make_sb_data(location=None, dist_type='lognormal'):
         print(f'No data for {sb_location=}, {location=}')
 
     debut = dict(
-        f=dict(dist=distf, par1=par1f, par2=par2f),
-        m=dict(dist=distm, par1=par1m, par2=par2m),
+        f=dict(dist=distf, par1=par1f+debut_bias[0], par2=par2f),
+        m=dict(dist=distm, par1=par1m+debut_bias[1], par2=par2m),
     )
 
     return debut
+
+def make_layer_probs(location=None, marriage_scale=1):
+    # Deal with missing countries and different spelling conventions
+    if location in set.nosbdata_locations:
+        sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
+    else:
+        sb_location = map_sb_loc(location)
+
+    # Read in data and write to layer_probs
+    prop_married = pd.read_csv(f'data/prop_married.csv')
+    vals = np.array(prop_married.loc[prop_married["Country"] == sb_location, ["15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49"]])[0]
+    layer_probs = dp.layer_probs[location]
+    layer_probs['m'][1][3:10] = vals/100
+    layer_probs['m'][1]*=marriage_scale
+
+    if location=='angola':
+        layer_probs['m'][1]*=.5
+        layer_probs['m'][1][9:]*=.15
+    if location=='benin':
+        layer_probs['m'][1][9:] *= .15
+    if location=='burundi':
+        layer_probs['m'][1][4:]*=.5
+        layer_probs['m'][1][9:]*=.15
+    if location=='cameroon':
+        layer_probs['m'][1]*=.5
+        layer_probs['m'][1][9:]*=.15
+    if location=='chad':
+        layer_probs['m'][1]*=.7
+        layer_probs['m'][1][9:]*=.15
+    if location=='cote divoire':
+        layer_probs['m'][1]*=.5
+    if location=='drc':
+        layer_probs['m'][1]*=.5
+        layer_probs['m'][1][9:] *= .15
+    if location=='ethiopia':
+        layer_probs['m'][1]*=.7
+        layer_probs['m'][1][9:]*=.15
+    if location=='ghana':
+        layer_probs['m'][1]*=.6
+        layer_probs['m'][1][9:]*=.15
+    if location in ['guinea', 'nigeria', 'senegal', 'sierra leone', 'sudan']:
+        layer_probs['m'][1]*=.7
+    if location in ['kenya', 'madagascar', 'malawi', 'mozambique', 'rwanda', 'tanzania', 'togo', 'uganda', 'zambia', 'zimbabwe']:
+        layer_probs['m'][1]*=.5
+        layer_probs['m'][1][9:]*=.15
+    if location=='south africa':
+        layer_probs['m'][1]*=.4
+        layer_probs['m'][1][7:]*=.5
+
+    return layer_probs
+
 
 
 
@@ -182,12 +206,12 @@ class prop_married(hpv.Analyzer):
 
             conditions = dict()
             for ab in self.bins:
-                conditions[ab] = (sim.people.age >= ab) & (sim.people.age < ab+self.binspan)
+                conditions[ab] = (sim.people.age >= ab) & (sim.people.age < ab+self.binspan) & sim.people.alive & sim.people.is_female & sim.people.level0
 
             prop_married = sc.autolist()
             for age_cond in conditions.values():
                 num_condition = age_cond & (sim.people.current_partners[0,:]>0)
-                prop_married += len(hpv.true(num_condition))/len(hpv.true(age_cond))
+                prop_married += len(hpu.true(num_condition))/len(hpv.true(age_cond))
 
             d = dict(age=self.bins, val=prop_married)
             df = pd.DataFrame().from_dict(d)
