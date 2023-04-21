@@ -381,7 +381,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     # pl.figtext(0.51, 0.47, 'D', fontweight='bold', fontsize=fs)
     fig.tight_layout()
 
-    pl.savefig(f"{ut.figfolder}/calib_nathx_{location}.png", dpi=100)
+    pl.savefig(f"figures/calib_nathx_{location}.png", dpi=100)
 
     return calib_pars, sim
 
@@ -390,7 +390,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
 if __name__ == '__main__':
 
     # location='nigeria_new'
-    location='india'
+    location='ethiopia'
     filename = rs.mc_filename
     # calib_pars = sc.loadobj(f'results/{location}_pars_flex_sev_v6_march17.obj')
     calib_pars = sc.loadobj(f'results/{location}_{filename}_pars.obj')

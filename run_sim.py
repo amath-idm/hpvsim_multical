@@ -21,7 +21,7 @@ import utils as ut
 #%% Settings and filepaths
 
 
-mc_filename = 'multical_apr03'
+mc_filename = 'multical_apr20'
 
 # Debug switch
 debug = 0 # Run with smaller population sizes and in serial
@@ -53,7 +53,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         location       = location,
         debut          = ut.make_sb_data(location=location, dist_type=dist_type, debut_bias=debut_bias),
         mixing         = dp.mixing[location],
-        layer_probs    = ut.make_layer_probs(location=location, marriage_scale=marriage_scale), #dp.layer_probs[location],
+        layer_probs    = ut.make_layer_probs(location=location, marriage_scale=marriage_scale),
         partners       = dp.partners[location],
         init_hpv_dist  = dp.init_genotype_dist[location],
         init_hpv_prev  = {

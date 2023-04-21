@@ -35,7 +35,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [2000, 2][debug]  # How many trials to run for calibration
+n_trials    = [3000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -50,9 +50,9 @@ def make_unique_priors(locations=None):
         unique_pars[location] = dict(
             calib_pars = dict(
                 beta = [0.15, 0.1, 0.25],
-                sev_dist = dict(
-                    par1 = [1.0, 0.9, 1.1]
-                ),
+                # sev_dist = dict(
+                #     par1 = [1.0, 0.9, 1.1]
+                # ),
             ),
             genotype_pars = dict(
                 hrhpv=dict(
@@ -60,6 +60,11 @@ def make_unique_priors(locations=None):
                 ),
             )
         )
+
+    unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10],
+    unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10],
+    unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10],
+
     return unique_pars
 
 def make_datafiles(locations):
@@ -91,10 +96,10 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                transform_prob=[7/1e10, 6/1e10, 8/1e10]
+                transform_prob=[8/1e10, 7/1e10, 9/1e10]
             ),
             hpv18=dict(
-                transform_prob=[2/1e10, 1/1e10, 3/1e10],
+                transform_prob=[2/1e10, 1.5/1e10, 3/1e10],
             ),
         ),
     )
@@ -186,10 +191,10 @@ if __name__ == '__main__':
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=set.locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+        sims, calib = run_calib(locations=set.lo_hiv_locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=locations, do_plot=True, save_pars=True)
+        calib, sims = load_calib(locations=set.locations, do_plot=True, save_pars=True)
 
     T.toc('Done')

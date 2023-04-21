@@ -13,11 +13,14 @@ import seaborn as sns
 # Imports from this repository
 import run_sim as rs
 import run_multical as rm
+import settings as set
+import utils as ut
 
 
 #%% Plotting functions
 def plot_fig1(locations, calib, n_results=20):
 
+    ut.set_font(12)
     n_plots = len(locations)
     n_rows, n_cols = sc.get_rows_cols(n_plots)
 
@@ -77,8 +80,8 @@ def plot_fig1(locations, calib, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = rm.locations
-    calib = sc.loadobj('results/multical_apr03.obj')
+    locations = set.locations
+    calib = sc.loadobj('results/multical_apr20.obj')
     plot_fig1(locations, calib, n_results=20)
 
     print('Done.')

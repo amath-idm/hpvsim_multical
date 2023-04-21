@@ -2,7 +2,7 @@
 Settings
 '''
 
-# Comment out locations to not run
+# All locations
 locations = [
     'angola',       # 0
     'benin',        # 1
@@ -34,6 +34,20 @@ locations = [
     'uganda',       # 27
     'zambia',       # 28
     'zimbabwe',     # 29
+]
+
+# 10 largest locations with HIV prevalence in women <
+lo_hiv_locations = [
+    'angola',       # 0
+    'burkina faso', # 2
+    'drc',          # 7
+    'ethiopia',     # 8
+    'madagascar',   # 12
+    'mali',         # 14
+    'niger',        # 16
+    'nigeria',      # 17
+    'senegal',      # 19
+    'sudan',        # 24
 ]
 
 nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan", "sudan"]
