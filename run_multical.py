@@ -25,8 +25,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 
@@ -62,13 +62,20 @@ def make_unique_priors(locations=None):
         )
 
     if 'ethiopia' in locations:
-        unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10]
+        unique_pars['ethiopia']['genotype_pars']['hrhpv'] = dict(
+            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
+            sev_fn=dict(
+                k=[0.2, 0.15, 0.25],
+            ),
+        )
+
     if 'nigeria' in locations:
         unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
     if 'senegal' in locations:
         unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
     return unique_pars
+
 
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
@@ -99,10 +106,16 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                transform_prob=[8/1e10, 7/1e10, 9/1e10]
+                transform_prob=[8 / 1e10, 6 / 1e10, 10 / 1e10],
+                sev_fn=dict(
+                    k=[0.2, 0.15, 0.25],
+                ),
             ),
             hpv18=dict(
-                transform_prob=[2/1e10, 1.5/1e10, 3/1e10],
+                transform_prob=[5 / 1e10, 3 / 1e10, 7 / 1e10],
+                sev_fn=dict(
+                    k=[0.2, 0.15, 0.25],
+                ),
             ),
         ),
     )
@@ -190,7 +203,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20_10'
+    filestem = '_apr20_3'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
