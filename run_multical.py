@@ -73,7 +73,7 @@ def make_unique_priors(locations=None):
         unique_pars['nigeria']['genotype_pars']['hrhpv'] = dict(
             transform_prob=[10 / 1e11, 8 / 1e11, 12 / 1e11],
             sev_fn=dict(
-                k=[0.25, 0.2, 0.15],
+                k=[0.25, 0.2, 0.3],
             ),
         )
 
