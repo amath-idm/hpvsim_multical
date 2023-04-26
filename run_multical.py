@@ -25,8 +25,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 
@@ -190,7 +190,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20_3'
+    filestem = '_apr20_10'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
@@ -198,6 +198,6 @@ if __name__ == '__main__':
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=set.lo_hiv_locations, do_plot=True, save_pars=True)
+        calib, sims = load_calib(locations=set.locations3, do_plot=True, save_pars=True) # lo_hiv_locations
 
     T.toc('Done')

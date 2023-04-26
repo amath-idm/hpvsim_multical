@@ -12,8 +12,8 @@ import utils as ut
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -37,13 +37,33 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3],
-        sev_dist = dict(par1=[1., 0.8, 1.2])
+        # sev_dist = dict(par1=[1., 0.8, 1.2])
     )
 
     genotype_pars = dict(
-        hrhpv=dict(
+        hpv16=dict(
             transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
-        )
+            sev_fn=dict(
+                k = [0.2,0.25,0.15],
+            ),
+            dur_episomal=dict(
+                par1=[0.9,.8,1],
+                par2=[0.9, .8, 1],
+            )
+        ),
+        hpv18=dict(
+            transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+            sev_fn=dict(
+                k = [0.2,0.25,0.15],
+            ),
+            dur_episomal=dict(
+                par1=[0.9,.8,1],
+                par2=[0.9, .8, 1],
+            )
+        ),
+        # hrhpv=dict(
+        #     transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+        # )
     )
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
@@ -90,8 +110,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['drc', 'south_africa', 'kenya', 'uganda']
-    filestem = '_apr03'
+    locations = ['ethiopia'] # ['drc', 'south_africa', 'kenya', 'uganda']
+    filestem = '_apr26'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
