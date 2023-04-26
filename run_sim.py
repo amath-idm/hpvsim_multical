@@ -21,7 +21,7 @@ import utils as ut
 #%% Settings and filepaths
 
 
-mc_filename = 'multical_apr20'
+mc_filename = 'multical_apr20_10'
 
 # Debug switch
 debug = 0 # Run with smaller population sizes and in serial

@@ -61,9 +61,9 @@ def make_unique_priors(locations=None):
             )
         )
 
-    unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10],
-    unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10],
-    unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10],
+    unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10]
+    unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
+    unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
     return unique_pars
 
@@ -187,7 +187,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20'
+    filestem = '_apr20_10'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
@@ -195,6 +195,6 @@ if __name__ == '__main__':
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=set.locations, do_plot=True, save_pars=True)
+        calib, sims = load_calib(locations=set.lo_hiv_locations, do_plot=True, save_pars=True)
 
     T.toc('Done')
