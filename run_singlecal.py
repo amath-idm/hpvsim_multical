@@ -54,7 +54,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
             ),
         ),
         hrhpv=dict(
-            transform_prob=[1 / 1e10, .5 / 1e10, 1.5 / 1e10],
+            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
