@@ -42,7 +42,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     genotype_pars = dict(
         hpv16=dict(
-            transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+            transform_prob=[8 / 1e10, 5 / 1e10, 10 / 1e10],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
@@ -52,7 +52,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
             )
         ),
         hpv18=dict(
-            transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+            transform_prob=[5 / 1e10, 3 / 1e10, 7 / 1e10],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
@@ -62,7 +62,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
             )
         ),
         hrhpv=dict(
-            transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+            transform_prob=[4 / 1e10, 2 / 1e10, 6 / 1e10],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
