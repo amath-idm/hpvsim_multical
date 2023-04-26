@@ -70,7 +70,21 @@ def make_unique_priors(locations=None):
         )
 
     if 'nigeria' in locations:
-        unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
+        unique_pars['nigeria']['genotype_pars']['hrhpv'] = dict(
+            transform_prob=[10 / 1e11, 8 / 1e11, 12 / 1e11],
+            sev_fn=dict(
+                k=[0.25, 0.2, 0.15],
+            ),
+        )
+
+    if 'drc' in locations:
+        unique_pars['drc']['genotype_pars']['hrhpv'] = dict(
+            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
+            sev_fn=dict(
+                k=[0.2, 0.15, 0.25],
+            ),
+        )
+
     if 'senegal' in locations:
         unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
