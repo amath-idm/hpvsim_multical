@@ -57,13 +57,20 @@ def run_calib(location=None, n_trials=None, n_workers=None,
                 k = [0.2,0.15,0.25],
             ),
             dur_episomal=dict(
-                par1=[0.9,.8,1],
+                par1=[0.9, .8, 1],
                 par2=[0.9, .8, 1],
             )
         ),
-        # hrhpv=dict(
-        #     transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
-        # )
+        hrhpv=dict(
+            transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+            sev_fn=dict(
+                k = [0.2,0.15,0.25],
+            ),
+            dur_episomal=dict(
+                par1=[0.9, .8, 1],
+                par2=[0.9, .8, 1],
+            )
+        ),
     )
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
