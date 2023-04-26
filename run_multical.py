@@ -187,11 +187,11 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20_10'
+    filestem = '_apr20_3'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=set.lo_hiv_locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+        sims, calib = run_calib(locations=set.locations3, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:

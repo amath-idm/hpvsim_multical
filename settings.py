@@ -36,7 +36,7 @@ locations = [
     'zimbabwe',     # 29
 ]
 
-# 10 largest locations with HIV prevalence in women <
+# 10 largest locations with HIV prevalence in women <2.5%
 lo_hiv_locations = [
     'angola',       # 0
     'burkina faso', # 2
@@ -48,6 +48,12 @@ lo_hiv_locations = [
     'nigeria',      # 17
     'senegal',      # 19
     'sudan',        # 24
+]
+# Biggest 3
+locations3 = [
+    'nigeria',
+    'ehtiopia',
+    'drc',
 ]
 
 nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan", "sudan"]
