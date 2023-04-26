@@ -61,9 +61,12 @@ def make_unique_priors(locations=None):
             )
         )
 
-    unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10]
-    unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
-    unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
+    if 'ethiopia' in locations:
+        unique_pars['ethiopia']['genotype_pars']['hrhpv']['transform_prob'] = [1/1e10, 0.5/1e10, 1.5/1e10]
+    if 'nigeria' in locations:
+        unique_pars['nigeria']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
+    if 'senegal' in locations:
+        unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
     return unique_pars
 
