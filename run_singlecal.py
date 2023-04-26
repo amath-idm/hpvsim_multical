@@ -44,17 +44,17 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         hpv16=dict(
             transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
             sev_fn=dict(
-                k = [0.2,0.25,0.15],
+                k = [0.2,0.15,0.25],
             ),
             dur_episomal=dict(
-                par1=[0.9,.8,1],
+                par1=[0.9, .8,1],
                 par2=[0.9, .8, 1],
             )
         ),
         hpv18=dict(
             transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
             sev_fn=dict(
-                k = [0.2,0.25,0.15],
+                k = [0.2,0.15,0.25],
             ),
             dur_episomal=dict(
                 par1=[0.9,.8,1],
