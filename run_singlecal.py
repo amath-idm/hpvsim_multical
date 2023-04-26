@@ -46,30 +46,18 @@ def run_calib(location=None, n_trials=None, n_workers=None,
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
-            dur_episomal=dict(
-                par1=[0.9, .8,1],
-                par2=[0.9, .8, 1],
-            )
         ),
         hpv18=dict(
             transform_prob=[5 / 1e10, 3 / 1e10, 7 / 1e10],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
-            dur_episomal=dict(
-                par1=[0.9, .8, 1],
-                par2=[0.9, .8, 1],
-            )
         ),
         hrhpv=dict(
             transform_prob=[4 / 1e10, 2 / 1e10, 6 / 1e10],
             sev_fn=dict(
                 k = [0.2,0.15,0.25],
             ),
-            dur_episomal=dict(
-                par1=[0.9, .8, 1],
-                par2=[0.9, .8, 1],
-            )
         ),
     )
 
