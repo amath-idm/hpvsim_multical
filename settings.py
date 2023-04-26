@@ -52,7 +52,7 @@ lo_hiv_locations = [
 # Biggest 3
 locations3 = [
     'nigeria',
-    'ehtiopia',
+    'ethiopia',
     'drc',
 ]
 
