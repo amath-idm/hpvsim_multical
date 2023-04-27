@@ -91,27 +91,6 @@ def make_unique_priors(locations=None):
     return unique_pars
 
 
-def make_datafiles(locations):
-    ''' Get the relevant datafiles for the selected locations '''
-    datafiles = dict()
-    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda']
-    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south africa', 'tanzania']
-    cin1_type_locs      = ['guinea', 'senegal', 'south africa']
-
-    for location in locations:
-        dflocation = location.replace(' ','_')
-        datafiles[location] = [f'data/{dflocation}_cancer_cases.csv']
-
-        if location in cancer_type_locs:
-            datafiles[location] += [f'data/{dflocation}_cancer_types.csv']
-        if location in cin3_type_locs:
-            datafiles[location] += [f'data/{dflocation}_cin3_types.csv']
-        if location in cin1_type_locs:
-            datafiles[location] += [f'data/{dflocation}_cin1_types.csv']
-
-    return datafiles
-
-
 
 def run_calib(locations=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
@@ -147,7 +126,7 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
         common_pars=common_pars,
         unique_pars=unique_pars,
         name=f'multical0104',
-        datafiles=make_datafiles(locations),
+        datafiles=ut.make_datafiles(locations),
         load_if_exists=True,
         db_name='multical0104.db',
         total_trials=n_trials,
