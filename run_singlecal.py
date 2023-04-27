@@ -9,6 +9,7 @@ import hpvsim as hpv
 # Imports from this repository
 import run_sim as rs
 import utils as ut
+import settings as set
 
 # Comment out to not run
 to_run = [
