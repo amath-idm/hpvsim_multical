@@ -97,7 +97,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = set.partitioned_locations[0]
+    locations = set.partitioned_locations[1]
     filestem = '_apr27'
 
     # Run calibration - usually on VMs
