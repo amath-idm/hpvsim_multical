@@ -42,13 +42,13 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     genotype_pars = dict(
         hpv16=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8],
+            transform_prob=[6e-8, 2e-8, 10e-8]
         ),
         hpv18=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8],,
+            transform_prob=[6e-8, 2e-8, 10e-8]
         ),
         hrhpv=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8],,
+            transform_prob=[6e-8, 2e-8, 10e-8]
         ),
     )
 
