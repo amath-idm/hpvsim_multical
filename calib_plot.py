@@ -39,8 +39,9 @@ def transform_prob(tp, dysp):
           = 2* dysp * (dysp/2)**2, assuming that b = c = 1/2 a
           = 1/2 * dysp**3
     '''
+    return 1-np.power(1-tp, ((dysp*100)**2))
     # return 1-np.power(1-tp, (dysp*100))
-    return 1-np.power(1-tp, 0.5*((dysp*100)**3))
+    # return 1-np.power(1-tp, 0.5*((dysp*100)**3))
 
 
 
@@ -399,8 +400,16 @@ if __name__ == '__main__':
     # calib_pars['genotype_pars']['hpv18']['transform_prob'] = 2e-10
     # calib_pars['genotype_pars']['hrhpv']['transform_prob'] = 3e-5
     # calib_pars['genotype_pars']['hrhpv']['sev_fn']['k'] = 0.2
-    # calib_pars['genotype_pars']['hpv16']['sev_fn']['k'] = 0.35
+    calib_pars['genotype_pars']['hpv16']['sev_fn']['k'] = 0.4
+    calib_pars['genotype_pars']['hpv18']['sev_fn']['k'] = 0.4
+    calib_pars['genotype_pars']['hrhpv']['sev_fn']['k'] = 0.4
     # calib_pars['genotype_pars']['hpv16']['dur_episomal'] = {'dist': 'lognormal', 'par1': 0.88, 'par2': 0.88}
+
+    calib_pars['genotype_pars']['hpv16']['transform_prob'] = 6e-8
+    calib_pars['genotype_pars']['hpv18']['transform_prob'] = 5e-8
+    calib_pars['genotype_pars']['hrhpv']['transform_prob'] = 3e-8
+
+
     calib_pars, sim = plot_fig4(location=location, calib_pars=calib_pars, old_pars=False)
 
     print('Done.')

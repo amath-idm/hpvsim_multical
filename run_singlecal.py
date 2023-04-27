@@ -12,15 +12,15 @@ import utils as ut
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [2000, 10][debug]  # How many trials to run for calibration
+n_trials    = [10000, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 4][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -42,22 +42,13 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     genotype_pars = dict(
         hpv16=dict(
-            transform_prob=[8 / 1e10, 6 / 1e10, 10 / 1e10],
-            sev_fn=dict(
-                k = [0.2,0.15,0.25],
-            ),
+            transform_prob=[6e-8, 2e-8, 10e-8],
         ),
         hpv18=dict(
-            transform_prob=[5 / 1e10, 3 / 1e10, 7 / 1e10],
-            sev_fn=dict(
-                k = [0.2,0.15,0.25],
-            ),
+            transform_prob=[6e-8, 2e-8, 10e-8],,
         ),
         hrhpv=dict(
-            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
-            sev_fn=dict(
-                k = [0.2,0.15,0.25],
-            ),
+            transform_prob=[6e-8, 2e-8, 10e-8],,
         ),
     )
 
@@ -105,8 +96,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['ethiopia'] # ['drc', 'south_africa', 'kenya', 'uganda']
-    filestem = '_apr26'
+    locations = set.partitioned_locations[0]
+    filestem = '_apr27'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

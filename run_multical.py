@@ -35,7 +35,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [3000, 2][debug]  # How many trials to run for calibration
+n_trials    = [5000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -50,9 +50,9 @@ def make_unique_priors(locations=None):
         unique_pars[location] = dict(
             calib_pars = dict(
                 beta = [0.15, 0.1, 0.25],
-                # sev_dist = dict(
-                #     par1 = [1.0, 0.9, 1.1]
-                # ),
+                sev_dist = dict(
+                    par1 = [1.0, 0.9, 1.1]
+                ),
             ),
             genotype_pars = dict(
                 hrhpv=dict(
@@ -217,14 +217,14 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20_3'
+    filestem = '_apr20_3fold1'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=set.locations3, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+        sims, calib = run_calib(locations=set.fold1locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=set.locations3, do_plot=True, save_pars=True) # lo_hiv_locations
+        calib, sims = load_calib(locations=set.fold1locations, do_plot=True, save_pars=True) # lo_hiv_locations
 
     T.toc('Done')

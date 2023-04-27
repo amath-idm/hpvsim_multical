@@ -57,3 +57,46 @@ locations3 = [
 ]
 
 nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan", "sudan"]
+
+partitioned_locations = [
+    [
+        'drc',
+        'south africa',
+        'burkina faso',
+        'senegal',
+        'south sudan',
+        'guinea',
+        'niger',
+        'ethiopia',
+        'mali',
+        'burundi',
+    ],
+    [
+        'somalia',
+        'zimbabwe',
+        'chad',
+        'cameroon',
+        'kenya',
+        'cote divoire',
+        'sudan',
+        'rwanda',
+        'sierra leone',
+        'madagascar',
+    ],
+    [
+        'ghana',
+        'malawi',
+        'nigeria',
+        'zambia',
+        'uganda',
+        'tanzania',
+        'benin',
+        'angola',
+        'togo',
+        'mozambique',
+    ]
+]
+
+fold1locations = partitioned_locations[0]+partitioned_locations[1]
+fold2locations = partitioned_locations[0]+partitioned_locations[2]
+fold3locations = partitioned_locations[1]+partitioned_locations[2]
