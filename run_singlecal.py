@@ -43,10 +43,10 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     genotype_pars = dict(
         hpv16=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8]
+            transform_prob=[6e-8, 5e-8, 10e-8]
         ),
         hpv18=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8]
+            transform_prob=[6e-8, 3e-8, 10e-8]
         ),
         hrhpv=dict(
             transform_prob=[6e-8, 2e-8, 10e-8]
@@ -76,7 +76,8 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 ########################################################################
 def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem=''):
 
-    filename = f'{location}_calib{filestem}'
+    fnlocation = location.replace(' ','_')
+    filename = f'{fnlocation}_calib{filestem}'
     calib = sc.load(f'results/{filename}.obj')
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
@@ -97,7 +98,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = set.partitioned_locations[0]
+    locations = ['kenya'] #set.partitioned_locations[1]
     filestem = '_apr27'
 
     # Run calibration - usually on VMs
