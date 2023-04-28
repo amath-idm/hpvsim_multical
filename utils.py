@@ -220,3 +220,17 @@ class prop_married(hpv.Analyzer):
 
     def finalize(self, sim):
         self.df = pd.concat(self.dfs)
+
+
+def lognorm_params(par1, par2):
+    """
+    Given the mean and std. dev. of the log-normal distribution, this function
+    returns the shape and scale parameters for scipy's parameterization of the
+    distribution.
+    """
+    mean = np.log(par1 ** 2 / np.sqrt(par2 ** 2 + par1 ** 2))  # Computes the mean of the underlying normal distribution
+    sigma = np.sqrt(np.log(par2 ** 2 / par1 ** 2 + 1))  # Computes sigma for the underlying normal distribution
+
+    scale = np.exp(mean)
+    shape = sigma
+    return shape, scale

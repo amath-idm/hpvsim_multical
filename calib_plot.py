@@ -17,32 +17,19 @@ import run_sim as rs
 
 #%% Plotting function
 
-def lognorm_params(par1, par2):
-    """
-    Given the mean and std. dev. of the log-normal distribution, this function
-    returns the shape and scale parameters for scipy's parameterization of the
-    distribution.
-    """
-    mean = np.log(par1 ** 2 / np.sqrt(par2 ** 2 + par1 ** 2))  # Computes the mean of the underlying normal distribution
-    sigma = np.sqrt(np.log(par2 ** 2 / par1 ** 2 + 1))  # Computes sigma for the underlying normal distribution
-
-    scale = np.exp(mean)
-    shape = sigma
-    return shape, scale
-
-def transform_prob(tp, dysp):
-    '''
-    Returns transformation probability given dysplasia
-    Using formula for half an ellipsoid:
-        V = 1/2 * 4/3 * pi * a*b*c
-          = 2 * a*b*c
-          = 2* dysp * (dysp/2)**2, assuming that b = c = 1/2 a
-          = 1/2 * dysp**3
-    '''
-    return 1-np.power(1-tp, ((dysp*100)**2))
-    # return 1-np.power(1-tp, (dysp*100))
-    # return 1-np.power(1-tp, 0.5*((dysp*100)**3))
-
+#
+# def transform_prob(tp, dysp):
+#     '''
+#     Returns transformation probability given dysplasia
+#     Using formula for half an ellipsoid:
+#         V = 1/2 * 4/3 * pi * a*b*c
+#           = 2 * a*b*c
+#           = 2* dysp * (dysp/2)**2, assuming that b = c = 1/2 a
+#           = 1/2 * dysp**3
+#     '''
+#     return 1-np.power(1-tp, ((dysp*100)**2))
+#     # return 1-np.power(1-tp, (dysp*100))
+#     # return 1-np.power(1-tp, 0.5*((dysp*100)**3))
 
 
 def plot_fig4(location, calib_pars=None, old_pars=True):
@@ -134,7 +121,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     for gi, gtype in enumerate(genotypes):
 
         # Panel A: durations
-        sigma, scale = lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
+        sigma, scale = ut.lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
         rv = lognorm(sigma, 0, scale)
         ax['A'].plot(thisx, rv.pdf(thisx), color=colors[gi], lw=2, label=glabels[gi])
 
@@ -162,7 +149,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
         else:
             cum_dysp[:] = dysp_int[:]
 
-        tp_array = transform_prob(transform_probs[gi], cum_dysp)
+        tp_array = hpu.transform_prob(transform_probs[gi], cum_dysp)
         ax['F'].plot(thisx, tp_array, color=colors[gi], lw=2, label=gtype.upper())
 
         # Add rel_sev samples to B and C plots
@@ -189,7 +176,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
                 rel_cum_dysp[:] = rel_dysp_int[:]
             ax['C'].plot(thisx, rel_dysp, color=colors[gi], lw=1, alpha=0.5)
 
-            rel_tp_array = transform_prob(transform_probs[gi], rel_cum_dysp)
+            rel_tp_array = hpu.transform_prob(transform_probs[gi], rel_cum_dysp)
             ax['F'].plot(thisx, rel_tp_array, color=colors[gi], lw=1, alpha=0.5)
 
     ax['A'].set_ylabel("")
@@ -253,7 +240,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
             peak_dysp[:] = hppar.compute_severity(thisx[:], pars=sev_fns[gi])
             cum_dysp[:] = dysp_int[:]
 
-        tp = transform_prob(transform_probs[gi], cum_dysp)
+        tp = hpu.transform_prob(transform_probs[gi], cum_dysp)
 
         # To start find women who advance to cancer
         cancer_inds = hpu.true(hpu.n_binomial(tp, len(thisx)))

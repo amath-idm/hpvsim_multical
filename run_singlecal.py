@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [3000, 10][debug]  # How many trials to run for calibration
+n_trials    = [1000, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 4][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -29,6 +29,15 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 # Run calibration
 ########################################################################
+def make_priors(location):
+    all_genotype_pars = dict(
+        ethiopia = dict(
+            hpv16=dict(transform_prob=[10e-8, 8e-8, 12e-8]),
+            hpv18=dict(transform_prob=[6e-8, 3e-8, 8e-8]),
+            hrhpv=dict(transform_prob=[3e-8, 2e-8, 4e-8]),
+        )
+    )
+
 def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
 
@@ -39,18 +48,6 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3],
         # sev_dist = dict(par1=[1., 0.8, 1.2])
-    )
-
-    genotype_pars = dict(
-        hpv16=dict(
-            transform_prob=[6e-8, 5e-8, 10e-8]
-        ),
-        hpv18=dict(
-            transform_prob=[6e-8, 3e-8, 10e-8]
-        ),
-        hrhpv=dict(
-            transform_prob=[6e-8, 2e-8, 10e-8]
-        ),
     )
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
@@ -98,8 +95,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['kenya'] #set.partitioned_locations[1]
-    filestem = '_apr27'
+    locations = ['ethiopia'] #set.partitioned_locations[0]+set.partitioned_locations[1]
+    filestem = '_apr28'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
