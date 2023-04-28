@@ -32,7 +32,7 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 def make_priors(location):
     all_genotype_pars = dict(
         ethiopia = dict(
-            hpv16=dict(transform_prob=[12e-11, 10e-11, 15e-11]),
+            hpv16=dict(transform_prob=[25e-11, 20e-11, 30e-11]),
             hpv18=dict(transform_prob=[7e-11, 5e-11, 10e-11]),
             hrhpv=dict(transform_prob=[2e-11, 1e-11, 3e-11 ]),
         )
