@@ -34,7 +34,7 @@ def make_priors(location):
         ethiopia = dict(
             hpv16=dict(transform_prob=[12e-11, 10e-11, 14e-11]),
             hpv18=dict(transform_prob=[7e-11, 5e-11, 10e-11]),
-            hrhpv=dict(transform_prob=[2e-11, 1e-11, 3e-11]),
+            hrhpv=dict(transform_prob=[2e-11, 1e-11, 3e-11 ]),
         )
     )
     return all_genotype_pars[location]
