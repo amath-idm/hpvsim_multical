@@ -37,6 +37,7 @@ def make_priors(location):
             hrhpv=dict(transform_prob=[3e-8, 2e-8, 4e-8]),
         )
     )
+    return all_genotype_pars[location]
 
 def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
@@ -49,6 +50,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         beta = [0.2, 0.1, 0.3],
         # sev_dist = dict(par1=[1., 0.8, 1.2])
     )
+    genotype_pars = make_priors(location)
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib',
