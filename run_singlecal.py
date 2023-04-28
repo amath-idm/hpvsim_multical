@@ -32,7 +32,7 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 def make_priors(location):
     all_genotype_pars = dict(
         ethiopia = dict(
-            hpv16=dict(transform_prob=[25e-11, 20e-11, 30e-11]),
+            hpv16=dict(transform_prob=[35e-11, 30e-11, 40e-11]),
             hpv18=dict(transform_prob=[7e-11, 5e-11, 10e-11]),
             hrhpv=dict(transform_prob=[2e-11, 1e-11, 3e-11 ]),
         )
@@ -48,7 +48,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         # beta = [0.2, 0.1, 0.3],
-        sev_dist = dict(par1=[0.6, 0.4, 0.8])
+        sev_dist = dict(par1=[0.4, 0.2, 0.6])
     )
     genotype_pars = make_priors(location)
 
