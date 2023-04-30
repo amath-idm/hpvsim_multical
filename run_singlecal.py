@@ -43,7 +43,7 @@ def make_priors(location):
             hpv16=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
             hrhpv=dict(
-                transform_prob=[8e-11, 6e-11, 10e-11],
+                transform_prob=[3e-10, 2e-10, 5e-11],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
         )
@@ -60,7 +60,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3],
-        # sev_dist = dict(par1=[0.4, 0.2, 0.6])
+        # sev_dist = dict(par1=[1.1, 1.0, 1.3])
     )
     genotype_pars = make_priors(location)
 
