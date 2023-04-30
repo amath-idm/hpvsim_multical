@@ -36,7 +36,7 @@ def make_priors(location):
             hpv18=dict(transform_prob=[3e-10, 2e-11, 5e-11]),
             hrhpv=dict(
                 transform_prob=[4e-11, 2e-11, 8e-11],
-                sev_fn=dict(par1=[0.2,0.15,0.25])
+                sev_fn=dict(k=[0.2,0.15,0.25])
             ),
         )
     )
