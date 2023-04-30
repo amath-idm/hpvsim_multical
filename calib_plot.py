@@ -220,7 +220,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     for gi in range(ng):
 
         # First, determine the outcomes for women
-        sigma, scale = lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
+        sigma, scale = ut.lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
         rv = lognorm(sigma, 0, scale)
 
         peak_dysp = np.zeros_like(thisx)
@@ -378,12 +378,12 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
 if __name__ == '__main__':
 
     # location='nigeria_new'
-    location='kenya'
+    location='ethiopia'
     # filename = rs.mc_filename
     # calib_pars = sc.loadobj(f'results/{location}_{filename}_pars.obj')
 
-    calib_pars = sc.loadobj(f'results/{location}_pars_apr27_sc.obj')
-    calib_pars['genotype_pars']['hpv16']['transform_prob'] *= 4
+    calib_pars = sc.loadobj(f'results/{location}_pars_apr26_sc.obj')
+    # calib_pars['genotype_pars']['hpv16']['transform_prob'] *= 4
     # calib_pars['genotype_pars']['hpv18']['transform_prob'] = 2e-10
     # calib_pars['genotype_pars']['hrhpv']['transform_prob'] = 3e-5
     # calib_pars['genotype_pars']['hrhpv']['sev_fn']['k'] = 0.2
