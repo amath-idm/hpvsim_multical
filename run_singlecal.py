@@ -79,6 +79,15 @@ def make_priors(location):
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
         ),
+        'nigeria': dict(
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hrhpv=dict(
+                transform_prob=[3e-10, 2e-10, 5e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2])
+            ),
+        ),
+
     }
     return all_genotype_pars[location]
 
