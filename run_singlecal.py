@@ -33,21 +33,24 @@ def make_priors(location):
     all_genotype_pars = dict(
         ethiopia = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[4e-10, 3e-10, 6e-10]),
-            hrhpv=dict(
-                transform_prob=[2e-10, 1e-10, 3e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
-                # transform_prob=[4e-11, 2e-11, 8e-11],
-                # sev_fn=dict(k=[0.2,0.15,0.25])
-            ),
-        ),
-        drc=dict(
-            hpv16=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
+        ),
+        drc=dict(
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hrhpv=dict(
+                transform_prob=[3e-10, 2e-10, 5e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2])
+            # hpv16=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
+            # hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            # hrhpv=dict(
+            #     transform_prob=[3e-10, 2e-10, 5e-10],
+            #     sev_fn=dict(k=[0.15, 0.10, 0.2])
+            # ),
         )
     )
     return all_genotype_pars[location]
@@ -111,7 +114,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['ethiopia'] #['ethiopia'] #set.partitioned_locations[0]+set.partitioned_locations[1]
+    locations = ['ethiopia','drc'] #['ethiopia'] #set.partitioned_locations[0]+set.partitioned_locations[1]
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
