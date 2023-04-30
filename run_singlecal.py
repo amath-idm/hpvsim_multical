@@ -13,8 +13,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -43,8 +43,8 @@ def make_priors(location):
             hpv16=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
             hrhpv=dict(
-                transform_prob=[4e-11, 2e-11, 8e-11],
-                sev_fn=dict(k=[0.2, 0.15, 0.25])
+                transform_prob=[8e-11, 6e-11, 10e-11],
+                sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
         )
     )
