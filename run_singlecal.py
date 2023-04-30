@@ -50,7 +50,7 @@ def make_priors(location):
             # hrhpv=dict(
             #     transform_prob=[3e-10, 2e-10, 5e-10],
             #     sev_fn=dict(k=[0.15, 0.10, 0.2])
-            # ),
+            ),
         )
     )
     return all_genotype_pars[location]
