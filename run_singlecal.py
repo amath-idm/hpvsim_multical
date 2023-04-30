@@ -13,8 +13,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -41,6 +41,7 @@ def make_priors(location):
         )
     )
     return all_genotype_pars[location]
+
 
 def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
@@ -100,7 +101,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['ethiopia'] #set.partitioned_locations[0]+set.partitioned_locations[1]
+    locations = ['drc'] #['ethiopia'] #set.partitioned_locations[0]+set.partitioned_locations[1]
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
