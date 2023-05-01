@@ -17,6 +17,7 @@ import sciris as sc
 import hpvsim as hpv
 import pandas as pd
 import numpy as np
+import utils as ut
 
 # Imports from this repository
 import run_sim as rs
