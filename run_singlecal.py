@@ -42,7 +42,7 @@ def make_priors(location):
     }
     if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
-    if location in ['malawi']:
+    if location in ['malawi', 'zambia']:
         all_genotype_pars[location] = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
@@ -51,7 +51,7 @@ def make_priors(location):
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
         )
-    if location in ['mali', 'zambia']:
+    if location in ['mali']:
         all_genotype_pars[location] = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
@@ -122,9 +122,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     )
     genotype_pars = make_priors(location)
 
-    if location in ['angola', 'mali', 'zambia']:
+    if location in ['angola', 'mali']:
         calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4])
-    if location in ['mozambique', 'malawi']:
+    if location in ['mozambique', 'malawi', 'zambia']:
         calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5])
     if location in ['sudan', 'niger']:
         calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0])
@@ -176,7 +176,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['mali', 'zambia'] #, 'malawi', 'burkina faso', 'senegal'] #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']
+    locations = ['zambia'] #, 'malawi', 'burkina faso', 'senegal', 'mali'] #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
