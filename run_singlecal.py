@@ -40,7 +40,7 @@ def make_priors(location):
             ),
         ),
     }
-    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal']:
+    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'zimbabawe', 'guinea', 'rwanda']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
     if location in ['malawi', 'zambia']:
         all_genotype_pars[location] = dict(
@@ -176,7 +176,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['zambia'] #, 'malawi', 'burkina faso', 'senegal', 'mali'] #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']
+    locations = ['chad', 'somalia', 'zimbabawe', 'guinea', 'rwanda']  #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia']
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
