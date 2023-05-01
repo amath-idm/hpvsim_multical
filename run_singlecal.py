@@ -40,9 +40,9 @@ def make_priors(location):
             ),
         ),
     }
-    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']:
+    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'benin', 'south sudan']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
-    if location in ['malawi', 'zambia']:
+    if location in ['malawi', 'zambia', 'burundi']:
         all_genotype_pars[location] = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
@@ -97,7 +97,7 @@ def make_priors(location):
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             )
         )
-    if location in ['sudan']:
+    if location in ['sudan', 'togo',  'sierra leone']:
         all_genotype_pars[location] = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
@@ -124,9 +124,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     if location in ['angola', 'mali']:
         calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4])
-    if location in ['mozambique', 'malawi', 'zambia']:
+    if location in ['mozambique', 'malawi', 'zambia', 'burundi']:
         calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5])
-    if location in ['sudan', 'niger', 'guinea', 'zimbabwe']:
+    if location in ['sudan', 'niger', 'guinea', 'zimbabwe', 'togo', 'sierra leone']:
         calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0])
     if location in ['cote divoire']:
         calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9])
@@ -176,7 +176,9 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['benin', 'burundi', 'south sudan', 'togo', 'sierra leone']  # ['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea']
+    # locations = []
+    locations = ['burundi', 'togo', 'sierra leone']
+    # locations = ['benin', 'burundi', 'south sudan', 'togo'] #, 'sierra leone']  # ['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea']
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
