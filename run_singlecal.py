@@ -40,7 +40,7 @@ def make_priors(location):
             ),
         ),
     }
-    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'zimbabawe', 'guinea', 'rwanda']:
+    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'zimbabwe', 'guinea', 'rwanda']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
     if location in ['malawi', 'zambia']:
         all_genotype_pars[location] = dict(
