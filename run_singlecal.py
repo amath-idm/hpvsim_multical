@@ -13,8 +13,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -42,7 +42,16 @@ def make_priors(location):
     }
     if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
-    if location in ['sudan', 'angola', 'mozambique']:
+    if location in ['angola', 'mozambique']:
+        all_genotype_pars[location] = dict(
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hrhpv=dict(
+                transform_prob=[6e-10, 4e-10, 8e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2])
+            )
+        )
+    if location in ['sudan']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
     return all_genotype_pars[location]
 
@@ -59,6 +68,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         # sev_dist = dict(par1=[1.1, 1.0, 1.3])
     )
     genotype_pars = make_priors(location)
+
+    if location in ['angola', 'mozambique']:
+        calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4])
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib',
@@ -105,7 +117,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['sudan','angola','mozambique'] #['ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']  #set.partitioned_locations[0]+set.partitioned_locations[1]
+    locations = ['angola','mozambique'] #['sudan',]#['ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']  #set.partitioned_locations[0]+set.partitioned_locations[1]
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
