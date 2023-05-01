@@ -35,7 +35,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [5000, 2][debug]  # How many trials to run for calibration
+n_trials    = [3000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -49,44 +49,45 @@ def make_unique_priors(locations=None):
     for location in locations:
         unique_pars[location] = dict(
             calib_pars = dict(
-                beta = [0.15, 0.1, 0.25],
-                sev_dist = dict(
-                    par1 = [1.0, 0.9, 1.1]
-                ),
+                beta=[0.2, 0.1, 0.3],
+                # sev_dist = dict(
+                #     par1 = [1.0, 0.9, 1.1]
+                # ),
             ),
             genotype_pars = dict(
                 hrhpv=dict(
-                    transform_prob=[2 / 1e10, 1 / 1e10, 3 / 1e10],
+                    transform_prob=[3e-10, 2e-10, 5e-10],
+                    sev_fn=dict(k=[0.15, 0.10, 0.2])
                 ),
             )
         )
 
-    if 'ethiopia' in locations:
-        unique_pars['ethiopia']['genotype_pars']['hrhpv'] = dict(
-            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
-            sev_fn=dict(
-                k=[0.2, 0.15, 0.25],
-            ),
-        )
-
-    if 'nigeria' in locations:
-        unique_pars['nigeria']['genotype_pars']['hrhpv'] = dict(
-            transform_prob=[10 / 1e11, 8 / 1e11, 12 / 1e11],
-            sev_fn=dict(
-                k=[0.25, 0.2, 0.3],
-            ),
-        )
-
-    if 'drc' in locations:
-        unique_pars['drc']['genotype_pars']['hrhpv'] = dict(
-            transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
-            sev_fn=dict(
-                k=[0.2, 0.15, 0.25],
-            ),
-        )
-
-    if 'senegal' in locations:
-        unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
+    # if 'ethiopia' in locations:
+    #     unique_pars['ethiopia']['genotype_pars']['hrhpv'] = dict(
+    #         transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
+    #         sev_fn=dict(
+    #             k=[0.2, 0.15, 0.25],
+    #         ),
+    #     )
+    #
+    # if 'nigeria' in locations:
+    #     unique_pars['nigeria']['genotype_pars']['hrhpv'] = dict(
+    #         transform_prob=[10 / 1e11, 8 / 1e11, 12 / 1e11],
+    #         sev_fn=dict(
+    #             k=[0.25, 0.2, 0.3],
+    #         ),
+    #     )
+    #
+    # if 'drc' in locations:
+    #     unique_pars['drc']['genotype_pars']['hrhpv'] = dict(
+    #         transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
+    #         sev_fn=dict(
+    #             k=[0.2, 0.15, 0.25],
+    #         ),
+    #     )
+    #
+    # if 'senegal' in locations:
+    #     unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
     return unique_pars
 
@@ -98,18 +99,8 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     # Define shared calibration parameters - same values used across sims
     common_pars = dict(
         genotype_pars=dict(
-            hpv16=dict(
-                transform_prob=[8 / 1e10, 6 / 1e10, 10 / 1e10],
-                sev_fn=dict(
-                    k=[0.2, 0.15, 0.25],
-                ),
-            ),
-            hpv18=dict(
-                transform_prob=[5 / 1e10, 3 / 1e10, 7 / 1e10],
-                sev_fn=dict(
-                    k=[0.2, 0.15, 0.25],
-                ),
-            ),
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
         ),
     )
 
@@ -196,14 +187,15 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_apr20_3fold1'
+    filestem = '_may01'
+    locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda']
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=set.fold1locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+        sims, calib = run_calib(locations=locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=set.fold1locations, do_plot=True, save_pars=True) # lo_hiv_locations
+        calib, sims = load_calib(locations=locations, do_plot=True, save_pars=True) # lo_hiv_locations
 
     T.toc('Done')
