@@ -42,7 +42,7 @@ def make_priors(location):
     }
     if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'mali', 'zambia', 'senegal']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
-    if location in []:
+    if location in ['malawi']:
         all_genotype_pars[location] = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
