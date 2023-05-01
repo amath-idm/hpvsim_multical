@@ -40,7 +40,7 @@ def make_priors(location):
             ),
         ),
     }
-    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda']:
+    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda','ghana']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
     if location in ['angola']:
         all_genotype_pars[location] = dict(
@@ -137,7 +137,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['mozambique','sudan'] #['ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']  #set.partitioned_locations[0]+set.partitioned_locations[1]
+    locations = ['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger'] #['mozambique','sudan'] #['ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']  #set.partitioned_locations[0]+set.partitioned_locations[1]
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
