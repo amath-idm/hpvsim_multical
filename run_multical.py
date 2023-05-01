@@ -51,9 +51,6 @@ def make_unique_priors(locations=None):
         unique_pars[location] = dict(
             calib_pars = dict(
                 beta=[0.2, 0.1, 0.3],
-                # sev_dist = dict(
-                #     par1 = [1.0, 0.9, 1.1]
-                # ),
             ),
             genotype_pars = dict(
                 hrhpv=dict(
