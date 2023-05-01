@@ -40,7 +40,7 @@ def make_priors(location):
             ),
         ),
     }
-    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'mali', 'zambia', 'senegal']:
+    if location in ['drc', 'tanzania', 'south africa', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
     if location in ['malawi']:
         all_genotype_pars[location] = dict(
@@ -48,6 +48,15 @@ def make_priors(location):
             hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
             hrhpv=dict(
                 transform_prob=[6e-10, 4e-10, 8e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2])
+            ),
+        )
+    if location in ['mali', 'zambia']:
+        all_genotype_pars[location] = dict(
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hrhpv=dict(
+                transform_prob=[5e-10, 3e-10, 7e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             ),
         )
@@ -113,7 +122,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     )
     genotype_pars = make_priors(location)
 
-    if location in ['angola']:
+    if location in ['angola', 'mali', 'zambia']:
         calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4])
     if location in ['mozambique', 'malawi']:
         calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5])
@@ -167,7 +176,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['malawi'] #, 'zambia', 'burkina faso', 'mali',  'senegal'] #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']
+    locations = ['mali', 'zambia'] #, 'malawi', 'burkina faso', 'senegal'] #['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria']
     filestem = '_apr28'
 
     # Run calibration - usually on VMs
