@@ -33,7 +33,7 @@ def make_priors(location):
     all_genotype_pars = {
         'ethiopia' : dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hpv18=dict(transform_prob=[5e-10, 3e-10, 7e-10]),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
@@ -42,70 +42,33 @@ def make_priors(location):
     }
     if location in ['drc', 'south africa', 'tanzania', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'benin', 'south sudan']:
         all_genotype_pars[location] = all_genotype_pars['ethiopia']
-    if location in ['malawi', 'zambia', 'burundi']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
-                transform_prob=[6e-10, 4e-10, 8e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
-            ),
-        )
-    if location in ['mali']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
-                transform_prob=[5e-10, 3e-10, 7e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
-            ),
-        )
 
-    if location in ['cote divoire', 'guinea', 'zimbabwe']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
-                transform_prob=[5e-10, 3e-10, 8e-10],
-                sev_fn=dict(k=[0.1, 0.05, 0.12])
-            )
-        )
-    if location in ['niger', 'rwanda']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
+    # Customize OHR
+    # Lower TP
+    if location in ['niger', 'rwanda', 'sudan', 'togo',  'sierra leone']:
+        all_genotype_pars[location]['hrhpv']=dict(
                 transform_prob=[2e-10, 1e-10, 3e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
-            ),
-        )
-    if location in ['angola']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
+            )
+    # Slightly higher TP
+    if location in ['cote divoire', 'guinea', 'zimbabwe', 'mali']:
+        all_genotype_pars[location]['hrhpv']=dict(
+                transform_prob=[5e-10, 3e-10, 7e-10],
+                sev_fn=dict(k=[0.1, 0.05, 0.12])
+            )
+    # Slightly higher again TP
+    if location in ['malawi', 'zambia', 'burundi', 'angola']:
+        all_genotype_pars[location]['hrhpv']=dict(
                 transform_prob=[6e-10, 4e-10, 8e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             )
-        )
+    # Highest TP
     if location in ['mozambique']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
+        all_genotype_pars[location]['hrhpv']=dict(
                 transform_prob=[7e-10, 5e-10, 10e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
             )
-        )
-    if location in ['sudan', 'togo',  'sierra leone']:
-        all_genotype_pars[location] = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
-            hrhpv=dict(
-                transform_prob=[2e-10, 1e-10, 3e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
-            ),
-        )
+
     return all_genotype_pars[location]
 
 
