@@ -37,13 +37,6 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
              dist_type='lognormal', marriage_scale=1, debut_bias=[0,0]):
     ''' Define parameters, analyzers, and interventions for the simulation -- not the sim itself '''
 
-    # # Parameters
-    # location = location.replace('_', ' ')
-    # if location =='cote divoire':
-    #     sb_location = "cote d'ivoire"
-    # else:
-    #     sb_location = location
-
     pars = dict(
         n_agents       = [10e3,1e3][debug],
         dt             = [0.25,1.0][debug],
@@ -133,16 +126,13 @@ if __name__ == '__main__':
         )
     )
 
+    calib_pars = sc.loadobj(f'results/{location}_pars_apr28_sc.obj')
     sim = make_sim(
         location,
+        calib_pars=calib_pars,
         analyzers=[
             az
         ]
-        #     ut.AFS(),
-        #     ut.prop_married(),
-        #     hpv.snapshot(timepoints=['2020']),
-        # ],
-        # dist_type='normal'
     )
     sim.run()
     a = sim.get_analyzer('age_results')

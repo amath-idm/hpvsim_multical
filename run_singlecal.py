@@ -176,9 +176,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    # locations = []
-    locations = ['burundi', 'togo', 'sierra leone']
-    # locations = ['benin', 'burundi', 'south sudan', 'togo'] #, 'sierra leone']  # ['ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea']
+    locations = ['tanzania'] #['angola', 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
     filestem = '_apr28'
 
     # Run calibration - usually on VMs

@@ -100,3 +100,8 @@ partitioned_locations = [
 fold1locations = partitioned_locations[0]+partitioned_locations[1]
 fold2locations = partitioned_locations[0]+partitioned_locations[2]
 fold3locations = partitioned_locations[1]+partitioned_locations[2]
+
+
+code3 = [
+
+]

@@ -115,8 +115,6 @@ def make_layer_probs(location=None, marriage_scale=1):
     return layer_probs
 
 
-
-
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
     datafiles = dict()
@@ -136,7 +134,6 @@ def make_datafiles(locations):
             datafiles[location] += [f'data/{dflocation}_cin1_types.csv']
 
     return datafiles
-
 
 
 class AFS(hpv.Analyzer):
