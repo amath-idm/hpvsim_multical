@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [1000, 10][debug]  # How many trials to run for calibration
+n_trials    = [500, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 4][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -33,7 +33,7 @@ def make_priors(location):
     all_genotype_pars = {
         'ethiopia' : dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[5e-10, 3e-10, 7e-10]),
+            hpv18=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
