@@ -33,7 +33,7 @@ def make_priors(location):
     all_genotype_pars = {
         'ethiopia' : dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[6e-10, 4e-10, 8e-10]),
+            hpv18=dict(transform_prob=[8e-10, 6e-10, 10e-10]),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2])
@@ -91,7 +91,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5])
     if location in ['sudan', 'niger', 'guinea', 'zimbabwe', 'togo', 'sierra leone']:
         calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0])
-    if location in ['cote divoire', 'tanzania']:
+    if location in ['cote divoire']:
         calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9])
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
