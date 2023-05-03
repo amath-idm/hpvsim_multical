@@ -55,12 +55,12 @@ def make_priors(location):
                 transform_prob=[5e-10, 3e-10, 7e-10, 1e-10],
                 sev_fn=dict(k=[0.1, 0.05, 0.12, 0.01])
             )
-    # Slightly higher again TP
-    if location in ['malawi', 'zambia', 'burundi', 'angola']:
-        all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-            )
+    # # Slightly higher again TP
+    # if location in ['malawi', 'zambia', 'burundi', 'angola']:
+    #     all_genotype_pars[location]['hrhpv']=dict(
+    #             transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
+    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
+    #         )
     # Highest TP
     if location in ['mozambique']:
         all_genotype_pars[location]['hrhpv']=dict(
