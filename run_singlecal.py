@@ -79,19 +79,19 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     # Define the calibration parameters
     calib_pars = dict(
-        beta = [0.2, 0.1, 0.3],
+        beta = [0.2, 0.1, 0.3, 0.01],
         # sev_dist = dict(par1=[1.1, 1.0, 1.3])
     )
     genotype_pars = make_priors(location)
 
     if location in ['mozambique', 'malawi', 'zambia', 'burundi', 'tanzania']: # Higher than 1
-        calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5])
+        calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5, 0.005])
     if location in ['angola', 'mali']:
-        calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4])
+        calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4, 0.005])
     if location in ['sudan', 'niger', 'guinea', 'zimbabwe', 'togo', 'sierra leone']:
-        calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0])
+        calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0, 0.005])
     if location in ['cote divoire']:
-        calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9])
+        calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9, 0.005])
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib',
