@@ -32,11 +32,11 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 def make_priors(location):
     all_genotype_pars = {
         'ethiopia' : dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
+            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10, 1e-10]),
+            hpv18=dict(transform_prob=[6e-10, 5e-10, 7e-10, 1e-10]),
             hrhpv=dict(
-                transform_prob=[3e-10, 2e-10, 5e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
+                transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
             ),
         ),
     }
@@ -47,26 +47,26 @@ def make_priors(location):
     # Lower TP
     if location in ['niger', 'rwanda', 'sudan', 'togo',  'sierra leone']:
         all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[2e-10, 1e-10, 3e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
+                transform_prob=[2e-10, 1e-10, 3e-10, 1e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
             )
     # Slightly higher TP
     if location in ['cote divoire', 'guinea', 'zimbabwe', 'mali']:
         all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[5e-10, 3e-10, 7e-10],
-                sev_fn=dict(k=[0.1, 0.05, 0.12])
+                transform_prob=[5e-10, 3e-10, 7e-10, 1e-10],
+                sev_fn=dict(k=[0.1, 0.05, 0.12, 0.01])
             )
     # Slightly higher again TP
     if location in ['malawi', 'zambia', 'burundi', 'angola']:
         all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[6e-10, 4e-10, 8e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
+                transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
             )
     # Highest TP
     if location in ['mozambique']:
         all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[7e-10, 5e-10, 10e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2])
+                transform_prob=[7e-10, 5e-10, 10e-10, 1e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
             )
 
     return all_genotype_pars[location]
@@ -139,8 +139,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['tanzania'] #['angola', 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
-    filestem = '_apr28'
+    locations = ['angola'] #, 'tanzania' 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
+    filestem = '_may03'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
