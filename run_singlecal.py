@@ -31,11 +31,17 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 def make_priors(location):
     default = dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10, 1e-10]),
-            hpv18=dict(transform_prob=[6e-10, 5e-10, 7e-10, 1e-10]),
+            hpv16=dict(
+                transform_prob=[10e-10, 8e-10, 12e-10, 1e-10]
+            ),
+            hpv18=dict(
+                transform_prob=[6e-10, 5e-10, 7e-10, 1e-10],
+                rel_beta=[0.75, 0.7, 0.95, 0.05]
+            ),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01]),
+                rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
         )
 
@@ -88,14 +94,14 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     )
     genotype_pars = make_priors(location)
 
-    if location in ['mozambique', 'malawi', 'zambia', 'burundi', 'tanzania']: # Higher than 1
-        calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5, 0.005])
-    if location in ['angola', 'mali']:
-        calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4, 0.005])
-    if location in ['sudan', 'niger', 'guinea', 'zimbabwe', 'togo', 'sierra leone']:
-        calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0, 0.005])
-    if location in ['cote divoire']:
-        calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9, 0.005])
+    # if location in ['mozambique', 'malawi', 'zambia', 'burundi', 'tanzania']: # Higher than 1
+    #     calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5, 0.005])
+    # if location in ['angola', 'mali']:
+    #     calib_pars['sev_dist'] = dict(par1=[1.2, 1.0, 1.4, 0.005])
+    # if location in ['sudan', 'niger', 'guinea', 'zimbabwe', 'togo', 'sierra leone']:
+    #     calib_pars['sev_dist'] = dict(par1=[0.9, 0.8, 1.0, 0.005])
+    # if location in ['cote divoire']:
+    #     calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9, 0.005])
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib',

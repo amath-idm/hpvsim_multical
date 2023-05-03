@@ -48,7 +48,6 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         mixing         = dp.mixing[location],
         layer_probs    = ut.make_layer_probs(location=location, marriage_scale=marriage_scale),
         partners       = dp.partners[location],
-        cross_imm_sus_med  = 0.5,
         init_hpv_dist  = dp.init_genotype_dist[location],
         init_hpv_prev  = {
             'age_brackets'  : np.array([  12,   17,   24,   34,  44,   64,    80, 150]),
@@ -117,7 +116,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
 
-    location = 'angola'
+    location = 'tanzania'
     az = hpv.age_results(
         result_args=sc.objdict(
             hpv_prevalence=sc.objdict(
@@ -127,7 +126,7 @@ if __name__ == '__main__':
         )
     )
 
-    calib_pars = sc.loadobj(f'results/{location}_pars_apr28_sc.obj')
+    calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
     sim = make_sim(
         location,
         calib_pars=calib_pars,
