@@ -30,18 +30,17 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 # Run calibration
 ########################################################################
 def make_priors(location):
-    all_genotype_pars = {
-        'ethiopia' : dict(
+    default = dict(
             hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10, 1e-10]),
             hpv18=dict(transform_prob=[6e-10, 5e-10, 7e-10, 1e-10]),
             hrhpv=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
             ),
-        ),
-    }
-    if location in ['drc', 'south africa', 'tanzania', 'kenya', 'nigeria', 'uganda', 'ghana', 'madagascar', 'cameroon', 'burkina faso', 'senegal', 'chad', 'somalia', 'benin', 'south sudan']:
-        all_genotype_pars[location] = all_genotype_pars['ethiopia']
+        )
+
+    all_genotype_pars = {}
+    all_genotype_pars[location] = default
 
     # Customize OHR
     # Lower TP
