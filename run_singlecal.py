@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [200, 10][debug]  # How many trials to run for calibration
+n_trials    = [400, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -32,20 +32,24 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 def make_priors(location):
     default = dict(
             hpv16=dict(
-                transform_prob=[10e-10, 8e-10, 20e-10, 1e-10]
+                transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
+                dur_episomal=dict(par2=[4, 3, 8, 0.5])
             ),
             hpv18=dict(
                 transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
             hi5=dict(
                 transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
             ohr=dict(
                 transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
     )
