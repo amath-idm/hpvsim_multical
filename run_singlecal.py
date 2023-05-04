@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [200, 10][debug]  # How many trials to run for calibration
+n_trials    = [2000, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -32,20 +32,20 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 def make_priors(location):
     default = dict(
             hpv16=dict(
-                transform_prob=[10e-10, 8e-10, 12e-10, 1e-10]
+                transform_prob=[10e-10, 5e-10, 20e-10, 1e-10]
             ),
             hpv18=dict(
-                transform_prob=[6e-10, 5e-10, 7e-10, 1e-10],
+                transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
             hi5=dict(
-                transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01]),
+                transform_prob=[3e-10, 1e-10, 6e-10, 1e-10],
+                sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
             ohr=dict(
                 transform_prob=[1e-10, 0.5e-10, 2e-10, 0.5e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01]),
+                sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
     )
@@ -90,7 +90,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3, 0.01],
-        cross_imm_sus_med = [0.3, 0.2, 0.5, 0.05],
+        cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
         cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
@@ -152,7 +152,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['angola', 'tanzania'] # 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
+    locations = ['tanzania'] # 'angola', 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
     filestem = '_may04'
 
     # Run calibration - usually on VMs
