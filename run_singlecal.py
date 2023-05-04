@@ -13,8 +13,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -38,43 +38,47 @@ def make_priors(location):
                 transform_prob=[6e-10, 5e-10, 7e-10, 1e-10],
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
-            hrhpv=dict(
+            hi5=dict(
                 transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01]),
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
-        )
+            ohr=dict(
+                transform_prob=[1e-10, 0.5e-10, 2e-10, 0.5e-10],
+                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01]),
+                rel_beta=[0.75, 0.7, 0.95, 0.05]
+            ),
+    )
 
-    all_genotype_pars = {}
-    all_genotype_pars[location] = default
+    genotype_pars = sc.dcp(default)
 
-    # Customize OHR
-    # Lower TP
-    if location in ['niger', 'rwanda', 'sudan', 'togo',  'sierra leone']:
-        all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[2e-10, 1e-10, 3e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-            )
-    # Slightly higher TP
-    if location in ['cote divoire', 'guinea', 'zimbabwe', 'mali']:
-        all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[5e-10, 3e-10, 7e-10, 1e-10],
-                sev_fn=dict(k=[0.1, 0.05, 0.12, 0.01])
-            )
+    # # Customize OHR
+    # # Lower TP
+    # if location in ['niger', 'rwanda', 'sudan', 'togo',  'sierra leone']:
+    #     genotype_pars['hi5']=dict(
+    #             transform_prob=[2e-10, 1e-10, 3e-10, 1e-10],
+    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
+    #         )
+    # # Slightly higher TP
+    # if location in ['cote divoire', 'guinea', 'zimbabwe', 'mali']:
+    #     genotype_pars['hrhpv']=dict(
+    #             transform_prob=[5e-10, 3e-10, 7e-10, 1e-10],
+    #             sev_fn=dict(k=[0.1, 0.05, 0.12, 0.01])
+    #         )
     # # Slightly higher again TP
     # if location in ['malawi', 'zambia', 'burundi', 'angola']:
     #     all_genotype_pars[location]['hrhpv']=dict(
     #             transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
     #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
     #         )
-    # Highest TP
-    if location in ['mozambique']:
-        all_genotype_pars[location]['hrhpv']=dict(
-                transform_prob=[7e-10, 5e-10, 10e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-            )
+    # # Highest TP
+    # if location in ['mozambique']:
+    #     genotype_pars['hrhpv']=dict(
+    #             transform_prob=[7e-10, 5e-10, 10e-10, 1e-10],
+    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
+    #         )
 
-    return all_genotype_pars[location]
+    return genotype_pars
 
 
 def run_calib(location=None, n_trials=None, n_workers=None,
@@ -149,7 +153,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     locations = ['angola', 'tanzania'] # 'ghana', 'madagascar', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
-    filestem = '_may03'
+    filestem = '_may04'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
