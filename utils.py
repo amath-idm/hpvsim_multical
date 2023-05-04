@@ -126,8 +126,8 @@ def make_datafiles(locations):
         dflocation = location.replace(' ','_')
         datafiles[location] = [f'data/{dflocation}_cancer_cases.csv']
 
-        # if location in cancer_type_locs:
-        #     datafiles[location] += [f'data/{dflocation}_cancer_types.csv']
+        if location in cancer_type_locs:
+            datafiles[location] += [f'data/{dflocation}_cancer_types.csv']
         # if location in cin3_type_locs:
         #     datafiles[location] += [f'data/{dflocation}_cin3_types.csv']
         # if location in cin1_type_locs:
