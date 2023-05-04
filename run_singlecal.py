@@ -39,12 +39,12 @@ def make_priors(location):
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
             hi5=dict(
-                transform_prob=[3e-10, 1e-10, 6e-10, 1e-10],
+                transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
             ohr=dict(
-                transform_prob=[1e-10, 0.5e-10, 3e-10, 0.5e-10],
+                transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
