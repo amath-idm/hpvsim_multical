@@ -26,8 +26,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 
@@ -50,42 +50,25 @@ def make_unique_priors(locations=None):
     for location in locations:
         unique_pars[location] = dict(
             calib_pars = dict(
-                beta=[0.2, 0.1, 0.3],
+                beta=[0.2, 0.1, 0.3, 0.01],
+                cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
+                cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
+                cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
+                cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
             ),
             genotype_pars = dict(
-                hrhpv=dict(
-                    transform_prob=[3e-10, 2e-10, 5e-10],
-                    sev_fn=dict(k=[0.15, 0.10, 0.2])
+                hi5=dict(
+                    transform_prob=[3e-10, 1e-10, 6e-10, 1e-10],
+                    sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                    rel_beta=[0.75, 0.7, 1.25, 0.05]
+                ),
+                ohr=dict(
+                    transform_prob=[1e-10, 0.5e-10, 2e-10, 0.5e-10],
+                    sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                    rel_beta=[0.75, 0.7, 1.25, 0.05]
                 ),
             )
         )
-
-    # if 'ethiopia' in locations:
-    #     unique_pars['ethiopia']['genotype_pars']['hrhpv'] = dict(
-    #         transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
-    #         sev_fn=dict(
-    #             k=[0.2, 0.15, 0.25],
-    #         ),
-    #     )
-    #
-    # if 'nigeria' in locations:
-    #     unique_pars['nigeria']['genotype_pars']['hrhpv'] = dict(
-    #         transform_prob=[10 / 1e11, 8 / 1e11, 12 / 1e11],
-    #         sev_fn=dict(
-    #             k=[0.25, 0.2, 0.3],
-    #         ),
-    #     )
-    #
-    # if 'drc' in locations:
-    #     unique_pars['drc']['genotype_pars']['hrhpv'] = dict(
-    #         transform_prob=[7 / 1e11, 5 / 1e11, 10 / 1e11],
-    #         sev_fn=dict(
-    #             k=[0.2, 0.15, 0.25],
-    #         ),
-    #     )
-    #
-    # if 'senegal' in locations:
-    #     unique_pars['senegal']['genotype_pars']['hrhpv']['transform_prob'] = [2/1e10, 1.5/1e10, 3.5/1e10]
 
     return unique_pars
 
@@ -97,8 +80,13 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     # Define shared calibration parameters - same values used across sims
     common_pars = dict(
         genotype_pars=dict(
-            hpv16=dict(transform_prob=[10e-10, 8e-10, 12e-10]),
-            hpv18=dict(transform_prob=[3e-10, 2e-10, 5e-10]),
+            hpv16=dict(
+                transform_prob=[10e-10, 5e-10, 20e-10, 1e-10]
+            ),
+            hpv18=dict(
+                transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+                rel_beta=[0.75, 0.7, 0.95, 0.05]
+            ),
         ),
     )
 
@@ -144,7 +132,6 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 
     filename = rs.mc_filename
     calib = sc.load(f'results/{filename}.obj')
-    age_bin_edges = np.array([0, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 100])
 
     if save_pars:
         sims = []
@@ -152,21 +139,6 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
             pars_file = f'results/{location}_{filename}_pars.obj'
             calib_pars = calib.trial_pars_to_sim_pars(slabel=location, which_pars=which_pars)
             sc.save(pars_file, calib_pars)
-
-            # # Rerun sim with calib pars
-            # az = hpv.age_results(
-            #     result_args=sc.objdict(
-            #         cancers=sc.objdict(
-            #             years=2020,
-            #             edges=age_bin_edges,
-            #         )
-            #     )
-            # )
-            # sim = rs.make_sim(location, calib_pars=calib_pars, analyzers=[az])
-            # sim.run()
-            # sims.append(sim)
-            # sim.plot()
-
 
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
@@ -185,8 +157,8 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_may01'
-    locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda']
+    filestem = '_may04'
+    locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique', 'sudan', 'angola']
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

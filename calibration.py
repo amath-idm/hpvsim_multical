@@ -357,6 +357,10 @@ class MultiCal(sc.prettyobj):
         for key, val in pardict.items():
             if isinstance(val, list):
                 low, high = val[1], val[2]
+                if (len(val)>3):
+                    step = val[3]
+                else:
+                    step=None
                 if key in self.par_samplers:  # If a custom sampler is used, get it now
                     try:
                         sampler_fn = getattr(trial, self.par_samplers[key])
@@ -370,7 +374,7 @@ class MultiCal(sc.prettyobj):
                 if gname is not None: sampler_key = gname + '_' + sampler_key
                 if sname is not None:
                     sampler_key = sname + '_' + sampler_key
-                pars[key] = sampler_fn(sampler_key, low, high)  # Sample from values within this range
+                pars[key] = sampler_fn(sampler_key, low, high, step=step)  # Sample from values within this range
 
             elif isinstance(val, dict):
                 sampler_fn = trial.suggest_float
@@ -382,7 +386,18 @@ class MultiCal(sc.prettyobj):
                     if sname is not None: sampler_key = sname + '_' + sampler_key
                     if isinstance(par_highlowlist, dict):
                         par_highlowlist = par_highlowlist['value']
-                    pars[key][parkey] = sampler_fn(sampler_key, par_highlowlist[1], par_highlowlist[2])
+                        low, high = par_highlowlist[1], par_highlowlist[2]
+                        if (len(par_highlowlist) > 3):
+                            step = par_highlowlist[3]
+                        else:
+                            step = None
+                    elif isinstance(par_highlowlist, list):
+                        low, high = par_highlowlist[1], par_highlowlist[2]
+                        if (len(par_highlowlist) > 3):
+                            step = par_highlowlist[3]
+                        else:
+                            step = None
+                    pars[key][parkey] = sampler_fn(sampler_key, low, high, step=step)
 
         return pars
 
