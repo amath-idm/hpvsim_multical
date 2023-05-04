@@ -43,6 +43,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         start          = [1960,1980][debug],
         end            = 2020,
         network        = 'default',
+        genotypes      = [16, 18, 'hi5', 'ohr'],
         location       = location,
         debut          = ut.make_sb_data(location=location, dist_type=dist_type, debut_bias=debut_bias),
         mixing         = dp.mixing[location],
@@ -126,10 +127,10 @@ if __name__ == '__main__':
         )
     )
 
-    calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
+    # calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
     sim = make_sim(
         location,
-        calib_pars=calib_pars,
+        # calib_pars=calib_pars,
         analyzers=[
             az
         ]
@@ -138,76 +139,5 @@ if __name__ == '__main__':
     a = sim.get_analyzer('age_results')
     sim.plot()
     a.plot()
-    # a = sim.get_analyzer('prop_married')
-
-    # colors = sc.gridcolors(1)
-    # fig,ax = pl.subplots(figsize=(8,11))
-    # sns.boxplot(data=a.df, x="age", y="val", color=colors[0], ax=ax)
-    # pl.show()
-    #
-    #
-    # # Plot age mixing
-    # import matplotlib as mpl
-    # import pylab as pl
-    #
-    # snapshot = sim.get_analyzer('snapshot')
-    # people = snapshot.snapshots[0]
-    # font_size = 15
-    # font_family = 'Libertinus Sans'
-    # pl.rcParams['font.size'] = font_size
-    # pl.rcParams['font.family'] = font_family
-    # fig, ax = pl.subplots(nrows=1, ncols=1, figsize=(5, 4))
-    # lkey = 'm'
-    # fc = people.contacts[lkey]['age_f']
-    # mc = people.contacts[lkey]['age_m']
-    # h = ax.hist2d(fc, mc, bins=np.linspace(0, 75, 16), density=True, norm=mpl.colors.LogNorm())
-    # ax.set_xlabel('Age of female partner')
-    # ax.set_ylabel('Age of male partner')
-    # fig.colorbar(h[3], ax=ax)
-    # ax.set_title('Marital age mixing')
-    # fig.tight_layout()
-    # pl.savefig(f"figures/networks.png", dpi=100)
-    #
-    # # Plot number of marriages, casual partnerships
-    # conditions = sim.people.is_female * sim.people.alive * sim.people.level0 * (sim.people.age>=20) * (sim.people.age<25)
-    # data = sim.people.current_partners[1, conditions]
-    # d = np.diff(np.unique(data)).min()
-    # left_of_first_bin = data.min() - float(d) / 2
-    # right_of_last_bin = data.max() + float(d) / 2
-    # sns.kdeplot(data)
-    # pl.show()
-    #
-    # # Shares of women by age with 0,1,2+ current casual partners
-    # binspan = 5
-    # bins = np.arange(15, 50, binspan)
-    # conditions = {}
-    # general_conditions = sim.people.is_female * sim.people.alive * sim.people.level0
-    # for ab in bins:
-    #     conditions[ab] = (sim.people.age >= ab) * (sim.people.age < ab + binspan) * general_conditions
-    #
-    # casual_partners = {(0,1): sc.autolist(), (1,2):sc.autolist(), (2,3):sc.autolist(), (3,5):sc.autolist()}
-    # for cp in casual_partners.keys():
-    #     for ab,age_cond in conditions.items():
-    #         this_condition = conditions[ab] * (sim.people.current_partners[1,:]>=cp[0]) * (sim.people.current_partners[1,:]<cp[1])
-    #         casual_partners[cp] += len(hpv.true(this_condition))
-    #
-    # popsize = sc.autolist()
-    # for ab, age_cond in conditions.items():
-    #     popsize += len(hpv.true(age_cond))
-    #
-    # n_bins = len(bins)
-    # partners = np.repeat([0, 1, 2, 3], n_bins)
-    # allbins = np.tile(bins,4)
-    # counts = np.concatenate([val for val in casual_partners.values()])
-    # allpopsize = np.tile(popsize, 4)
-    # shares = counts / allpopsize
-    # datadict = dict(bins=allbins, partners=partners, counts=counts, popsize=allpopsize, shares=shares)
-    # df = pd.DataFrame.from_dict(datadict)
-    #
-    # fig, ax = pl.subplots(1,1,figsize=(5, 4))
-    # sns.barplot(data=df.loc[df['partners']>0], x="bins", y="shares", hue="partners",ax=ax)
-    # pl.show()
-
-
     T.toc('Done')
 

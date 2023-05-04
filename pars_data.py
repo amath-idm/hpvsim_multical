@@ -40,14 +40,9 @@ for location in set.locations:
     layer_probs[location] = default_layer_probs
 
 #%% INIT GENOTYPE DISTRIBUTION
-default_init_genotype_dist = dict(hpv16=0.4, hpv18=0.25, hrhpv=0.35)
+default_init_genotype_dist = dict(hpv16=0.4, hpv18=0.25, hi5=0.25, ohr=.1)
 for location in set.locations:
     init_genotype_dist[location] = default_init_genotype_dist
-
-# Replace for some
-init_genotype_dist['ethiopia'] = dict(hpv16=0.6, hpv18=0.3, hrhpv=0.1)
-init_genotype_dist['nigeria'] = dict(hpv16=0.2, hpv18=0.1, hrhpv=0.7)
-init_genotype_dist['tanzania'] = dict(hpv16=0.4, hpv18=0.25, hrhpv=0.35)
 
 
 #%% PARTNERS
