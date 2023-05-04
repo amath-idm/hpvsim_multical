@@ -782,13 +782,14 @@ class MultiCal(sc.prettyobj):
                     plot_count += 1
 
             for rn, resname in enumerate(sim_results_keys):
-                x = np.arange(3)
+                x = np.arange(4)
                 ax = axes[plot_count]
                 bins = []
                 values = []
                 thisdatadf = target_data[rn+sum(dates_per_result)][target_data[rn + sum(dates_per_result)].name == resname]
                 ydata = np.array(thisdatadf.value)
                 ax.scatter(x, ydata, color=pl.cm.Reds(0.95), marker='s', label='Data')
+
 
                 # Construct a dataframe with things in the most logical order for plotting
                 for run_num, run in enumerate(sim_results):
@@ -803,7 +804,7 @@ class MultiCal(sc.prettyobj):
                 ax.set_xlabel('Genotype')
                 ax.set_title(f'{resname}, {date}')
                 ax.legend()
-                ax.set_xticks(x, ['16', '18', 'HRHPV'])
+                ax.set_xticks(x, ['16', '18', 'H5', 'OHR'])
                 plot_count += 1
 
         return hppl.tidy_up(fig, do_save=do_save, fig_path=fig_path, do_show=do_show, args=all_args)

@@ -26,8 +26,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 
@@ -128,15 +128,14 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
 ########################################################################
 # Load pre-run calibration
 ########################################################################
-def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
+def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_pars=True):
 
-    filename = rs.mc_filename
-    calib = sc.load(f'results/{filename}.obj')
+    calib = sc.load(f'results/multical{filestem}.obj')
 
     if save_pars:
         sims = []
         for location in locations:
-            pars_file = f'results/{location}_{filename}_pars.obj'
+            pars_file = f'results/{location}_multical{filestem}_pars.obj'
             calib_pars = calib.trial_pars_to_sim_pars(slabel=location, which_pars=which_pars)
             sc.save(pars_file, calib_pars)
 
@@ -147,7 +146,7 @@ def load_calib(locations=None, do_plot=True, which_pars=0, save_pars=True):
             fig = calib.plot(slabel=location, res_to_plot=20, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/{filename}_{location}.png')
+            fig.savefig(f'figures/multical{filestem}_{location}.png')
 
 
     return calib, sims
@@ -166,6 +165,6 @@ if __name__ == '__main__':
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
-        calib, sims = load_calib(locations=locations, do_plot=True, save_pars=True) # lo_hiv_locations
+        calib, sims = load_calib(filestem=filestem, locations=locations, do_plot=True, save_pars=True) # lo_hiv_locations
 
     T.toc('Done')
