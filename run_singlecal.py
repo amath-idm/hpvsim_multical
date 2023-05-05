@@ -13,8 +13,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -164,7 +164,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['uganda'] # 'angola', 'ghana', 'madagascar', 'tanzania', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
+    locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique', 'sudan', 'angola'] # 'angola', 'ghana', 'madagascar', 'tanzania', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
     filestem = '_may04'
 
     # Run calibration - usually on VMs
