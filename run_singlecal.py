@@ -33,23 +33,23 @@ def make_priors(location):
     default = dict(
             hpv16=dict(
                 transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
-                dur_episomal=dict(par2=[4, 3, 8, 0.5])
+                dur_episomal=dict(par2=[7, 4, 10, 0.5])
             ),
             hpv18=dict(
                 transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
+                dur_episomal=dict(par2=[7, 4, 10, 0.5]),
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
             hi5=dict(
                 transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
-                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
+                dur_episomal=dict(par2=[7, 4, 10, 0.5]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
             ohr=dict(
                 transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                 sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
-                dur_episomal=dict(par2=[4, 3, 8, 0.5]),
+                dur_episomal=dict(par2=[7, 4, 10, 0.5]),
                 rel_beta=[0.75, 0.7, 1.25, 0.05]
             ),
     )
