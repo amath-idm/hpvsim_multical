@@ -17,7 +17,7 @@ to_run = [
     # 'plot_calibration',
 ]
 
-debug = False # Smaller runs
+debug = True # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
@@ -165,7 +165,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique', 'sudan', 'angola'] # 'angola', 'ghana', 'madagascar', 'tanzania', 'cameroon', 'cote divoire', 'niger', 'mozambique','sudan','ethiopia','drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'nigeria', 'malawi', 'burkina faso', 'senegal', 'mali', 'zambia', 'chad', 'somalia', 'rwanda', 'zimbabwe', 'guinea', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone']
-    filestem = '_may04'
+    filestem = '_may08'
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

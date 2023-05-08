@@ -17,6 +17,7 @@ import pylab as pl
 # Imports from this repository
 import pars_data as dp
 import utils as ut
+import settings as set
 
 #%% Settings and filepaths
 
@@ -72,9 +73,23 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
 #%% Simulation running functions
 def run_sim(
-        location=None, analyzers=None, debug=0, seed=0, verbose=0.2,
+        location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
         do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
     ):
+
+    if analyzers is None:
+        analyzers = sc.autolist()
+    else:
+        analyzers = sc.promotetolist()
+
+    dflocation = location.replace(' ', '_')
+    if age_pyr:
+        ap = hpv.age_pyramid(
+            timepoints=['2020'],
+            datafile=f'data/{dflocation}_age_pyramid_reduced.csv',
+            edges=np.linspace(0, 80, 9))
+
+        analyzers += [ap]
 
     # Make sim
     sim = make_sim(
@@ -94,18 +109,18 @@ def run_sim(
     sim.shrink()
         
     if do_save:
-        sim.save(f'results/{location}.sim')
+        sim.save(f'results/{dflocation}.sim')
     
     return sim
 
 
 def run_sims(
-        locations=None, debug=False, verbose=-1, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
+        locations=None, age_pyr=True, debug=False, verbose=-1, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
         *args, **kwargs
     ):
     ''' Run multiple simulations in parallel '''
     
-    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, dist_type=dist_type, marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, dist_type=dist_type, age_pyr=age_pyr, marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location:sim for location,sim in zip(locations, simlist)}) # Convert from a list to a dict
     
@@ -117,27 +132,38 @@ if __name__ == '__main__':
 
     T = sc.timer()
 
-    location = 'tanzania'
-    az = hpv.age_results(
-        result_args=sc.objdict(
-            hpv_prevalence=sc.objdict(
-                years=2020,
-                edges=[0,15,25,30,35,40,50,60,70,80,100],
-            )
-        )
-    )
+    locations = ['somalia'] #set.locations[28:]
+    sims = run_sims(locations=locations, age_pyr=True, debug=False, verbose=.1, do_save=True)
 
-    # calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
-    sim = make_sim(
-        location,
-        # calib_pars=calib_pars,
-        analyzers=[
-            az
-        ]
-    )
-    sim.run()
-    a = sim.get_analyzer('age_results')
-    sim.plot()
-    a.plot()
     T.toc('Done')
+
+    # location = 'tanzania'
+    # az = hpv.age_results(
+    #     result_args=sc.objdict(
+    #         hpv_prevalence=sc.objdict(
+    #             years=2020,
+    #             edges=[0,15,25,30,35,40,50,60,70,80,100],
+    #         )
+    #     )
+    # )
+    #
+    # age_pyr = hpv.age_pyramid(
+    #     timepoints=['2020'],
+    #     datafile=f'data/{country}_age_pyramid_reduced.csv',
+    #     edges=np.linspace(0, 100, 21))
+    #
+    # # calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
+    # sim = make_sim(
+    #     location,
+    #     # calib_pars=calib_pars,
+    #     analyzers=[
+    #         az,
+    #         age_pyr,
+    #     ]
+    # )
+    # sim.run()
+    # a = sim.get_analyzer('age_results')
+    # sim.plot()
+    # a.plot()
+    # T.toc('Done')
 
