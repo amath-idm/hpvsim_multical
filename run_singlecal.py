@@ -17,7 +17,7 @@ to_run = [
     # 'plot_calibration',
 ]
 
-debug = True # Smaller runs
+debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
