@@ -158,7 +158,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['uganda', 'tanzania'] # ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana', 'tanzania'] #,
+    locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'angola', 'mozambique', 'ghana'] #,
     filestem = '_may08'
 
     # Run calibration - usually on VMs
