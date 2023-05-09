@@ -34,7 +34,7 @@ def make_priors(location):
             hpv16=dict(
                 transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
                 dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
+                    par1=[2.5, 2, 5, 0.5],
                     par2=[7, 4, 10, 0.5])
             ),
             hpv18=dict(
@@ -83,12 +83,14 @@ def make_priors(location):
     #             transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
     #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
     #         )
-    # # Highest TP
-    # if location in ['mozambique']:
-    #     genotype_pars['hrhpv']=dict(
-    #             transform_prob=[7e-10, 5e-10, 10e-10, 1e-10],
-    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-    #         )
+    # Old cancers: lower k and longer dur_episomal
+    if location in ['tanzania']:
+        genotype_pars['hpv16']=dict(
+                transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
+                dur_episomal=dict(
+                    par1=[4, 2, 5, 0.5],
+                    par2=[9, 5, 12, 0.5])
+            )
 
     return genotype_pars
 
@@ -164,7 +166,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
+    locations = ['tanzania'] #, 'nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
