@@ -88,7 +88,7 @@ def make_priors(location):
         genotype_pars['hpv16']=dict(
             transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
             sev_fn = dict(
-                k=[0.10, 0.08, 0.2, 0.05],
+                k=[0.10, 0.05, 0.2, 0.05],
             ),
             dur_episomal=dict(
                 par1=[4, 3, 5, 0.5],
@@ -96,7 +96,7 @@ def make_priors(location):
             )
         genotype_pars['hpv18']=dict(
             sev_fn = dict(
-                k=[0.10, 0.08, 0.2, 0.05],
+                k=[0.10, 0.05, 0.2, 0.05],
             ),
             dur_episomal=dict(
                 par1=[4, 3, 5, 0.5],
