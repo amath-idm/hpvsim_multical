@@ -18,13 +18,13 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_fig1(locations, n_results=20):
+def plot_fig1(locations, n_results=20, filestem=None):
 
     ut.set_font(12)
     n_plots = len(locations)
     n_rows, n_cols = sc.get_rows_cols(n_plots)
 
-    fig, axes = pl.subplots(n_rows, n_cols, figsize=(8,11))
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(11,10))
     axes = axes.flatten()
     resname = 'cancers'
     plot_count = 0
@@ -34,7 +34,7 @@ def plot_fig1(locations, n_results=20):
 
         dflocation = location.replace(' ', '_')
 
-        calib = sc.loadobj(f'results/{dflocation}_calib_apr28.obj')
+        calib = sc.loadobj(f'results/{dflocation}_calib_{filestem}.obj')
 
         # Plot settings
         ax = axes[plot_count]
@@ -84,7 +84,8 @@ def plot_fig1(locations, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    plot_fig1(locations, n_results=20)
+    filestem = 'may08'
+    locations = ['angola', 'nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique'] #set.locations
+    plot_fig1(locations, n_results=20, filestem=filestem)
 
     print('Done.')

@@ -24,7 +24,7 @@ def plot_fig1(locations, calib, n_results=20):
     n_plots = len(locations)
     n_rows, n_cols = sc.get_rows_cols(n_plots)
 
-    fig, axes = pl.subplots(n_rows, n_cols, figsize=(8,11))
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(10,11))
     axes = axes.flatten()
     resname = 'cancers'
     plot_count = 0
@@ -80,8 +80,8 @@ def plot_fig1(locations, calib, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    calib = sc.loadobj('results/multical_apr20.obj')
+    locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique', 'sudan', 'angola'] # set.locations
+    calib = sc.loadobj('results/multical_may04.obj')
     plot_fig1(locations, calib, n_results=20)
 
     print('Done.')

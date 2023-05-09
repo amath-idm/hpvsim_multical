@@ -172,7 +172,7 @@ class AFS(hpv.Analyzer):
                 num_inds_f = hpu.true(num_conditions_f)
                 self.prop_active_f[cohort_ind,bin_ind] = len(num_inds_f)/len(denom_inds_f)
 
-                conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
+                conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin)
                 denom_inds_m = hpu.true(conditions_m)
                 num_conditions_m = conditions_m * (sim.people.n_rships.sum(axis=0)>0)
                 num_inds_m = hpu.true(num_conditions_m)
