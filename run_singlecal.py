@@ -92,7 +92,7 @@ def make_priors(location):
             ),
             dur_episomal=dict(
                 par1=[4, 3, 5, 0.5],
-                par2=[10, 8, 15, 0.5])
+                par2=[12, 10, 15, 0.5])
             )
         genotype_pars['hpv18']=dict(
             sev_fn = dict(
@@ -100,7 +100,7 @@ def make_priors(location):
             ),
             dur_episomal=dict(
                 par1=[4, 3, 5, 0.5],
-                par2=[10, 8, 15, 0.5])
+                par2=[12, 10, 15, 0.5])
         )
 
     return genotype_pars
@@ -115,10 +115,10 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3, 0.02],
-        cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
-        cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
+        # cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
+        # cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
         # sev_dist = dict(par1=[1.1, 1.0, 1.3])
     )
     genotype_pars = make_priors(location)
@@ -177,7 +177,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['tanzania'] # ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana', 'tanzania'] #,
+    locations = ['uganda', 'tanzania'] # ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana', 'tanzania'] #,
     filestem = '_may08'
 
     # Run calibration - usually on VMs
