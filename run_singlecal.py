@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [1000, 10][debug]  # How many trials to run for calibration
+n_trials    = [1500, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -64,25 +64,6 @@ def make_priors(location):
 
     genotype_pars = sc.dcp(default)
 
-    # # Customize OHR
-    # # Lower TP
-    # if location in ['niger', 'rwanda', 'sudan', 'togo',  'sierra leone']:
-    #     genotype_pars['hi5']=dict(
-    #             transform_prob=[2e-10, 1e-10, 3e-10, 1e-10],
-    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-    #         )
-    # # Slightly higher TP
-    # if location in ['cote divoire', 'guinea', 'zimbabwe', 'mali']:
-    #     genotype_pars['hrhpv']=dict(
-    #             transform_prob=[5e-10, 3e-10, 7e-10, 1e-10],
-    #             sev_fn=dict(k=[0.1, 0.05, 0.12, 0.01])
-    #         )
-    # # Slightly higher again TP
-    # if location in ['malawi', 'zambia', 'burundi', 'angola']:
-    #     all_genotype_pars[location]['hrhpv']=dict(
-    #             transform_prob=[6e-10, 4e-10, 8e-10, 1e-10],
-    #             sev_fn=dict(k=[0.15, 0.10, 0.2, 0.01])
-    #         )
     # Old cancers: lower k and longer dur_episomal
     if location in ['tanzania']:
         genotype_pars['hpv16']=dict(
@@ -115,10 +96,10 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta = [0.2, 0.1, 0.3, 0.02],
-        # cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
-        # cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
-        # cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
-        # cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
+        cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
+        cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
         # sev_dist = dict(par1=[1.1, 1.0, 1.3])
     )
     genotype_pars = make_priors(location)
