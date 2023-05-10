@@ -36,7 +36,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [3000, 2][debug]  # How many trials to run for calibration
+n_trials    = [4000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -58,7 +58,7 @@ def make_unique_priors(locations=None):
             ),
             genotype_pars = dict(
                 hi5=dict(
-                    transform_prob=[3e-10, 1e-10, 6e-10, 1e-10],
+                    transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                     sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                     dur_episomal=dict(
                         par1=[2.5, 2, 3, 0.5],
@@ -66,7 +66,7 @@ def make_unique_priors(locations=None):
                     rel_beta=[0.75, 0.7, 1.25, 0.05]
                 ),
                 ohr=dict(
-                    transform_prob=[1e-10, 0.5e-10, 2e-10, 0.5e-10],
+                    transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
                     sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
                     dur_episomal=dict(
                         par1=[2.5, 2, 3, 0.5],
@@ -87,17 +87,17 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                transform_prob=[10e-10, 5e-10, 20e-10, 1e-10],
+                transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
                 dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
-                    par2=[7, 4, 10, 0.5]),
+                    par1=[2.5, 2, 5, 0.5],
+                    par2=[7, 4, 10, 0.5])
             ),
             hpv18=dict(
                 transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-                rel_beta=[0.75, 0.7, 0.95, 0.05],
                 dur_episomal=dict(
                     par1=[2.5, 2, 3, 0.5],
                     par2=[7, 4, 10, 0.5]),
+                rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
         ),
     )
