@@ -84,6 +84,19 @@ def make_priors(location):
                 par2=[12, 10, 15, 0.5])
         )
 
+    if location in ['anogola']:
+        genotype_pars['hpv16'] = dict(
+            transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
+            sev_fn = dict(
+                k=[0.10, 0.05, 0.2, 0.05],
+            ),
+        )
+        genotype_pars['hpv18'] = dict(
+            sev_fn = dict(
+                k=[0.10, 0.05, 0.2, 0.05],
+            ),
+        )
+
     return genotype_pars
 
 
@@ -158,7 +171,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['mozambique', 'ghana'] #,['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' ]#, 'angola',
+    locations = ['angola'] #['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
