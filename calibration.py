@@ -449,7 +449,10 @@ class MultiCal(sc.prettyobj):
             for rkey in sresults:
                 year = sresults[rkey].data.year.unique()[0]
                 yind = sc.findinds(sim.results['year'],year)[0]
-                model_output = sim.results[rkey][:,yind]
+                if sim.results[rkey][:].ndim == 1:
+                    model_output = sim.results[rkey][yind]
+                else:
+                    model_output = sim.results[rkey][:, yind]
                 gofs = hpm.compute_gof(sresults[rkey].data.value, model_output)
                 losses = gofs * sresults[rkey].weights
                 mismatch = losses.sum()
