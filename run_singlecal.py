@@ -85,7 +85,7 @@ def make_priors(location):
         )
 
     # Younger cancers: higher k
-    if location in ['nigeria', 'mozambique']:
+    if location in ['nigeria', 'mozambique', 'south africa']:
         genotype_pars['hpv16']=dict(
             sev_fn = dict(
                 k=[0.3, 0.25, 0.4, 0.05],
@@ -171,7 +171,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['nigeria', 'mozambique'] #[, 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', , 'ghana']
+    locations = ['south africa'] #['nigeria', 'mozambique'] #[, 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', , 'ghana']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
