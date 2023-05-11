@@ -132,8 +132,12 @@ if __name__ == '__main__':
 
     T = sc.timer()
 
-    locations = ['somalia'] #set.locations[28:]
-    sims = run_sims(locations=locations, age_pyr=True, debug=False, verbose=.1, do_save=True)
+    # locations = ['congo'] #set.locations[28:]
+    # sims = run_sims(locations=locations, age_pyr=True, debug=False, verbose=.1, do_save=True)
+
+    location = 'congo'
+    sim = run_sim(location, age_pyr=True, verbose=0.1, do_save=True)
+    sim.run()
 
     T.toc('Done')
 
