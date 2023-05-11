@@ -80,7 +80,7 @@ def run_sim(
     if analyzers is None:
         analyzers = sc.autolist()
     else:
-        analyzers = sc.promotetolist()
+        analyzers = sc.promotetolist(analyzers)
 
     dflocation = location.replace(' ', '_')
     if age_pyr:
