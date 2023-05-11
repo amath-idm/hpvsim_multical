@@ -21,7 +21,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [1500, 10][debug]  # How many trials to run for calibration
+n_trials    = [2500, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -34,7 +34,7 @@ def make_priors(location):
         hpv16=dict(
             transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
             sev_fn=dict(
-                k=[0.25, 0.05, 0.4, 0.05],
+                k=[0.25, 0.1, 0.4, 0.05],
             ),
             dur_episomal=dict(
                 par1=[2.5, 2, 5, 0.5],
@@ -43,7 +43,7 @@ def make_priors(location):
         hpv18=dict(
             transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
             sev_fn=dict(
-                k=[0.25, 0.05, 0.4, 0.05],
+                k=[0.25, 0.1, 0.4, 0.05],
             ),
             dur_episomal=dict(
                 par1=[2.5, 2, 3, 0.5],
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['congo'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    locations = ['zimbabwe', 'benin']#['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone'] #, 'congo']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
