@@ -115,12 +115,12 @@ def run_sim(
 
 
 def run_sims(
-        locations=None, age_pyr=True, debug=False, verbose=-1, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
+        locations=None, age_pyr=True, debug=False, verbose=-1, analyzers=None, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
         *args, **kwargs
     ):
     ''' Run multiple simulations in parallel '''
     
-    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, dist_type=dist_type, age_pyr=age_pyr, marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr, marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location:sim for location,sim in zip(locations, simlist)}) # Convert from a list to a dict
     
