@@ -31,71 +31,77 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 def make_priors(location):
     default = dict(
-            hpv16=dict(
-                transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
-                dur_episomal=dict(
-                    par1=[2.5, 2, 5, 0.5],
-                    par2=[7, 4, 10, 0.5])
+        hpv16=dict(
+            transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.25, 0.05, 0.4, 0.05],
             ),
-            hpv18=dict(
-                transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-                dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
-                    par2=[7, 4, 10, 0.5]),
-                rel_beta=[0.75, 0.7, 0.95, 0.05]
+            dur_episomal=dict(
+                par1=[2.5, 2, 5, 0.5],
+                par2=[7, 4, 15, 0.5])
+        ),
+        hpv18=dict(
+            transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.25, 0.05, 0.4, 0.05],
             ),
-            hi5=dict(
-                transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
-                dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
-                    par2=[7, 4, 10, 0.5]),
-                rel_beta=[0.75, 0.7, 1.25, 0.05]
-            ),
-            ohr=dict(
-                transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-                sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
-                dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
-                    par2=[7, 4, 10, 0.5]),
-                rel_beta=[0.75, 0.7, 1.25, 0.05]
-            ),
+            dur_episomal=dict(
+                par1=[2.5, 2, 3, 0.5],
+                par2=[7, 4, 15, 0.5]),
+            rel_beta=[0.75, 0.7, 0.95, 0.05]
+        ),
+        hi5=dict(
+            transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
+            sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+            dur_episomal=dict(
+                par1=[2.5, 2, 3, 0.5],
+                par2=[7, 4, 10, 0.5]),
+            rel_beta=[0.75, 0.7, 1.25, 0.05]
+        ),
+        ohr=dict(
+            transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
+            sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+            dur_episomal=dict(
+                par1=[2.5, 2, 3, 0.5],
+                par2=[7, 4, 10, 0.5]),
+            rel_beta=[0.75, 0.7, 1.25, 0.05]
+        ),
     )
 
     genotype_pars = sc.dcp(default)
 
-    # Old cancers: lower k and longer dur_episomal
-    if location in ['tanzania', 'mali']:
-        genotype_pars['hpv16']=dict(
-            transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
-            sev_fn = dict(
-                k=[0.10, 0.05, 0.2, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[4, 3, 5, 0.5],
-                par2=[12, 10, 15, 0.5])
-            )
-        genotype_pars['hpv18']=dict(
-            sev_fn = dict(
-                k=[0.10, 0.05, 0.2, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[4, 3, 5, 0.5],
-                par2=[12, 10, 15, 0.5])
-        )
+    # # Old cancers: lower k and longer dur_episomal
+    # if location in ['tanzania', 'mali']:
+    #     genotype_pars['hpv16']=dict(
+    #         transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
+    #         sev_fn = dict(
+    #             k=[0.10, 0.05, 0.2, 0.05],
+    #         ),
+    #         dur_episomal=dict(
+    #             par1=[4, 3, 5, 0.5],
+    #             par2=[12, 10, 15, 0.5])
+    #         )
+    #     genotype_pars['hpv18']=dict(
+    #         sev_fn = dict(
+    #             k=[0.10, 0.05, 0.2, 0.05],
+    #         ),
+    #         dur_episomal=dict(
+    #             par1=[4, 3, 5, 0.5],
+    #             par2=[12, 10, 15, 0.5])
+    #     )
 
-    # Younger cancers: higher k
-    if location in ['nigeria', 'mozambique', 'south africa', 'malawi', 'zambia']:
-        genotype_pars['hpv16']=dict(
-            sev_fn = dict(
-                k=[0.3, 0.25, 0.4, 0.05],
-            )
-        )
-        genotype_pars['hpv18']=dict(
-            sev_fn = dict(
-                k=[0.3, 0.25, 0.4, 0.05],
-            )
-        )
+    # # Younger cancers: higher k
+    # if location in ['nigeria', 'mozambique', 'south africa', 'malawi', 'zambia']:
+    #     genotype_pars['hpv16']=dict(
+    #         sev_fn = dict(
+    #             k=[0.3, 0.25, 0.4, 0.05],
+    #         )
+    #     )
+    #     genotype_pars['hpv18']=dict(
+    #         sev_fn = dict(
+    #             k=[0.3, 0.25, 0.4, 0.05],
+    #         )
+    #     )
 
     return genotype_pars
 
@@ -172,7 +178,8 @@ if __name__ == '__main__':
 
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
-    locations = ['malawi', 'mali', 'zambia'] #['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
+    # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
+    locations = ['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
