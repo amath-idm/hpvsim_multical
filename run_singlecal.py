@@ -179,7 +179,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    locations = ['congo'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may08'
 
     # Run calibration - usually on VMs

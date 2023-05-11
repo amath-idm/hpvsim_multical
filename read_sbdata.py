@@ -143,6 +143,7 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
     countries_to_run = locations
     sims = rs.run_sims(
         locations=countries_to_run,
+        age_pyr=True,
         analyzers=[ut.AFS(),ut.prop_married(),hpv.snapshot(timepoints=['2020'])],
         debug=debug,
         dist_type=dist_type,
@@ -275,7 +276,7 @@ def plot_sb(dist_type='lognormal'):
             ax.set_xlabel('')
 
         fig.tight_layout()
-        pl.savefig(f"figures/fig_sb_{sex.lower()}.png", dpi=100)
+        pl.savefig(f"figures/1_SMs/fig_sb_{sex.lower()}.png", dpi=100)
 
     return
 
@@ -330,7 +331,7 @@ def plot_prop_married():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig_prop_married.png", dpi=100)
+    pl.savefig(f"figures/1_SMs/fig_prop_married.png", dpi=100)
 
     return
 
@@ -376,7 +377,7 @@ def plot_age_diffs():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig_age_diffs.png", dpi=100)
+    pl.savefig(f"figures/1_SMs/fig_age_diffs.png", dpi=100)
 
     return
 
@@ -430,7 +431,7 @@ def plot_casuals():
         ax.tick_params(axis='both', which='major', labelsize=10)
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig_casual.png", dpi=100)
+    pl.savefig(f"figures/1_SMs/fig_casual.png", dpi=100)
 
     return
 
@@ -441,7 +442,7 @@ if __name__ == '__main__':
     # countries, dff, df2, rvs = read_debut_data(dist_type=dist_type)
 
     dist_type = 'lognormal'
-    do_run = True
+    do_run = False
 
     if do_run:
         sims, afs_df, pm_df, agediff_df, casual_df = get_sb_from_sims(
@@ -453,9 +454,9 @@ if __name__ == '__main__':
         )
 
     # Plotting functions
-    # plot_sb(dist_type=dist_type)
-    # plot_prop_married()
-    # plot_age_diffs()
-    # plot_casuals()
+    plot_sb(dist_type=dist_type)
+    plot_prop_married()
+    plot_age_diffs()
+    plot_casuals()
 
     print('Done.')
