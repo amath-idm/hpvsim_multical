@@ -2,6 +2,15 @@
 Calibrate HPVsim
 '''
 
+# Additions to handle numpy multithreading
+import os
+os.environ.update(
+    OMP_NUM_THREADS = '1',
+    OPENBLAS_NUM_THREADS = '1',
+    NUMEXPR_NUM_THREADS = '1',
+    MKL_NUM_THREADS = '1',
+)
+
 # Standard imports
 import sciris as sc
 import hpvsim as hpv
