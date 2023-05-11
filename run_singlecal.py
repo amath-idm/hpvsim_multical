@@ -65,7 +65,7 @@ def make_priors(location):
     genotype_pars = sc.dcp(default)
 
     # Old cancers: lower k and longer dur_episomal
-    if location in ['tanzania']:
+    if location in ['tanzania', 'mali']:
         genotype_pars['hpv16']=dict(
             transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
             sev_fn = dict(
@@ -85,7 +85,7 @@ def make_priors(location):
         )
 
     # Younger cancers: higher k
-    if location in ['nigeria', 'mozambique', 'south africa']:
+    if location in ['nigeria', 'mozambique', 'south africa', 'malawi', 'zambia']:
         genotype_pars['hpv16']=dict(
             sev_fn = dict(
                 k=[0.3, 0.25, 0.4, 0.05],
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
-    locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
+    locations = ['malawi', 'mali', 'zambia'] #['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
