@@ -26,8 +26,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 
@@ -36,7 +36,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [4000, 2][debug]  # How many trials to run for calibration
+n_trials    = [10000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -87,19 +87,25 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                transform_prob=[10e-10, 8e-10, 20e-10, 1e-10],
+                transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+                sev_fn=dict(
+                    k=[0.25, 0.1, 0.4, 0.05],
+                ),
                 dur_episomal=dict(
                     par1=[2.5, 2, 5, 0.5],
-                    par2=[7, 4, 10, 0.5])
+                    par2=[7, 4, 15, 0.5])
             ),
             hpv18=dict(
                 transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+                sev_fn=dict(
+                    k=[0.25, 0.1, 0.4, 0.05],
+                ),
                 dur_episomal=dict(
                     par1=[2.5, 2, 3, 0.5],
-                    par2=[7, 4, 10, 0.5]),
+                    par2=[7, 4, 15, 0.5]),
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
-        ),
+        )
     )
 
     unique_pars = make_unique_priors(locations)
@@ -168,8 +174,8 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_may08'
-    locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
+    filestem = '_may15'
+    locations = set.locations #['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

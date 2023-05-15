@@ -85,7 +85,7 @@ def plot_fig1(locations, n_results=20, filestem=None):
 if __name__ == '__main__':
 
     filestem = 'may08'
-    locations = ['angola', 'nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique'] #set.locations
-    plot_fig1(locations, n_results=20, filestem=filestem)
+    locations = set.locations #['angola', 'nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique'] #set.locations
+    plot_fig1(locations, n_results=50, filestem=filestem)
 
     print('Done.')

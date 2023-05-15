@@ -22,8 +22,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -170,7 +170,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
-        fig = calib.plot(res_to_plot=50, plot_type='sns.boxplot', do_save=False)
+        fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
         fig.savefig(f'figures/{filename}_sc.png')
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['zimbabwe', 'benin']#['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone'] #, 'congo']
+    locations = ['benin'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may08'
 
     # Run calibration - usually on VMs
