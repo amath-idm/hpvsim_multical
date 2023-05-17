@@ -22,15 +22,15 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [2500, 10][debug]  # How many trials to run for calibration
+n_trials    = [1500, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -40,25 +40,25 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 def make_priors(location):
     default = dict(
-        hpv16=dict(
-            transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
-            sev_fn=dict(
-                k=[0.25, 0.1, 0.4, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[2.5, 2, 5, 0.5],
-                par2=[7, 4, 15, 0.5])
-        ),
-        hpv18=dict(
-            transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-            sev_fn=dict(
-                k=[0.25, 0.1, 0.4, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[2.5, 2, 3, 0.5],
-                par2=[7, 4, 15, 0.5]),
-            rel_beta=[0.75, 0.7, 0.95, 0.05]
-        ),
+        # hpv16=dict(
+        #     transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+        #     sev_fn=dict(
+        #         k=[0.25, 0.1, 0.4, 0.05],
+        #     ),
+        #     dur_episomal=dict(
+        #         par1=[2.5, 2, 5, 0.5],
+        #         par2=[7, 4, 15, 0.5])
+        # ),
+        # hpv18=dict(
+        #     transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+        #     sev_fn=dict(
+        #         k=[0.25, 0.1, 0.4, 0.05],
+        #     ),
+        #     dur_episomal=dict(
+        #         par1=[2.5, 2, 3, 0.5],
+        #         par2=[7, 4, 15, 0.5]),
+        #     rel_beta=[0.75, 0.7, 0.95, 0.05]
+        # ),
         hi5=dict(
             transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
             sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
@@ -116,9 +116,9 @@ def make_priors(location):
 
 
 def run_calib(location=None, n_trials=None, n_workers=None,
-              do_plot=False, do_save=True, filestem=''):
+              do_plot=False, do_save=True, filestem='', mc_gpars=None):
 
-    sim = rs.make_sim(location)
+    sim = rs.make_sim(location, calib_pars=mc_gpars)
     datafiles = ut.make_datafiles([location])[location]
 
     # Define the calibration parameters
@@ -128,7 +128,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
-        # sev_dist = dict(par1=[1.1, 1.0, 1.3])
+        sev_dist = dict(par1=[1.0, 0.5, 1.5])
     )
     genotype_pars = make_priors(location)
 
@@ -188,13 +188,29 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['benin'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
-    filestem = '_may08'
+    locations = ['zambia'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    filestem = '_may18'
+
+    mc_gpars = dict(
+        genotype_pars=dict(
+            hpv16=dict(
+                transform_prob=5e-10,
+                sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=2, par2=11)
+            ),
+            hpv18=dict(
+                transform_prob=7e-10,
+                sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=2, par2=15),
+                rel_beta=0.85
+            ),
+        )
+    )
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
         for location in locations:
-            sim, calib = run_calib(location=location, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+            sim, calib = run_calib(mc_gpars=mc_gpars, location=location, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
