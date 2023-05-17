@@ -188,7 +188,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['uganda'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    locations = ['togo'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may18'
 
     mc_gpars = dict(
