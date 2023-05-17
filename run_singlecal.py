@@ -128,7 +128,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
-        sev_dist = dict(par1=[1.0, 0.5, 1.5])
+        sev_dist = dict(par1=[1.0, 0.5, 1.5, 0.02])
     )
     genotype_pars = make_priors(location)
 
@@ -173,7 +173,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
         fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'figures/{filename}_sc.png')
+        fig.savefig(f'figures/8_may18r/{filename}_sc.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['zambia'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    locations = ['uganda'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may18'
 
     mc_gpars = dict(
