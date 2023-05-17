@@ -26,8 +26,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 
@@ -161,10 +161,10 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
         for location in locations:
-            fig = calib.plot(slabel=location, res_to_plot=20, plot_type='sns.boxplot')
+            fig = calib.plot(slabel=location, res_to_plot=50, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/multical{filestem}_{location}.png')
+            fig.savefig(f'figures/7_may15mc/multical{filestem}_{location}.png')
 
 
     return calib, sims

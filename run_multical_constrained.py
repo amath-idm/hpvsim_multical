@@ -156,13 +156,13 @@ if __name__ == '__main__':
         genotype_pars=dict(
             hpv16=dict(
                 transform_prob=5e-10,
-                sev_fn=dict(k=0.1),
-                dur_episomal=dict(par1=2, par2=11)
+                sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=2, par2=11)
             ),
             hpv18=dict(
                 transform_prob=7e-10,
-                sev_fn=dict(k=0.15),
-                dur_episomal=dict(par1=2, par2=15),
+                sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=2, par2=15),
                 rel_beta=0.85
             ),
         )
