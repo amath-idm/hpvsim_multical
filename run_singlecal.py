@@ -22,8 +22,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     T = sc.timer()
     # locations = ['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda' , 'angola', 'mozambique', 'ghana']
     # locations = ['madagascar', 'cameroon', 'cote divoire', 'niger', 'burkina faso', 'mali', 'malawi' , 'zambia', 'senegal', 'chad']
-    locations = ['togo'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
+    locations = ['tanzania', 'south africa', 'sierra leone', 'senegal'] #['somalia', 'zimbabwe', 'guinea', 'rwanda', 'benin', 'burundi', 'south sudan', 'togo', 'sierra leone', 'congo']
     filestem = '_may18'
 
     mc_gpars = dict(
