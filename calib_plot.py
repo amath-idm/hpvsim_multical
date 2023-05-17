@@ -35,7 +35,7 @@ import run_sim as rs
 def plot_fig4(location, calib_pars=None, old_pars=True):
 
     # Group genotypes
-    genotypes = ['hpv16', 'hpv18', 'hrhpv']
+    genotypes = ['hpv16', 'hpv18', 'hi5', 'ohr']
     if calib_pars is not None:
         pars = sc.dcp(calib_pars)
         sim = hpv.Sim(pars, location=location, genotypes=genotypes)
@@ -107,7 +107,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     # Panel A and C
     ####################
 
-    glabels = ['HPV16', 'HPV18', 'HRHPV']
+    glabels = ['HPV16', 'HPV18', 'Hi5', 'OHR']
     ####################
     # Make plots
     ####################
@@ -353,7 +353,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     dw1 = np.concatenate(dw1s) #[dw1s[0]] * len(dw3s[0]) + [dw1s[1]] * len(dw3s[1]) + [dw1s[2]] * len(dw3s[2])
     dw2 = np.concatenate(dw2s) #[dw2s[0]] * len(dw3s[0]) + [dw2s[1]] * len(dw3s[1]) + [dw2s[2]] * len(dw3s[2])
     dw3 = np.concatenate(dw3s)
-    gnames = ['hpv16']*len(dw3s[0]) + ['hpv18']*len(dw3s[1]) + ['hrhpv']*len(dw3s[2])
+    gnames = ['hpv16']*len(dw3s[0]) + ['hpv18']*len(dw3s[1]) + ['hi5']*len(dw3s[2]) + ['ohr']*len(dw3s[3])
     df = pd.DataFrame(dict(dw1=dw1,dw2=dw2,dw3=dw3,genotype=gnames))
     df['id'] = df.index
     df = pd.wide_to_long(df, ["dw"], i="id", j="CIN")
@@ -369,7 +369,7 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
     # pl.figtext(0.51, 0.47, 'D', fontweight='bold', fontsize=fs)
     fig.tight_layout()
 
-    pl.savefig(f"figures/calib_nathx_{location}.png", dpi=100)
+    pl.savefig(f"figures/0_calib_nathx_{location}.png", dpi=100)
 
     return calib_pars, sim
 
@@ -378,11 +378,11 @@ def plot_fig4(location, calib_pars=None, old_pars=True):
 if __name__ == '__main__':
 
     # location='nigeria_new'
-    location='ethiopia'
+    location='tanzania'
     # filename = rs.mc_filename
     # calib_pars = sc.loadobj(f'results/{location}_{filename}_pars.obj')
 
-    calib_pars = sc.loadobj(f'results/{location}_pars_apr26_sc.obj')
+    calib_pars = sc.loadobj(f'results/{location}_pars_may08_sc.obj')
     # calib_pars['genotype_pars']['hpv16']['transform_prob'] *= 4
     # calib_pars['genotype_pars']['hpv18']['transform_prob'] = 2e-10
     # calib_pars['genotype_pars']['hrhpv']['transform_prob'] = 3e-5

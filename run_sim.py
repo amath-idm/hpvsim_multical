@@ -75,6 +75,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 def run_sim(
         location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
         do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
+        calib_par_stem=None,
     ):
 
     if analyzers is None:
@@ -91,6 +92,11 @@ def run_sim(
 
         analyzers += [ap]
 
+    if calib_par_stem is not None:
+        calib_pars = sc.loadobj(f'results/{location+calib_par_stem}.obj')
+    else:
+        calib_pars=None
+
     # Make sim
     sim = make_sim(
         location=location,
@@ -98,7 +104,8 @@ def run_sim(
         analyzers=analyzers,
         dist_type=dist_type,
         marriage_scale=marriage_scale,
-        debut_bias=debut_bias
+        debut_bias=debut_bias,
+        calib_pars=calib_pars
     )
     sim['rand_seed'] = seed
     sim.label = f'{location}--{seed}'
@@ -115,12 +122,12 @@ def run_sim(
 
 
 def run_sims(
-        locations=None, age_pyr=True, debug=False, verbose=-1, analyzers=None, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
-        *args, **kwargs
+        locations=None, age_pyr=True, debug=False, verbose=-1, analyzers=None, dist_type='lognormal',
+        marriage_scale=1, debut_bias=[0,0], calib_par_stem=None, *args, **kwargs
     ):
     ''' Run multiple simulations in parallel '''
     
-    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr, marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr, marriage_scale=marriage_scale, calib_par_stem=calib_par_stem, debut_bias=debut_bias), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location:sim for location,sim in zip(locations, simlist)}) # Convert from a list to a dict
     
@@ -132,12 +139,14 @@ if __name__ == '__main__':
 
     T = sc.timer()
 
-    # locations = ['congo'] #set.locations[28:]
-    # sims = run_sims(locations=locations, age_pyr=True, debug=False, verbose=.1, do_save=True)
+    # locations = ['tanzania', 'uganda'] #set.locations[28:]
+    # sims = run_sims(
+    #     locations=locations, analyzers=[ut.dwelltime_by_genotype()],
+    #     calib_par_stem='_pars_may08_sc',
+    #     age_pyr=True, debug=False, verbose=.1, do_save=True)
 
-    location = 'congo'
-    sim = run_sim(location, age_pyr=True, verbose=0.1, do_save=True)
-    sim.run()
+    location = 'uganda'
+    sim = run_sim(location,  calib_par_stem='_pars_may08_sc', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
 
     T.toc('Done')
 
