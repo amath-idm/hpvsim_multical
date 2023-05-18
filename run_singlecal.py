@@ -166,14 +166,14 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 
     fnlocation = location.replace(' ','_')
     filename = f'{fnlocation}_calib{filestem}'
-    calib = sc.load(f'results/{filename}.obj')
+    calib = sc.load(f'results/1_iv/{filename}.obj')
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
         fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'figures/8_may18r/{filename}_sc.png')
+        fig.savefig(f'figures/5_may18r/{filename}_sc.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
@@ -186,7 +186,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['angola', 'benin', 'burkina faso', 'drc', 'ethiopia', 'ghana', 'south sudan', 'zimbabwe']
+    locations = ['cameroon', 'mali', 'somalia', 'burkina faso', 'burundi', 'senegal']
     filestem = '_may18'
 
     mc_gpars = dict(
