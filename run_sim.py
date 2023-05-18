@@ -145,8 +145,8 @@ if __name__ == '__main__':
     #     calib_par_stem='_pars_may08_sc',
     #     age_pyr=True, debug=False, verbose=.1, do_save=True)
 
-    location = 'uganda'
-    sim = run_sim(location,  calib_par_stem='_pars_may08_sc', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
+    location = 'mali'
+    sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
 
     T.toc('Done')
 

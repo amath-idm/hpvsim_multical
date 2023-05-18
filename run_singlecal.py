@@ -186,7 +186,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['kenya', 'guinea', 'drc', 'cote divoire', 'congo', 'chad', 'burundi']
+    locations = ['angola', 'benin', 'burkina faso', 'drc', 'ethiopia', 'ghana', 'south sudan', 'zimbabwe']
     filestem = '_may18'
 
     mc_gpars = dict(

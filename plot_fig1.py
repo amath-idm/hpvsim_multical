@@ -1,5 +1,5 @@
 """
-This script produces figure 1 of the HPVsim calibration paper
+This script produces figure 2 of the HPVsim calibration paper
 """
 
 # Import packages
@@ -18,13 +18,13 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_fig1(locations, calib, n_results=20):
+def plot_fig1(locations, calib, sclocations=None, filestem=None, n_results=20):
 
     ut.set_font(12)
     n_plots = len(locations)
     n_rows, n_cols = sc.get_rows_cols(n_plots)
 
-    fig, axes = pl.subplots(n_rows, n_cols, figsize=(10,11))
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(11,10))
     axes = axes.flatten()
     resname = 'cancers'
     plot_count = 0
@@ -35,9 +35,17 @@ def plot_fig1(locations, calib, n_results=20):
         # Plot settings
         ax = axes[plot_count]
 
-        # Pull out model results and data
-        reslist = calib.age_results[location]
-        target_data = calib.target_data[location][0]
+        if location in sclocations:
+            dflocation = location.replace(' ', '_')
+            sccalib = sc.loadobj(f'results/{dflocation}_calib_{filestem}.obj')
+            reslist = sccalib.analyzer_results
+            target_data = sccalib.target_data[0]
+
+        else:
+            # Pull out model results and data
+            reslist = calib.age_results[location]
+            target_data = calib.target_data[location][0]
+
         target_data = target_data[(target_data.name == resname)]
 
         # Make labels
@@ -46,7 +54,11 @@ def plot_fig1(locations, calib, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        plot_indices = calib.df.iloc[0:n_results, 0].values
+        if location in sclocations:
+            plot_indices = sccalib.df.iloc[0:n_results, 0].values
+        else:
+            plot_indices = calib.df.iloc[0:n_results, 0].values
+
         res = [reslist[i] for i in plot_indices]
 
         # Plot data
@@ -80,8 +92,11 @@ def plot_fig1(locations, calib, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = ['nigeria', 'ethiopia', 'drc', 'south africa', 'kenya', 'uganda', 'mozambique', 'sudan', 'angola'] # set.locations
-    calib = sc.loadobj('results/multical_may04.obj')
-    plot_fig1(locations, calib, n_results=20)
+    locations = set.locations
+    sclocations = ['zambia', 'uganda', 'togo', 'tanzania', 'south africa', 'sierra leone',
+                   'senegal', 'rwanda', 'nigeria', 'niger', 'mozambique', 'malawi', 'madagascar',
+                   'kenya', 'guinea', 'drc', 'cote divoire', 'congo', 'chad', 'burundi']
+    calib = sc.loadobj('results/multical_may15.obj')
+    plot_fig1(locations, calib, sclocations=sclocations, filestem='may18', n_results=50)
 
     print('Done.')
