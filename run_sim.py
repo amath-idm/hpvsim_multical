@@ -162,7 +162,7 @@ if __name__ == '__main__':
     # location = 'mali'
     # sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
 
-    locations = ['tanzania'] #set.locations[28:]
+    locations = set.locations
     for location in locations:
         msim = run_parsets(location=location, save_results=True)
 
