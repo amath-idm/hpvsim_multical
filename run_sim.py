@@ -136,13 +136,13 @@ def run_parsets(
         location=None, debug=False, verbose=.1, analyzers=None, save_results=True, **kwargs):
     ''' Run multiple simulations in parallel '''
 
-    parsets = sc.loadobj(f'results/1_iv/{location}_pars_may18_iv_all.obj')
+    dflocation = location.replace(' ', '_')
+    parsets = sc.loadobj(f'results/1_iv/{dflocation}_pars_may18_iv_all.obj')
     kwargs = sc.mergedicts(dict(location=location, debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
     msim = hpv.MultiSim(simlist)
     msim.reduce()
     if save_results:
-        dflocation = location.replace(' ', '_')
         sc.saveobj(f'results/4_msims/{dflocation}.obj', msim.results)
 
     return msim
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     # location = 'mali'
     # sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
 
-    locations = set.locations
+    locations = set.locations[2:]
     for location in locations:
         msim = run_parsets(location=location, save_results=True)
 
