@@ -26,8 +26,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 
@@ -36,7 +36,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [10000, 2][debug]  # How many trials to run for calibration
+n_trials    = [4000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -58,16 +58,16 @@ def make_unique_priors(locations=None):
             ),
             genotype_pars = dict(
                 hi5=dict(
-                    transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-                    sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                    transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
+                    sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
                     dur_episomal=dict(
                         par1=[2.5, 2, 3, 0.5],
                         par2=[7, 4, 10, 0.5]),
                     rel_beta=[0.75, 0.7, 1.25, 0.05]
                 ),
                 ohr=dict(
-                    transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-                    sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+                    transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
+                    sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
                     dur_episomal=dict(
                         par1=[2.5, 2, 3, 0.5],
                         par2=[7, 4, 10, 0.5]),
@@ -89,19 +89,19 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
             hpv16=dict(
                 transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
                 sev_fn=dict(
-                    k=[0.25, 0.1, 0.4, 0.05],
+                    k=[0.25, 0.15, 0.4, 0.05],
                 ),
                 dur_episomal=dict(
-                    par1=[2.5, 2, 5, 0.5],
+                    par1=[2.5, 1.5, 5, 0.5],
                     par2=[7, 4, 15, 0.5])
             ),
             hpv18=dict(
                 transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
                 sev_fn=dict(
-                    k=[0.25, 0.1, 0.4, 0.05],
+                    k=[0.2, 0.1, 0.35, 0.05],
                 ),
                 dur_episomal=dict(
-                    par1=[2.5, 2, 3, 0.5],
+                    par1=[2.5, 1.5, 3, 0.5],
                     par2=[7, 4, 15, 0.5]),
                 rel_beta=[0.75, 0.7, 0.95, 0.05]
             ),
@@ -120,10 +120,10 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
         sims,
         common_pars=common_pars,
         unique_pars=unique_pars,
-        name=f'multical0104',
+        name=f'multical0105',
         datafiles=ut.make_datafiles(locations),
         load_if_exists=True,
-        db_name='multical0104.db',
+        db_name='multical0105.db',
         total_trials=n_trials,
         n_workers=n_workers,
         storage=storage,
@@ -174,7 +174,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_may15'
+    filestem = '_may19'
     locations = set.locations #['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
 
     # Run calibration - usually on VMs

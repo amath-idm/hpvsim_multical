@@ -22,8 +22,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -40,36 +40,36 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 def make_priors(location):
     default = dict(
-        # hpv16=dict(
-        #     transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
-        #     sev_fn=dict(
-        #         k=[0.25, 0.1, 0.4, 0.05],
-        #     ),
-        #     dur_episomal=dict(
-        #         par1=[2.5, 2, 5, 0.5],
-        #         par2=[7, 4, 15, 0.5])
-        # ),
-        # hpv18=dict(
-        #     transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-        #     sev_fn=dict(
-        #         k=[0.25, 0.1, 0.4, 0.05],
-        #     ),
-        #     dur_episomal=dict(
-        #         par1=[2.5, 2, 3, 0.5],
-        #         par2=[7, 4, 15, 0.5]),
-        #     rel_beta=[0.75, 0.7, 0.95, 0.05]
-        # ),
+        hpv16=dict(
+            transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.25, 0.15, 0.4, 0.05],
+            ),
+            dur_episomal=dict(
+                par1=[2.5, 1.5, 5, 0.5],
+                par2=[7, 4, 15, 0.5])
+        ),
+        hpv18=dict(
+            transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.2, 0.1, 0.35, 0.05],
+            ),
+            dur_episomal=dict(
+                par1=[2.5, 1.5, 3, 0.5],
+                par2=[7, 4, 15, 0.5]),
+            rel_beta=[0.75, 0.7, 0.95, 0.05]
+        ),
         hi5=dict(
-            transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-            sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+            transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
+            sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
             dur_episomal=dict(
                 par1=[2.5, 2, 3, 0.5],
                 par2=[7, 4, 10, 0.5]),
             rel_beta=[0.75, 0.7, 1.25, 0.05]
         ),
         ohr=dict(
-            transform_prob=[4e-10, 2e-10, 6e-10, 1e-10],
-            sev_fn=dict(k=[0.15, 0.05, 0.2, 0.01]),
+            transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
+            sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
             dur_episomal=dict(
                 par1=[2.5, 2, 3, 0.5],
                 par2=[7, 4, 10, 0.5]),
@@ -191,23 +191,24 @@ if __name__ == '__main__':
 
     T = sc.timer()
     locations = set.locations
-    filestem = '_may18'
+    filestem = '_may19'
 
-    mc_gpars = dict(
-        genotype_pars=dict(
-            hpv16=dict(
-                transform_prob=5e-10,
-                sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
-                dur_episomal=dict(dist='lognormal',par1=2, par2=11)
-            ),
-            hpv18=dict(
-                transform_prob=7e-10,
-                sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
-                dur_episomal=dict(dist='lognormal',par1=2, par2=15),
-                rel_beta=0.85
-            ),
-        )
-    )
+    # mc_gpars = dict(
+    #     genotype_pars=dict(
+    #         hpv16=dict(
+    #             transform_prob=5e-10,
+    #             sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
+    #             dur_episomal=dict(dist='lognormal',par1=2, par2=11)
+    #         ),
+    #         hpv18=dict(
+    #             transform_prob=7e-10,
+    #             sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
+    #             dur_episomal=dict(dist='lognormal',par1=2, par2=15),
+    #             rel_beta=0.85
+    #         ),
+    #     )
+    # )
+    mc_gpars=None
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
