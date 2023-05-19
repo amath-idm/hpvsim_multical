@@ -133,13 +133,11 @@ def run_sims(
 
 
 def run_parsets(
-        location=None, debug=False, verbose=-1, analyzers=None, dist_type='lognormal',
-        marriage_scale=1, debut_bias=[0, 0], save_results=True, **kwargs):
+        location=None, debug=False, verbose=-1, analyzers=None, save_results=True, **kwargs):
     ''' Run multiple simulations in parallel '''
 
     parsets = sc.loadobj(f'results/1_iv/{location}_pars_may18_iv_all.obj')
-    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr,
-                                marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
     msim = hpv.MultiSim(simlist)
     msim.reduce()
