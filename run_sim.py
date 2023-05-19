@@ -133,7 +133,7 @@ def run_sims(
 
 
 def run_parsets(
-        location=None, debug=False, verbose=-1, analyzers=None, save_results=True, **kwargs):
+        location=None, debug=False, verbose=.1, analyzers=None, save_results=True, **kwargs):
     ''' Run multiple simulations in parallel '''
 
     parsets = sc.loadobj(f'results/1_iv/{location}_pars_may18_iv_all.obj')
@@ -142,6 +142,7 @@ def run_parsets(
     msim = hpv.MultiSim(simlist)
     msim.reduce()
     if save_results:
+        dflocation = location.replace(' ', '_')
         sc.saveobj(f'results/4_msims/{dflocation}.obj', msim.results)
 
     return msim
