@@ -137,7 +137,7 @@ def run_parsets(
     ''' Run multiple simulations in parallel '''
 
     parsets = sc.loadobj(f'results/1_iv/{location}_pars_may18_iv_all.obj')
-    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
+    kwargs = sc.mergedicts(dict(location=location, debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
     msim = hpv.MultiSim(simlist)
     msim.reduce()
