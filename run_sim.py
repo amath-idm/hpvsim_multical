@@ -75,7 +75,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 def run_sim(
         location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
         do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
-        calib_par_stem=None,
+        calib_par_stem=None, calib_pars=None,
     ):
 
     if analyzers is None:
@@ -92,10 +92,8 @@ def run_sim(
 
         analyzers += [ap]
 
-    if calib_par_stem is not None:
+    if calib_pars is None and calib_par_stem is not None:
         calib_pars = sc.loadobj(f'results/{location+calib_par_stem}.obj')
-    else:
-        calib_pars=None
 
     # Make sim
     sim = make_sim(
@@ -117,7 +115,7 @@ def run_sim(
         
     if do_save:
         sim.save(f'results/{dflocation}.sim')
-    
+
     return sim
 
 
@@ -134,6 +132,23 @@ def run_sims(
     return sims
 
 
+def run_parsets(
+        location=None, debug=False, verbose=-1, analyzers=None, dist_type='lognormal',
+        marriage_scale=1, debut_bias=[0, 0], save_results=True, **kwargs):
+    ''' Run multiple simulations in parallel '''
+
+    parsets = sc.loadobj(f'results/1_iv/{location}_pars_may18_iv_all.obj')
+    kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr,
+                                marriage_scale=marriage_scale, debut_bias=debut_bias), kwargs)
+    simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
+    msim = hpv.MultiSim(simlist)
+    msim.reduce()
+    if save_results:
+        sc.saveobj(f'results/4_msims/{dflocation}.obj', msim.results)
+
+    return msim
+
+
 #%% Run as a script
 if __name__ == '__main__':
 
@@ -145,8 +160,11 @@ if __name__ == '__main__':
     #     calib_par_stem='_pars_may08_sc',
     #     age_pyr=True, debug=False, verbose=.1, do_save=True)
 
-    location = 'mali'
-    sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
+    # location = 'mali'
+    # sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
+
+    locations = ['tanzania'] #set.locations[28:]
+    msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')
 

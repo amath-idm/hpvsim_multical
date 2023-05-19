@@ -22,8 +22,8 @@ import settings as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False # Smaller runs
@@ -177,7 +177,11 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
-        sc.save(f'results/{location}_pars{filestem}_sc.obj', calib_pars)
+        trial_pars = sc.autolist()
+        for i in range(100):
+            trial_pars += calib.trial_pars_to_sim_pars(which_pars=i)
+        sc.save(f'results/1_iv/{location}_pars{filestem}_iv.obj', calib_pars)
+        sc.save(f'results/1_iv/{location}_pars{filestem}_iv_all.obj', trial_pars)
 
     return calib
 
@@ -186,7 +190,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['cameroon', 'mali', 'somalia', 'burkina faso', 'burundi', 'senegal']
+    locations = set.locations
     filestem = '_may18'
 
     mc_gpars = dict(
@@ -213,6 +217,6 @@ if __name__ == '__main__':
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
         for location in locations:
-            calib = load_calib(location=location, do_plot=True, save_pars=True, filestem=filestem)
+            calib = load_calib(location=location, do_plot=False, save_pars=True, filestem=filestem)
     
     T.toc('Done')
