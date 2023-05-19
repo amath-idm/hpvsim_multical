@@ -18,7 +18,7 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_fig1(locations, calib, sclocations=None, filestem=None, n_results=20):
+def plot_fig1(locations, filestem=None, n_results=20):
 
     ut.set_font(12)
     n_plots = len(locations)
@@ -35,17 +35,10 @@ def plot_fig1(locations, calib, sclocations=None, filestem=None, n_results=20):
         # Plot settings
         ax = axes[plot_count]
 
-        if location in sclocations:
-            dflocation = location.replace(' ', '_')
-            sccalib = sc.loadobj(f'results/{dflocation}_calib_{filestem}.obj')
-            reslist = sccalib.analyzer_results
-            target_data = sccalib.target_data[0]
-
-        else:
-            # Pull out model results and data
-            reslist = calib.age_results[location]
-            target_data = calib.target_data[location][0]
-
+        dflocation = location.replace(' ', '_')
+        sccalib = sc.loadobj(f'results/1_iv/{dflocation}_calib_{filestem}.obj')
+        reslist = sccalib.analyzer_results
+        target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
 
         # Make labels
@@ -54,11 +47,7 @@ def plot_fig1(locations, calib, sclocations=None, filestem=None, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        if location in sclocations:
-            plot_indices = sccalib.df.iloc[0:n_results, 0].values
-        else:
-            plot_indices = calib.df.iloc[0:n_results, 0].values
-
+        plot_indices = sccalib.df.iloc[0:n_results, 0].values
         res = [reslist[i] for i in plot_indices]
 
         # Plot data
@@ -93,10 +82,6 @@ def plot_fig1(locations, calib, sclocations=None, filestem=None, n_results=20):
 if __name__ == '__main__':
 
     locations = set.locations
-    sclocations = ['zambia', 'uganda', 'togo', 'tanzania', 'south africa', 'sierra leone',
-                   'senegal', 'rwanda', 'nigeria', 'niger', 'mozambique', 'malawi', 'madagascar',
-                   'kenya', 'guinea', 'drc', 'cote divoire', 'congo', 'chad', 'burundi']
-    calib = sc.loadobj('results/multical_may15.obj')
-    plot_fig1(locations, calib, sclocations=sclocations, filestem='may18', n_results=50)
+    plot_fig1(locations, filestem='may18', n_results=50)
 
     print('Done.')
