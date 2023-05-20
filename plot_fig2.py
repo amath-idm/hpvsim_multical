@@ -1,5 +1,5 @@
 """
-This script produces figure 2 of the HPVsim methods paper, showing the natural history
+Plot implied natural history
 """
 import hpvsim as hpv
 import hpvsim.utils as hpu

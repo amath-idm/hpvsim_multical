@@ -208,6 +208,22 @@ if __name__ == '__main__':
     #         ),
     #     )
     # )
+    mc_gpars = dict(
+        genotype_pars=dict(
+            hpv16=dict(
+                transform_prob=1.3e-9,
+                sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=1.5, par2=4)
+            ),
+            hpv18=dict(
+                transform_prob=9e-10,
+                sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
+                dur_episomal=dict(dist='lognormal',par1=2, par2=12),
+                rel_beta=0.95
+            ),
+        )
+    )
+
     mc_gpars=None
 
     # Run calibration - usually on VMs

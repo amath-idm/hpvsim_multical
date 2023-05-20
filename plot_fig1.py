@@ -1,5 +1,5 @@
 """
-This script produces figure 2 of the HPVsim calibration paper
+Plot immuno-varying calibrations
 """
 
 # Import packages
