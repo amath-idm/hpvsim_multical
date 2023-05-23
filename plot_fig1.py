@@ -36,7 +36,7 @@ def plot_fig1(locations, filestem=None, n_results=20):
         ax = axes[plot_count]
 
         dflocation = location.replace(' ', '_')
-        sccalib = sc.loadobj(f'results/1_iv/{dflocation}_calib_{filestem}.obj')
+        sccalib = sc.loadobj(f'results/1a_iv/{dflocation}_calib_{filestem}.obj')
         reslist = sccalib.analyzer_results
         target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
