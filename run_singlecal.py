@@ -157,7 +157,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['nigeria'] #set.locations
+    locations = ['drc', 'ethiopia', 'ghana', 'senegal'] #set.locations
     filestem = '_may23'
     ressubfolder = '7_iv2'
     figsubfolder = '6_may19iv'
