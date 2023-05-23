@@ -30,7 +30,7 @@ debug = False # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [1500, 10][debug]  # How many trials to run for calibration
+n_trials    = [2000, 10][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -40,25 +40,25 @@ storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage
 ########################################################################
 def make_priors(location):
     default = dict(
-        hpv16=dict(
-            transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
-            sev_fn=dict(
-                k=[0.25, 0.15, 0.4, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[2.5, 1.5, 5, 0.5],
-                par2=[7, 4, 15, 0.5])
-        ),
-        hpv18=dict(
-            transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-            sev_fn=dict(
-                k=[0.2, 0.1, 0.35, 0.05],
-            ),
-            dur_episomal=dict(
-                par1=[2.5, 1.5, 3, 0.5],
-                par2=[7, 4, 15, 0.5]),
-            rel_beta=[0.75, 0.7, 0.95, 0.05]
-        ),
+        # hpv16=dict(
+        #     transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+        #     sev_fn=dict(
+        #         k=[0.25, 0.15, 0.4, 0.05],
+        #     ),
+        #     dur_episomal=dict(
+        #         par1=[2.5, 1.5, 5, 0.5],
+        #         par2=[7, 4, 15, 0.5])
+        # ),
+        # hpv18=dict(
+        #     transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+        #     sev_fn=dict(
+        #         k=[0.2, 0.1, 0.35, 0.05],
+        #     ),
+        #     dur_episomal=dict(
+        #         par1=[2.5, 1.5, 3, 0.5],
+        #         par2=[7, 4, 15, 0.5]),
+        #     rel_beta=[0.75, 0.7, 0.95, 0.05]
+        # ),
         hi5=dict(
             transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
             sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
@@ -79,39 +79,6 @@ def make_priors(location):
 
     genotype_pars = sc.dcp(default)
 
-    # # Old cancers: lower k and longer dur_episomal
-    # if location in ['tanzania', 'mali']:
-    #     genotype_pars['hpv16']=dict(
-    #         transform_prob=[5e-10, 4e-10, 10e-10, 1e-10],
-    #         sev_fn = dict(
-    #             k=[0.10, 0.05, 0.2, 0.05],
-    #         ),
-    #         dur_episomal=dict(
-    #             par1=[4, 3, 5, 0.5],
-    #             par2=[12, 10, 15, 0.5])
-    #         )
-    #     genotype_pars['hpv18']=dict(
-    #         sev_fn = dict(
-    #             k=[0.10, 0.05, 0.2, 0.05],
-    #         ),
-    #         dur_episomal=dict(
-    #             par1=[4, 3, 5, 0.5],
-    #             par2=[12, 10, 15, 0.5])
-    #     )
-
-    # # Younger cancers: higher k
-    # if location in ['nigeria', 'mozambique', 'south africa', 'malawi', 'zambia']:
-    #     genotype_pars['hpv16']=dict(
-    #         sev_fn = dict(
-    #             k=[0.3, 0.25, 0.4, 0.05],
-    #         )
-    #     )
-    #     genotype_pars['hpv18']=dict(
-    #         sev_fn = dict(
-    #             k=[0.3, 0.25, 0.4, 0.05],
-    #         )
-    #     )
-
     return genotype_pars
 
 
@@ -128,7 +95,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
-        sev_dist = dict(par1=[1.0, 0.5, 1.5, 0.02])
+        sev_dist = dict(par1=[1.0, 0.1, 3.0, 0.05])
     )
     genotype_pars = make_priors(location)
 
@@ -162,26 +129,26 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 ########################################################################
 # Load pre-run calibration
 ########################################################################
-def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem=''):
+def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem='', ressubfolder=None, figsubfolder=None):
 
     fnlocation = location.replace(' ','_')
     filename = f'{fnlocation}_calib{filestem}'
-    calib = sc.load(f'results/1_iv/{filename}.obj')
+    calib = sc.load(f'results/{ressubfolder}/{filename}.obj')
     if do_plot:
         sc.fonts(add=sc.thisdir(aspath=True) / 'Libertinus Sans')
         sc.options(font='Libertinus Sans')
         fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'figures/5_may18r/{filename}_sc.png')
+        fig.savefig(f'figures/{figsubfolder}/{filename}_sc.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
         trial_pars = sc.autolist()
         for i in range(100):
             trial_pars += calib.trial_pars_to_sim_pars(which_pars=i)
-        sc.save(f'results/1_iv/{location}_pars{filestem}_iv.obj', calib_pars)
-        sc.save(f'results/1_iv/{location}_pars{filestem}_iv_all.obj', trial_pars)
+        sc.save(f'results/{ressubfolder}/{location}_pars{filestem}_iv.obj', calib_pars)
+        sc.save(f'results/{ressubfolder}/{location}_pars{filestem}_iv_all.obj', trial_pars)
 
     return calib
 
@@ -190,8 +157,10 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = set.locations
-    filestem = '_may19'
+    locations = ['nigeria'] #set.locations
+    filestem = '_may23'
+    ressubfolder = '7_iv2'
+    figsubfolder = '6_may19iv'
 
     # mc_gpars = dict(
     #     genotype_pars=dict(
@@ -234,6 +203,6 @@ if __name__ == '__main__':
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
         for location in locations:
-            calib = load_calib(location=location, do_plot=False, save_pars=True, filestem=filestem)
+            calib = load_calib(location=location, do_plot=True, save_pars=True, filestem=filestem, ressubfolder=ressubfolder, figsubfolder=figsubfolder)
     
     T.toc('Done')
