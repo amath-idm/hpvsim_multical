@@ -22,12 +22,12 @@ import utils as ut
 # Imports from this repository
 import run_sim as rs
 import calibration as cal
-import settings as set
+import locations as set
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 
@@ -148,12 +148,12 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
 ########################################################################
 def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_pars=True):
 
-    calib = sc.load(f'results/multical{filestem}.obj')
+    calib = sc.load(f'results/6_mc2/multical{filestem}.obj')
 
     if save_pars:
         sims = []
         for location in locations:
-            pars_file = f'results/{location}_multical{filestem}_pars.obj'
+            pars_file = f'results/6_mc2/{location}_multical{filestem}_pars.obj'
             calib_pars = calib.trial_pars_to_sim_pars(slabel=location, which_pars=which_pars)
             sc.save(pars_file, calib_pars)
 
@@ -164,7 +164,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
             fig = calib.plot(slabel=location, res_to_plot=50, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/7_may15mc/multical{filestem}_{location}.png')
+            fig.savefig(f'figures/7_may19mc2/multical{filestem}_{location}.png')
 
 
     return calib, sims

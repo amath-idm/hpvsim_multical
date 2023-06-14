@@ -9,7 +9,7 @@ import hpvsim.utils as hpu
 import pandas as pd
 import numpy as np
 
-import settings as set
+import locations as set
 import pars_data as dp
 
 def set_font(size=None, font='Libertinus Sans'):

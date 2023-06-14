@@ -17,7 +17,7 @@ import pylab as pl
 # Imports from this repository
 import pars_data as dp
 import utils as ut
-import settings as set
+import locations as set
 
 #%% Settings and filepaths
 
@@ -75,7 +75,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 def run_sim(
         location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
         do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
-        calib_par_stem=None, calib_pars=None,
+        calib_par_stem=None, ressubfolder=None, calib_pars=None,
     ):
 
     if analyzers is None:
@@ -93,7 +93,7 @@ def run_sim(
         analyzers += [ap]
 
     if calib_pars is None and calib_par_stem is not None:
-        calib_pars = sc.loadobj(f'results/{location+calib_par_stem}.obj')
+        calib_pars = sc.loadobj(f'results/{ressubfolder}/{location+calib_par_stem}.obj')
 
     # Make sim
     sim = make_sim(
@@ -159,12 +159,12 @@ if __name__ == '__main__':
     #     calib_par_stem='_pars_may08_sc',
     #     age_pyr=True, debug=False, verbose=.1, do_save=True)
 
-    # location = 'mali'
-    # sim = run_sim(location,  calib_par_stem='_multical_may15_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
+    location = 'nigeria'
+    sim = run_sim(location, ressubfolder='6_mc2',  calib_par_stem='_multical_may19_pars', analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
 
-    locations = set.locations[2:]
-    for location in locations:
-        msim = run_parsets(location=location, save_results=True)
+    # locations = set.locations[2:]
+    # for location in locations:
+    #     msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')
 

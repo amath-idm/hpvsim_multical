@@ -1,14 +1,20 @@
-'''
-Calibrate HPVsim
-'''
+"""
+This file is used to run both the immuno-varying and the unconstrained calibrations as described in
+the HPVsim multicalibration paper (reference forthcoming).
+
+Instructions:
+    - Go to the CONFIGURATIONS section on lines 29-36 to set up the script before running it.
+    -
+"""
 
 # Additions to handle numpy multithreading
 import os
+
 os.environ.update(
-    OMP_NUM_THREADS = '1',
-    OPENBLAS_NUM_THREADS = '1',
-    NUMEXPR_NUM_THREADS = '1',
-    MKL_NUM_THREADS = '1',
+    OMP_NUM_THREADS='1',
+    OPENBLAS_NUM_THREADS='1',
+    NUMEXPR_NUM_THREADS='1',
+    MKL_NUM_THREADS='1',
 )
 
 # Standard imports
@@ -18,47 +24,28 @@ import hpvsim as hpv
 # Imports from this repository
 import run_sim as rs
 import utils as ut
-import settings as set
+import locations as loc
 
-# Comment out to not run
+# CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
-
-debug = False # Smaller runs
+cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
+debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [2000, 10][debug]  # How many trials to run for calibration
-n_workers   = [40, 1][debug]    # How many cores to use
-storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
+n_trials = [2000, 10][debug]  # How many trials to run for calibration
+n_workers = [40, 1][debug]  # How many cores to use
+storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
 
 ########################################################################
 # Run calibration
 ########################################################################
-def make_priors(location):
+def make_priors(add_1618=True):
     default = dict(
-        # hpv16=dict(
-        #     transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
-        #     sev_fn=dict(
-        #         k=[0.25, 0.15, 0.4, 0.05],
-        #     ),
-        #     dur_episomal=dict(
-        #         par1=[2.5, 1.5, 5, 0.5],
-        #         par2=[7, 4, 15, 0.5])
-        # ),
-        # hpv18=dict(
-        #     transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-        #     sev_fn=dict(
-        #         k=[0.2, 0.1, 0.35, 0.05],
-        #     ),
-        #     dur_episomal=dict(
-        #         par1=[2.5, 1.5, 3, 0.5],
-        #         par2=[7, 4, 15, 0.5]),
-        #     rel_beta=[0.75, 0.7, 0.95, 0.05]
-        # ),
         hi5=dict(
             transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
             sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
@@ -77,6 +64,27 @@ def make_priors(location):
         ),
     )
 
+    if add_1618:
+        default['hpv16'] = dict(
+            transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.25, 0.15, 0.4, 0.05],
+            ),
+            dur_episomal=dict(
+                par1=[2.5, 1.5, 5, 0.5],
+                par2=[7, 4, 15, 0.5])
+        )
+        default['hpv18'] = dict(
+            transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
+            sev_fn=dict(
+                k=[0.2, 0.1, 0.35, 0.05],
+            ),
+            dur_episomal=dict(
+                par1=[2.5, 1.5, 3, 0.5],
+                par2=[7, 4, 15, 0.5]),
+            rel_beta=[0.75, 0.7, 0.95, 0.05]
+        )
+
     genotype_pars = sc.dcp(default)
 
     return genotype_pars
@@ -84,20 +92,19 @@ def make_priors(location):
 
 def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem='', mc_gpars=None):
-
     sim = rs.make_sim(location, calib_pars=mc_gpars)
     datafiles = ut.make_datafiles([location])[location]
 
     # Define the calibration parameters
     calib_pars = dict(
-        beta = [0.2, 0.1, 0.3, 0.02],
-        cross_imm_sus_med = [0.3, 0.2, 0.6, 0.05],
-        cross_imm_sus_high = [0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_med = [0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_high = [0.7, 0.5, 0.9, 0.05],
-        sev_dist = dict(par1=[1.0, 0.1, 3.0, 0.05])
+        beta=[0.2, 0.1, 0.3, 0.02],
+        cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
+        cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
+        sev_dist=dict(par1=[1.0, 0.1, 3.0, 0.05])
     )
-    genotype_pars = make_priors(location)
+    genotype_pars = make_priors()
 
     # if location in ['mozambique', 'malawi', 'zambia', 'burundi', 'tanzania']: # Higher than 1
     #     calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5, 0.005])
@@ -129,9 +136,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 ########################################################################
 # Load pre-run calibration
 ########################################################################
-def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem='', ressubfolder=None, figsubfolder=None):
-
-    fnlocation = location.replace(' ','_')
+def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filestem='', ressubfolder=None,
+               figsubfolder=None):
+    fnlocation = location.replace(' ', '_')
     filename = f'{fnlocation}_calib{filestem}'
     calib = sc.load(f'results/{ressubfolder}/{filename}.obj')
     if do_plot:
@@ -153,56 +160,47 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
     return calib
 
 
-#%% Run as a script
+# %% Run as a script
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['zimbabwe'] #, 'drc', 'ethiopia', 'ghana', 'senegal'] #set.locations
-    filestem = '_may23'
-    ressubfolder = '7_iv2'
-    figsubfolder = '6_may19iv'
+    locations = ['angola', 'benin', 'burkina faso', 'burundi', 'cameroon', 'chad', 'congo', 'cote divoire']#  loc.locations
+    filestem = '_jun15'
+    # ressubfolder = '1a_iv'
+    # figsubfolder = '6_may19iv'
 
-    # mc_gpars = dict(
-    #     genotype_pars=dict(
-    #         hpv16=dict(
-    #             transform_prob=5e-10,
-    #             sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
-    #             dur_episomal=dict(dist='lognormal',par1=2, par2=11)
-    #         ),
-    #         hpv18=dict(
-    #             transform_prob=7e-10,
-    #             sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
-    #             dur_episomal=dict(dist='lognormal',par1=2, par2=15),
-    #             rel_beta=0.85
-    #         ),
-    #     )
-    # )
-    mc_gpars = dict(
-        genotype_pars=dict(
-            hpv16=dict(
-                transform_prob=1.3e-9,
-                sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
-                dur_episomal=dict(dist='lognormal',par1=1.5, par2=4)
-            ),
-            hpv18=dict(
-                transform_prob=9e-10,
-                sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
-                dur_episomal=dict(dist='lognormal',par1=2, par2=12),
-                rel_beta=0.95
-            ),
+    if cal_type == 'immunovarying':
+        mc_gpars = dict(
+            genotype_pars=dict(
+                hpv16=dict(
+                    transform_prob=1.3e-9,
+                    sev_fn=dict(form='logf2', k=0.15, x_infl=0, ttc=30),
+                    dur_episomal=dict(dist='lognormal', par1=1.5, par2=4)
+                ),
+                hpv18=dict(
+                    transform_prob=9e-10,
+                    sev_fn=dict(form='logf2', k=0.1, x_infl=0, ttc=30),
+                    dur_episomal=dict(dist='lognormal', par1=2, par2=12),
+                    rel_beta=0.95
+                ),
+            )
         )
-    )
 
-    mc_gpars=None
+    elif cal_type == 'unconstrained' in to_run:
+        mc_gpars = None
+    else:
+        raise ValueError('Need to define which calibration to run.')
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
         for location in locations:
-            sim, calib = run_calib(mc_gpars=mc_gpars, location=location, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+            sim, calib = run_calib(mc_gpars=mc_gpars, location=location, n_trials=n_trials, n_workers=n_workers,
+                                   do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:
         for location in locations:
-            calib = load_calib(location=location, do_plot=True, save_pars=True, filestem=filestem, ressubfolder=ressubfolder, figsubfolder=figsubfolder)
-    
+            calib = load_calib(location=location, do_plot=True, save_pars=True, filestem=filestem,
+                               ressubfolder=cal_type, figsubfolder=cal_type)
+
     T.toc('Done')

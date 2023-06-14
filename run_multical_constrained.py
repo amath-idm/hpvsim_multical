@@ -22,7 +22,7 @@ import utils as ut
 # Imports from this repository
 import run_sim as rs
 import calibration as cal
-import settings as set
+import locations as set
 
 # Comment out to not run
 to_run = [

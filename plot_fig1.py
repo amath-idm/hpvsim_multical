@@ -13,7 +13,7 @@ import seaborn as sns
 # Imports from this repository
 import run_sim as rs
 import run_multical as rm
-import settings as set
+import locations as set
 import utils as ut
 
 

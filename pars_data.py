@@ -7,7 +7,7 @@ with high HPV burden, for use in HPVsim.
 #%% Initialization
 
 import numpy as np
-import settings as set
+import locations as set
 
 # Initialize objects with per-country results
 layer_probs          = dict()

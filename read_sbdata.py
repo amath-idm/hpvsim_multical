@@ -15,7 +15,7 @@ import hpvsim.utils as hpu
 # Imports from this repository
 import utils as ut
 import run_sim as rs
-import settings as set
+import locations as set
 
 def percentiles_to_pars(x1, p1, x2, p2):
     """ Find the parameters of a normal distribution where:

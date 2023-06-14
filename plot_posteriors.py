@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 
 # Imports from this repository
-import settings as set
+import locations as set
 import utils as ut
 
 #%% Functions

@@ -59,6 +59,8 @@ def plot_nh(sim=None):
         multiplier += 1
     axes[0].set_title("Proportion clearing\n within X years")
     axes[0].set_xticks(annual_x)
+    axes[0].set_ylabel("Probability")
+    axes[0].set_xlabel("Years")
     # axes[0].legend()
 
     # Panel B: transform prob
@@ -73,6 +75,8 @@ def plot_nh(sim=None):
         tp_array = hpu.transform_prob(transform_probs[gi], cum_dysp)
         axes[1].plot(x, tp_array, color=colors[gi], lw=2, label=genotype.upper())
     axes[1].set_title("Probability of cancer\n within X years")
+    axes[1].set_ylabel("Probability")
+    axes[1].set_xlabel("Years")
     axes[1].legend()
 
     # Panel C: total dwelltime
@@ -88,6 +92,7 @@ def plot_nh(sim=None):
     sns.violinplot(data=dd, x="genotype", y="dwelltime", ax=axes[2], palette=colors)
     axes[2].set_xlabel('')
     axes[2].set_ylabel('')
+    axes[2].set_ylabel("Years")
     axes[2].set_title('Total dwelltime\n from infection to cancer')
 
     fig.tight_layout()
