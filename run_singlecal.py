@@ -92,6 +92,7 @@ def make_priors(add_1618=True):
 
 def run_calib(location=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem='', mc_gpars=None):
+
     sim = rs.make_sim(location, calib_pars=mc_gpars)
     datafiles = ut.make_datafiles([location])[location]
 
@@ -104,7 +105,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
         sev_dist=dict(par1=[1.0, 0.1, 3.0, 0.05])
     )
-    genotype_pars = make_priors()
+    if mc_gpars is None: add_1618 = True
+    else: add_1618 = False
+    genotype_pars = make_priors(add_1618=add_1618)
 
     # if location in ['mozambique', 'malawi', 'zambia', 'burundi', 'tanzania']: # Higher than 1
     #     calib_pars['sev_dist'] = dict(par1=[1.3, 1.1, 1.5, 0.005])
@@ -116,7 +119,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     #     calib_pars['sev_dist'] = dict(par1=[0.8, 0.7, 0.9, 0.005])
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
-                            name=f'{location}_calib',
+                            name=f'{location}_calib_final',
                             datafiles=datafiles,
                             total_trials=n_trials, n_workers=n_workers,
                             storage=storage
