@@ -34,7 +34,7 @@ debug = False  # If True, this will do smaller runs that can be run locally for 
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [1200, 10][debug]  # How many trials to run for calibration
+n_trials = [2000, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -104,10 +104,10 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         sev_dist=dict(par1=[2.0, 1.5, 5.0, 0.05])
     )
     if location in ['kenya', 'south africa', 'tanzania']:
-        calib_pars['beta'] = [0.2, 0.15, 0.3, 0.05]
+        calib_pars['beta'] = [0.2, 0.14, 0.3, 0.02]
         calib_pars['cross_imm_sev_high'] = [0.5, 0.4, 0.6, 0.05]
         calib_pars['cross_imm_sus_high'] = [0.5, 0.4, 0.7, 0.05]
-        calib_pars['sev_dist'] = dict(par1=[3.0, 2.0, 5.0, 0.1])
+        calib_pars['sev_dist'] = dict(par1=[3.0, 1.5, 5.0, 0.1])
 
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
