@@ -28,15 +28,15 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [2000, 10][debug]  # How many trials to run for calibration
+n_trials = [1600, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -103,7 +103,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
-        sev_dist=dict(par1=[1.0, 0.1, 3.0, 0.05])
+        sev_dist=dict(par1=[1.0, 1.0, 5.0, 0.05])
     )
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
@@ -168,8 +168,8 @@ if __name__ == '__main__':
 
     T = sc.timer()
     good_locations = []
-    rerun_locations = ['cameroon', 'congo', 'cote divoire', 'kenya', 'mozambique', 'niger']
-    locations = ['rwanda', 'sierra leone', 'somalia', 'south africa', 'south sudan', 'tanzania', 'togo', 'uganda', 'zambia']
+    rerun_locations = ['cameroon', 'congo', 'cote divoire', 'kenya', 'mozambique', 'niger', 'south africa', 'tanzania', 'uganda', 'zambia']
+    locations = ['zambia']
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
