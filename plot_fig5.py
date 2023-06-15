@@ -127,6 +127,16 @@ if __name__ == '__main__':
     calib_pars_0 = sc.loadobj(f'results/3_sc/{locations[0]}_pars_may08_sc.obj')
     calib_pars_1 = sc.loadobj(f'results/3_sc/{locations[1]}_pars_may08_sc.obj')
     calib_pars = [calib_pars_0, calib_pars_1]
-    calib_pars, sim = plot_calib_comp(locations=locations, calib_pars=calib_pars)
+
+    make_sims = True
+    if make_sims:
+        sims = rs.run_sims(
+            locations=locations, analyzers=[ut.dwelltime_by_genotype()],
+            ressubfolder=[],
+            calib_par_stem='_pars_may08_sc',
+            age_pyr=True, debug=False, verbose=.1, do_save=True)
+
+
+    calib_pars, sims = plot_calib_comp(locations=locations, calib_pars=calib_pars)
 
     print('Done.')

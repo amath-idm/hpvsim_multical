@@ -140,11 +140,6 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    # locations = ['tanzania', 'uganda'] #set.locations[28:]
-    # sims = run_sims(
-    #     locations=locations, analyzers=[ut.dwelltime_by_genotype()],
-    #     calib_par_stem='_pars_may08_sc',
-    #     age_pyr=True, debug=False, verbose=.1, do_save=True)
 
     location = 'nigeria'
     sim = run_sim(location, ressubfolder='6_mc2', calib_par_stem='_multical_may19_pars',
