@@ -109,7 +109,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         calib_pars['cross_imm_sus_high'] = [0.5, 0.3, 0.7, 0.05]
         calib_pars['sev_dist'] = dict(par1=[3.0, 1.0, 5.0, 0.1])
     if location == 'tanzania':
-        calib_pars['beta'] = [0.2, 0.14, 0.3, 0.05]
+        calib_pars['beta'] = [0.2, 0.14, 0.3, 0.02]
         calib_pars['cross_imm_sus_med'] = [0.25, 0.2, 0.3, 0.05]
         calib_pars['cross_imm_sus_high'] = [0.4, 0.3, 0.5, 0.05]
         calib_pars['cross_imm_sev_med'] = [0.4, 0.3, 0.5, 0.05]
