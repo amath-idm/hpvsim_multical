@@ -169,7 +169,7 @@ if __name__ == '__main__':
     T = sc.timer()
     good_locations = []
     rerun_locations = ['cameroon', 'congo', 'cote divoire', 'kenya', 'mozambique', 'niger', 'south africa', 'tanzania', 'uganda', 'zambia']
-    locations = ['zambia']
+    locations = rerun_locations
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
