@@ -1,111 +1,87 @@
 """
-Plot implied natural history
+Plot immuno-varying calibrations
 """
-import hpvsim as hpv
-import hpvsim.utils as hpu
-import hpvsim.parameters as hppar
+
+# Import packages
+import sciris as sc
+import numpy as np
 import pylab as pl
 import pandas as pd
-from scipy.stats import lognorm, norm
-import numpy as np
-import sciris as sc
-import utils as ut
 import seaborn as sns
 
+
+# Imports from this repository
 import run_sim as rs
+import run_multical as rm
+import locations as set
+import utils as ut
 
 
-#%% Functions
+#%% Plotting functions
+def plot_fig1(locations, filestem=None, n_results=20):
 
-def plot_nh(sim=None):
+    ut.set_font(12)
+    n_plots = len(locations)
+    n_rows, n_cols = sc.get_rows_cols(n_plots)
 
-    # Make sims
-    genotypes = ['hpv16', 'hpv18'] #, 'hi5', 'ohr']
-    dur_episomal = sc.autolist()
-    transform_probs = sc.autolist()
-    sev_fns = sc.autolist()
-    dur_precins = sc.autolist()
-    for gi, genotype in enumerate(genotypes):
-        dur_precins += sim['genotype_pars'][genotype]['dur_precin']
-        dur_episomal += sim['genotype_pars'][genotype]['dur_episomal']
-        transform_probs += sim['genotype_pars'][genotype]['transform_prob']
-        sev_fns += sim['genotype_pars'][genotype]['sev_fn']
-        # sims[location] = sim
-
-    ####################
-    # Make figure, set fonts and colors
-    ####################
-    ut.set_font(size=16)
-    colors = sc.gridcolors(len(genotypes))
-    fig, axes = pl.subplots(1, 3, figsize=(11, 5))
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(11,10))
     axes = axes.flatten()
+    resname = 'cancers'
+    plot_count = 0
+    date = 2020
 
-    ####################
-    # Make plots
-    ####################
-    dt = 0.25
-    max_x = 30
-    x = np.arange(dt, max_x+dt, dt)
-    annual_x = np.arange(1, 11, 1)
-    width = 0.4  # the width of the bars
-    multiplier = 0
+    for pn, location in enumerate(locations):
 
-    # Panel A: clearance rates
-    for gi, genotype in enumerate(genotypes):
-        offset = width * multiplier
-        sigma, scale = ut.lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
-        rv = lognorm(sigma, 0, scale)
-        axes[0].bar(annual_x+offset-width/2, rv.cdf(annual_x), color=colors[gi], lw=2, label=genotype.upper(), width=width)
-        multiplier += 1
-    axes[0].set_title("Proportion clearing\n within X years")
-    axes[0].set_xticks(annual_x)
-    axes[0].set_ylabel("Probability")
-    axes[0].set_xlabel("Years")
-    # axes[0].legend()
+        # Plot settings
+        ax = axes[plot_count]
 
-    # Panel B: transform prob
-    for gi, genotype in enumerate(genotypes):
-        cum_dysp = np.zeros_like(x)
-        dysp_int = hppar.compute_severity_integral(x, pars=sev_fns[gi])
-        dysp_start_ind = sc.findnearest(x, dur_precins[gi]['par1'])
-        if dysp_start_ind > 0:
-            cum_dysp[dysp_start_ind:] = dysp_int[:-dysp_start_ind]
-        else:
-            cum_dysp[:] = dysp_int[:]
-        tp_array = hpu.transform_prob(transform_probs[gi], cum_dysp)
-        axes[1].plot(x, tp_array, color=colors[gi], lw=2, label=genotype.upper())
-    axes[1].set_title("Probability of cancer\n within X years")
-    axes[1].set_ylabel("Probability")
-    axes[1].set_xlabel("Years")
-    axes[1].legend()
+        dflocation = location.replace(' ', '_')
+        sccalib = sc.loadobj(f'results/1a_iv/{dflocation}_calib_{filestem}.obj')
+        reslist = sccalib.analyzer_results
+        target_data = sccalib.target_data[0]
+        target_data = target_data[(target_data.name == resname)]
 
-    # Panel C: total dwelltime
-    dd = pd.DataFrame()
-    dw = sc.autolist()
-    gen = sc.autolist()
-    for gi, genotype in enumerate(genotypes):
-        a = sim.get_analyzer('dwelltime_by_genotype')
-        dw += a.dwelltime['total'][gi]
-        gen += [genotype.upper()] * len(a.dwelltime['total'][gi])
-    dd['genotype'] = gen
-    dd['dwelltime'] = dw
-    sns.violinplot(data=dd, x="genotype", y="dwelltime", ax=axes[2], palette=colors)
-    axes[2].set_xlabel('')
-    axes[2].set_ylabel('')
-    axes[2].set_ylabel("Years")
-    axes[2].set_title('Total dwelltime\n from infection to cancer')
+        # Make labels
+        baseres = reslist[0]['cancers']
+        age_labels = [str(int(baseres['bins'][i])) + '-' + str(int(baseres['bins'][i + 1])) for i in range(len(baseres['bins'])-1)]
+        age_labels.append(str(int(baseres['bins'][-1])) + '+')
+
+        # Pull out results to plot
+        plot_indices = sccalib.df.iloc[0:n_results, 0].values
+        res = [reslist[i] for i in plot_indices]
+
+        # Plot data
+        x = np.arange(len(age_labels))
+        ydata = np.array(target_data.value)
+        ax.scatter(x, ydata, color='k', marker='s', label='Data')
+
+        # Construct a dataframe with things in the most logical order for plotting
+        bins = []
+        values = []
+        for run_num, run in enumerate(res):
+            bins += x.tolist()
+            values += list(run[resname][date])
+        modeldf = pd.DataFrame({'bins': bins, 'values': values})
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+
+        # Set title and labels
+        # ax.set_xlabel('Age group')
+        ax.set_title(f'{location.capitalize()}')
+        ax.set_ylabel('')
+        ax.set_xlabel('')
+        # ax.legend()
+        ax.set_xticks(x, [])
+        plot_count += 1
 
     fig.tight_layout()
+    pl.savefig(f"figures/fig1.png", dpi=100)
 
-    pl.savefig(f"figures/fig2.png", dpi=100)
 
-    return
- 
 
 #%% Run as a script
 if __name__ == '__main__':
 
-    sim = sc.loadobj('results/mali.sim')
-    plot_nh(sim)
+    locations = set.locations
+    plot_fig1(locations, filestem='may18', n_results=50)
 
     print('Done.')
