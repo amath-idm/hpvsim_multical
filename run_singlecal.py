@@ -167,7 +167,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['angola', 'benin', 'burkina faso', 'burundi', 'cameroon', 'chad', 'congo', 'cote divoire']#  loc.locations
+    good_locations = []
+    locations = ['guinea', 'kenya', 'madagascar', 'malawi', 'mali', 'mozambique', 'niger']
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
