@@ -16,7 +16,7 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_multical(locations, calib, n_results=20):
+def plot_fig1(locations, calib, n_results=20):
 
     ut.set_font(12)
     n_plots = len(locations)
@@ -73,7 +73,8 @@ def plot_multical(locations, calib, n_results=20):
         ax.set_xlabel('')
         # ax.legend()
         if pn in [25, 26, 27, 28, 29]:
-            ax.set_xticks(x, baseres['bins'])
+            stride = np.arange(0, len(baseres['bins']), 2)
+            ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
         else:
             ax.set_xticks(x, [])
 
@@ -88,6 +89,6 @@ if __name__ == '__main__':
 
     locations = loc.locations
     calib = sc.loadobj('results/constrained/multical_may19.obj')
-    plot_multical(locations, calib, n_results=50)
+    plot_fig1(locations, calib, n_results=50)
 
     print('Done.')

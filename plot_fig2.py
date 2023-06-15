@@ -18,7 +18,7 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_fig1(locations, filestem=None, n_results=20):
+def plot_fig2(locations, filestem=None, n_results=20):
 
     ut.set_font(12)
     n_plots = len(locations)
@@ -36,7 +36,7 @@ def plot_fig1(locations, filestem=None, n_results=20):
         ax = axes[plot_count]
 
         dflocation = location.replace(' ', '_')
-        sccalib = sc.loadobj(f'results/1a_iv/{dflocation}_calib_{filestem}.obj')
+        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}.obj')
         reslist = sccalib.analyzer_results
         target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
@@ -66,22 +66,29 @@ def plot_fig1(locations, filestem=None, n_results=20):
 
         # Set title and labels
         # ax.set_xlabel('Age group')
-        ax.set_title(f'{location.capitalize()}')
+        title_country = location.title()
+        if title_country == 'Drc':
+            title_country = 'DRC'
+        if title_country == 'Cote Divoire':
+            title_country = "Cote d'Ivoire"
+        ax.set_title(title_country)
         ax.set_ylabel('')
         ax.set_xlabel('')
-        # ax.legend()
-        ax.set_xticks(x, [])
+        if pn in [25, 26, 27, 28, 29]:
+            stride = np.arange(0, len(baseres['bins']), 2)
+            ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
+        else:
+            ax.set_xticks(x, [])
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig1.png", dpi=100)
-
+    pl.savefig(f"figures/fig2.png", dpi=100)
 
 
 #%% Run as a script
 if __name__ == '__main__':
 
     locations = set.locations
-    plot_fig1(locations, filestem='may18', n_results=50)
+    plot_fig2(locations, filestem='jun15', n_results=50)
 
     print('Done.')
