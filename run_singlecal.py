@@ -36,7 +36,7 @@ debug = False  # If True, this will do smaller runs that can be run locally for 
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [1600, 10][debug]  # How many trials to run for calibration
+n_trials = [1200, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -103,7 +103,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
-        sev_dist=dict(par1=[1.0, 1.0, 5.0, 0.05])
+        sev_dist=dict(par1=[2.0, 1.5, 5.0, 0.05])
     )
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
@@ -167,9 +167,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    good_locations = []
-    rerun_locations = ['cameroon', 'congo', 'cote divoire', 'kenya', 'mozambique', 'niger', 'south africa', 'tanzania', 'uganda', 'zambia']
-    locations = rerun_locations
+    rererun_locations = ['cote divoire', 'kenya', 'mozambique', 'south africa', 'tanzania', 'uganda', 'zambia']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
+    locations = rererun_locations
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
