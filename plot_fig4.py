@@ -1,4 +1,4 @@
-"""![](figures/fig4_calib_comp.png)
+"""
 Plot distribution of rel_sevs
 """
 
@@ -18,7 +18,7 @@ import utils as ut
 
 
 #%% Plotting functions
-def plot_rel_sevs(locations, make=False, filestem=None, n_results=100):
+def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
 
     ut.set_font(16)
     fig, ax = pl.subplots(1, 1, figsize=(11,5))
@@ -29,11 +29,11 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=100):
         loc = sc.autolist()
         for pn, location in enumerate(locations):
             dflocation = location.replace(' ', '_')
-            calib = sc.loadobj(f'results/1a_iv/{dflocation+filestem}.obj')
+            calib = sc.loadobj(f'results/immunovarying/{dflocation+filestem}.obj')
             rel_sevs += [calib.trial_pars_to_sim_pars(which_pars=i)['sev_dist']['par1'] for i in range(n_results)]
             loclabel = location.capitalize()
-            if location=='drc':loclabel='DRC'
-            if location=='cote divoire': loclabel="Cote d'Ivoire"
+            if location == 'drc': loclabel='DRC'
+            if location == 'cote divoire': loclabel = "Cote d'Ivoire"
             loc += [loclabel]*n_results
         df['Country'] = loc
         df['Mean immunocompromise level'] = rel_sevs
@@ -48,7 +48,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=100):
     ax.set_ylabel('')
     ax.annotate('More immunocompromised', xy=(5, 1.2), xytext=(5, 1.6) ,horizontalalignment="center", arrowprops=dict(arrowstyle='<-',lw=1))
     fig.tight_layout()
-    pl.savefig(f"figures/fig3.png", dpi=100)
+    pl.savefig(f"figures/fig4.png", dpi=100)
 
 
 
@@ -56,6 +56,6 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=100):
 if __name__ == '__main__':
 
     locations = set.locations
-    plot_rel_sevs(locations, make=False, filestem='_calib_may18')
+    plot_rel_sevs(locations, make=False, filestem='_calib_jun15')
 
     print('Done.')

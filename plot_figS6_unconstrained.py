@@ -10,9 +10,7 @@ import pandas as pd
 import seaborn as sns
 
 # Imports from this repository
-import run_sim as rs
-import run_multical as rm
-import locations as set
+import locations as loc
 import utils as ut
 
 
@@ -32,7 +30,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
 
         dflocation = location.replace(' ', '_')
 
-        calib = sc.loadobj(f'results/{dflocation}_calib_{filestem}.obj')
+        calib = sc.loadobj(f'results/unconstrained/{dflocation}_calib_{filestem}.obj')
 
         # Plot settings
         ax = axes[plot_count]
@@ -67,22 +65,31 @@ def plot_single_cals(locations, n_results=20, filestem=None):
         sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
 
         # Set title and labels
-        # ax.set_xlabel('Age group')
-        ax.set_title(f'{location.capitalize()}')
+        title_country = location.title()
+        if title_country == 'Drc':
+            title_country = 'DRC'
+        if title_country == 'Cote Divoire':
+            title_country = "Cote d'Ivoire"
+        ax.set_title(title_country)
         ax.set_ylabel('')
         ax.set_xlabel('')
         # ax.legend()
-        ax.set_xticks(x, [])
+        if pn in [25, 26, 27, 28, 29]:
+            stride = np.arange(0, len(baseres['bins']), 2)
+            ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
+        else:
+            ax.set_xticks(x, [])
+
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig1.png", dpi=100)
+    pl.savefig(f"figures/SMs/fig_fit_sc.png", dpi=100)
 
 
 # %% Run as a script
 if __name__ == '__main__':
     filestem = 'may08'
-    locations = set.locations
+    locations = loc.locations
     plot_single_cals(locations, n_results=50, filestem=filestem)
 
     print('Done.')
