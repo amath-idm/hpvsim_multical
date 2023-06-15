@@ -72,8 +72,8 @@ def plot_multical(locations, calib, n_results=20):
         ax.set_ylabel('')
         ax.set_xlabel('')
         # ax.legend()
-        if pn in [0, 1, 2, 3, 4]:
-            ax.set_xticks(x, [age_labels])
+        if pn in [25, 26, 27, 28, 29]:
+            ax.set_xticks(x, baseres['bins'])
         else:
             ax.set_xticks(x, [])
 
