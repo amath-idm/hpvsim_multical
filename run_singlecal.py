@@ -2,9 +2,7 @@
 This file is used to run both the immuno-varying and the unconstrained calibrations as described in
 the HPVsim multicalibration paper (reference forthcoming).
 
-Instructions:
-    - Go to the CONFIGURATIONS section on lines 29-36 to set up the script before running it.
-    -
+Instructions: Go to the CONFIGURATIONS section on lines 29-36 to set up the script before running it.
 """
 
 # Additions to handle numpy multithreading
@@ -28,8 +26,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
