@@ -169,6 +169,7 @@ if __name__ == '__main__':
     T = sc.timer()
     good_locations = []
     locations = ['guinea', 'kenya', 'madagascar', 'malawi', 'mali', 'mozambique', 'niger']
+    final_locations = ['rwanda', 'sierra leone', 'somalia', 'south africa', 'south sudan', 'tanzania', 'togo', 'uganda', 'zambia']
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'

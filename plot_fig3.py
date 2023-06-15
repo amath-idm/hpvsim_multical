@@ -1,5 +1,5 @@
 """
-Plot implied natural history
+Plot implied natural history.
 """
 import hpvsim as hpv
 import hpvsim.utils as hpu
@@ -15,12 +15,11 @@ import seaborn as sns
 import run_sim as rs
 
 
-#%% Functions
+# %% Functions
 
 def plot_nh(sim=None):
-
     # Make sims
-    genotypes = ['hpv16', 'hpv18'] #, 'hi5', 'ohr']
+    genotypes = ['hpv16', 'hpv18']  # , 'hi5', 'ohr']
     dur_episomal = sc.autolist()
     transform_probs = sc.autolist()
     sev_fns = sc.autolist()
@@ -45,7 +44,7 @@ def plot_nh(sim=None):
     ####################
     dt = 0.25
     max_x = 30
-    x = np.arange(dt, max_x+dt, dt)
+    x = np.arange(dt, max_x + dt, dt)
     annual_x = np.arange(1, 11, 1)
     width = 0.4  # the width of the bars
     multiplier = 0
@@ -55,7 +54,8 @@ def plot_nh(sim=None):
         offset = width * multiplier
         sigma, scale = ut.lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
         rv = lognorm(sigma, 0, scale)
-        axes[0].bar(annual_x+offset-width/2, rv.cdf(annual_x), color=colors[gi], lw=2, label=genotype.upper(), width=width)
+        axes[0].bar(annual_x + offset - width / 2, rv.cdf(annual_x), color=colors[gi], lw=2, label=genotype.upper(),
+                    width=width)
         multiplier += 1
     axes[0].set_title("Proportion clearing\n within X years")
     axes[0].set_xticks(annual_x)
@@ -97,15 +97,22 @@ def plot_nh(sim=None):
 
     fig.tight_layout()
 
-    pl.savefig(f"figures/fig2.png", dpi=100)
+    pl.savefig(f"figures/fig3.png", dpi=100)
 
     return
- 
 
-#%% Run as a script
+
+# %% Run as a script
 if __name__ == '__main__':
 
-    sim = sc.loadobj('results/mali.sim')
+    location = 'nigeria'
+    make_sim = True
+    if make_sim:
+        sim = rs.run_sim(location, ressubfolder='constrained', calib_par_stem='_multical_may19_pars',
+                         analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
+    else:
+        sim = sc.loadobj(f'results/{location}.sim')
+
     plot_nh(sim)
 
     print('Done.')
