@@ -18,7 +18,7 @@ import run_sim as rs
 #%% Plotting function
 
 
-def plot_calib_comp(locations, calib_pars=None):
+def plot_calib_comp(locations, sims=None, calib_pars=None):
 
     # Make sims
     genotypes = ['hpv16', 'hpv18', 'hi5', 'ohr']
@@ -27,7 +27,7 @@ def plot_calib_comp(locations, calib_pars=None):
     transform_probs = sc.autolist()
     sev_fns = sc.autolist()
     dur_precins = sc.autolist()
-    sims = sc.loadobj('results/comp_sims_may08.obj')
+
     for li, location in enumerate(locations):
         sim = sims[location]
         # pars = sc.dcp(calib_pars[li])
@@ -115,7 +115,7 @@ def plot_calib_comp(locations, calib_pars=None):
 
     fig.tight_layout()
 
-    pl.savefig(f"figures/fig4.png", dpi=100)
+    pl.savefig(f"figures/fig5.png", dpi=100)
 
     return calib_pars, sims
  
@@ -124,19 +124,21 @@ def plot_calib_comp(locations, calib_pars=None):
 if __name__ == '__main__':
 
     locations = ['tanzania', 'uganda']
-    calib_pars_0 = sc.loadobj(f'results/3_sc/{locations[0]}_pars_may08_sc.obj')
-    calib_pars_1 = sc.loadobj(f'results/3_sc/{locations[1]}_pars_may08_sc.obj')
+    calib_pars_0 = sc.loadobj(f'results/unconstrained/{locations[0]}_pars_may08_sc.obj')
+    calib_pars_1 = sc.loadobj(f'results/unconstrained/{locations[1]}_pars_may08_sc.obj')
     calib_pars = [calib_pars_0, calib_pars_1]
 
-    make_sims = True
+    make_sims = False
     if make_sims:
         sims = rs.run_sims(
             locations=locations, analyzers=[ut.dwelltime_by_genotype()],
-            ressubfolder=[],
+            ressubfolder='unconstrained',
             calib_par_stem='_pars_may08_sc',
-            age_pyr=True, debug=False, verbose=.1, do_save=True)
+            age_pyr=False, debug=False, verbose=.1, do_save=False)
+        sc.saveobj('results/comp_sims_may08.obj', sims)
+    else:
+        sims = sc.loadobj('results/comp_sims_may08.obj')
 
-
-    calib_pars, sims = plot_calib_comp(locations=locations, calib_pars=calib_pars)
+    calib_pars, sims = plot_calib_comp(locations=locations, sims=sims, calib_pars=calib_pars)
 
     print('Done.')
