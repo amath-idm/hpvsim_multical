@@ -105,9 +105,9 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     )
     if location in ['kenya', 'south africa', 'tanzania']:
         calib_pars['beta'] = [0.2, 0.14, 0.3, 0.02]
-        calib_pars['cross_imm_sev_high'] = [0.5, 0.4, 0.6, 0.05]
-        calib_pars['cross_imm_sus_high'] = [0.5, 0.4, 0.7, 0.05]
-        calib_pars['sev_dist'] = dict(par1=[3.0, 1.5, 5.0, 0.1])
+        calib_pars['cross_imm_sev_high'] = [0.5, 0.3, 0.5, 0.05]
+        calib_pars['cross_imm_sus_high'] = [0.5, 0.3, 0.7, 0.05]
+        calib_pars['sev_dist'] = dict(par1=[3.0, 1.0, 5.0, 0.1])
 
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
 #    rererun_locations = ['uganda', 'zambia']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
-    rerererun_locations = ['kenya', 'south africa', 'tanzania']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
+    rerererun_locations = ['tanzania']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
     locations = rerererun_locations
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
