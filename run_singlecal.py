@@ -28,8 +28,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
@@ -105,6 +105,12 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
         sev_dist=dict(par1=[2.0, 1.5, 5.0, 0.05])
     )
+    if location in ['kenya', 'south africa', 'tanzania']:
+        calib_pars['beta'] = [0.2, 0.15, 0.3, 0.05]
+        calib_pars['cross_imm_sev_high'] = [0.5, 0.4, 0.6, 0.05]
+        calib_pars['cross_imm_sus_high'] = [0.5, 0.4, 0.7, 0.05]
+        calib_pars['sev_dist'] = dict(par1=[3.0, 2.0, 5.0, 0.1])
+
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
     genotype_pars = make_priors(add_1618=add_1618)
@@ -167,8 +173,9 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    rererun_locations = ['cote divoire', 'kenya', 'mozambique', 'south africa', 'tanzania', 'uganda', 'zambia']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
-    locations = rererun_locations
+#    rererun_locations = ['uganda', 'zambia']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
+    rerererun_locations = ['kenya', 'south africa', 'tanzania']  # [1.0, 1.15, 1.2, 1.1, 1.05, 1.2, 1.1]
+    locations = rerererun_locations
     filestem = '_jun15'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
