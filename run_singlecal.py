@@ -101,7 +101,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
-        sev_dist=dict(par1=[2.0, 1.5, 5.0, 0.05])
+        sev_dist=dict(par1=[1.0, 0.75, 1.5, 0.05])
     )
     if location in ['malawi']:
         calib_pars['beta'] = [0.18, 0.14, 0.22, 0.02]
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
 #    hiv_locations = ['south_africa', 'zimbabwe', 'zambia', 'mozambique', 'malawi', 'uganda', 'tanzania', 'congo', 'kenya']
-    refine_locations = ['malawi']
+    refine_locations = ['burkina faso']
     locations = refine_locations
     filestem = '_jun16'
     # ressubfolder = '1a_iv'
