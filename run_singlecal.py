@@ -26,8 +26,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
 #    hiv_locations = ['south_africa', 'zimbabwe', 'zambia', 'mozambique', 'malawi', 'uganda', 'tanzania', 'congo', 'kenya']
-    refine_locations = ['togo']
+    refine_locations = ['somalia']
     locations = refine_locations
     filestem = '_jun16'
     # ressubfolder = '1a_iv'
