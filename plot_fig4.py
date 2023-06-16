@@ -74,11 +74,13 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     fig.tight_layout()
     pl.savefig(f"figures/scatter.png", dpi=100)
 
+    return df2
+
 
 #%% Run as a script
 if __name__ == '__main__':
 
     locations = set.locations
-    plot_rel_sevs(locations, make=False, filestem='_calib_jun15')
+    df2 = plot_rel_sevs(locations, make=True, filestem='_calib_jun15')
 
     print('Done.')
