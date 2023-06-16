@@ -1,6 +1,15 @@
 """
 Define the HPVsim simulation objects.
 """
+# Additions to handle numpy multithreading
+import os
+
+os.environ.update(
+    OMP_NUM_THREADS='1',
+    OPENBLAS_NUM_THREADS='1',
+    NUMEXPR_NUM_THREADS='1',
+    MKL_NUM_THREADS='1',
+)
 
 # Standard imports
 import numpy as np
@@ -10,6 +19,7 @@ import hpvsim as hpv
 # Imports from this repository
 import pars_data as dp
 import utils as ut
+import locations as loc
 
 # %% Settings and filepaths
 # Debug switch
@@ -146,32 +156,3 @@ if __name__ == '__main__':
 
     T.toc('Done')
 
-    # location = 'tanzania'
-    # az = hpv.age_results(
-    #     result_args=sc.objdict(
-    #         hpv_prevalence=sc.objdict(
-    #             years=2020,
-    #             edges=[0,15,25,30,35,40,50,60,70,80,100],
-    #         )
-    #     )
-    # )
-    #
-    # age_pyr = hpv.age_pyramid(
-    #     timepoints=['2020'],
-    #     datafile=f'data/{country}_age_pyramid_reduced.csv',
-    #     edges=np.linspace(0, 100, 21))
-    #
-    # # calib_pars = sc.loadobj(f'results/{location}_pars_may03_sc.obj')
-    # sim = make_sim(
-    #     location,
-    #     # calib_pars=calib_pars,
-    #     analyzers=[
-    #         az,
-    #         age_pyr,
-    #     ]
-    # )
-    # sim.run()
-    # a = sim.get_analyzer('age_results')
-    # sim.plot()
-    # a.plot()
-    # T.toc('Done')

@@ -26,8 +26,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
@@ -171,12 +171,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-#    hiv_locations = ['south_africa', 'zimbabwe', 'zambia', 'mozambique', 'malawi', 'uganda', 'tanzania', 'congo', 'kenya']
-    refine_locations = ['somalia']
-    locations = refine_locations
-    filestem = '_jun16'
-    # ressubfolder = '1a_iv'
-    # figsubfolder = '6_may19iv'
+    locations = loc.locations
+    filestem = '_jun15'
 
     if cal_type == 'immunovarying':
         mc_gpars = dict(
@@ -203,21 +199,6 @@ if __name__ == '__main__':
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
         for location in locations:
-
-            # if location in ['malawi']:
-            #     mc_gpars['genotype_pars']['hi5'] = dict(
-            #         transform_prob=3e-10,
-            #         sev_fn=dict(form='logf2', k=0.2, x_infl=0, ttc=30),
-            #         dur_episomal=dict(dist='lognormal', par1=3, par2=10),
-            #         rel_beta=1
-            #     )
-            #     mc_gpars['genotype_pars']['ohr'] = dict(
-            #         transform_prob=5e-10,
-            #         sev_fn=dict(form='logf2', k=0.2, x_infl=0, ttc=30),
-            #         dur_episomal=dict(dist='lognormal', par1=3, par2=8),
-            #         rel_beta=1.05
-            #     )
-
             sim, calib = run_calib(mc_gpars=mc_gpars, location=location, n_trials=n_trials, n_workers=n_workers,
                                    do_save=do_save, do_plot=False, filestem=filestem)
 
