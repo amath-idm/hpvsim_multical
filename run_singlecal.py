@@ -103,10 +103,12 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
         sev_dist=dict(par1=[2.0, 1.5, 5.0, 0.05])
     )
-    if location in ['malawi', 'mozambique', 'south africa', 'kenya', 'uganda']:
-        calib_pars['beta'] = [0.2, 0.14, 0.3, 0.02]
-        calib_pars['cross_imm_sev_high'] = [0.5, 0.3, 0.5, 0.05]
-        calib_pars['cross_imm_sus_high'] = [0.5, 0.3, 0.7, 0.05]
+    if location in ['malawi']:
+        calib_pars['beta'] = [0.18, 0.14, 0.22, 0.02]
+        calib_pars['cross_imm_sus_med'] = [0.25, 0.2, 0.3, 0.05]
+        calib_pars['cross_imm_sus_high'] = [0.4, 0.3, 0.5, 0.05]
+        calib_pars['cross_imm_sev_med'] = [0.4, 0.3, 0.5, 0.05]
+        calib_pars['cross_imm_sev_high'] = [0.5, 0.4, 0.6, 0.05]
         calib_pars['sev_dist'] = dict(par1=[3.0, 1.0, 5.0, 0.1])
     if location == 'tanzania':
         calib_pars['beta'] = [0.24, 0.2, 0.3, 0.02]
@@ -119,6 +121,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
     genotype_pars = make_priors(add_1618=add_1618)
+    if location == 'malawi': genotype_pars = {}
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib_final',
@@ -169,9 +172,10 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    refine_locations = ['burkina faso', 'burundi', 'malawi', 'mozambique', 'south africa', 'kenya', 'uganda']
+#    hiv_locations = ['south_africa', 'zimbabwe', 'zambia', 'mozambique', 'malawi', 'uganda', 'tanzania', 'congo', 'kenya']
+    refine_locations = ['malawi']
     locations = refine_locations
-    filestem = '_jun15'
+    filestem = '_jun16'
     # ressubfolder = '1a_iv'
     # figsubfolder = '6_may19iv'
 
@@ -200,6 +204,21 @@ if __name__ == '__main__':
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
         for location in locations:
+
+            if location in ['malawi']:
+                mc_gpars['genotype_pars']['hi5'] = dict(
+                    transform_prob=3e-10,
+                    sev_fn=dict(form='logf2', k=0.2, x_infl=0, ttc=30),
+                    dur_episomal=dict(dist='lognormal', par1=3, par2=10),
+                    rel_beta=1
+                )
+                mc_gpars['genotype_pars']['ohr'] = dict(
+                    transform_prob=5e-10,
+                    sev_fn=dict(form='logf2', k=0.2, x_infl=0, ttc=30),
+                    dur_episomal=dict(dist='lognormal', par1=3, par2=8),
+                    rel_beta=1.05
+                )
+
             sim, calib = run_calib(mc_gpars=mc_gpars, location=location, n_trials=n_trials, n_workers=n_workers,
                                    do_save=do_save, do_plot=False, filestem=filestem)
 
