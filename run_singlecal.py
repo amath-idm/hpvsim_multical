@@ -172,7 +172,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
 #    hiv_locations = ['south_africa', 'zimbabwe', 'zambia', 'mozambique', 'malawi', 'uganda', 'tanzania', 'congo', 'kenya']
-    refine_locations = ['burundi']
+    refine_locations = ['togo']
     locations = refine_locations
     filestem = '_jun16'
     # ressubfolder = '1a_iv'
