@@ -121,7 +121,6 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     if mc_gpars is None: add_1618 = True
     else: add_1618 = False
     genotype_pars = make_priors(add_1618=add_1618)
-    if location == 'malawi': genotype_pars = {}
 
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib_final',
