@@ -46,7 +46,7 @@ def make_priors(add_1618=True):
     default = dict(
         hi5=dict(
             transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-            sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
+            sev_fn=dict(k=[0.05, 0.04, 0.08, 0.01]),
             dur_episomal=dict(
                 par1=[2.5, 2, 3, 0.5],
                 par2=[7, 4, 10, 0.5]),
@@ -54,7 +54,7 @@ def make_priors(add_1618=True):
         ),
         ohr=dict(
             transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-            sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
+            sev_fn=dict(k=[0.05, 0.04, 0.08, 0.01]),
             dur_episomal=dict(
                 par1=[2.5, 2, 3, 0.5],
                 par2=[7, 4, 10, 0.5]),
