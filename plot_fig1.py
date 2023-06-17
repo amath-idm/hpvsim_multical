@@ -1,5 +1,5 @@
 """
-This script produces figure 1 of the HPVsim calibration paper
+This script plots all the constrained calibrations together
 """
 
 # Import packages
@@ -11,9 +11,7 @@ import seaborn as sns
 
 
 # Imports from this repository
-import run_sim as rs
-import run_multical as rm
-import settings as set
+import locations as loc
 import utils as ut
 
 
@@ -24,7 +22,7 @@ def plot_fig1(locations, calib, n_results=20):
     n_plots = len(locations)
     n_rows, n_cols = sc.get_rows_cols(n_plots)
 
-    fig, axes = pl.subplots(n_rows, n_cols, figsize=(8,11))
+    fig, axes = pl.subplots(n_rows, n_cols, figsize=(11, 10))
     axes = axes.flatten()
     resname = 'cancers'
     plot_count = 0
@@ -65,23 +63,32 @@ def plot_fig1(locations, calib, n_results=20):
 
         # Set title and labels
         # ax.set_xlabel('Age group')
-        ax.set_title(f'{location.capitalize()}')
+        title_country = location.title()
+        if title_country == 'Drc':
+            title_country = 'DRC'
+        if title_country == 'Cote Divoire':
+            title_country = "Cote d'Ivoire"
+        ax.set_title(title_country)
         ax.set_ylabel('')
         ax.set_xlabel('')
         # ax.legend()
-        ax.set_xticks(x, [])
+        if pn in [25, 26, 27, 28, 29]:
+            stride = np.arange(0, len(baseres['bins']), 2)
+            ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
+        else:
+            ax.set_xticks(x, [])
+
         plot_count += 1
 
     fig.tight_layout()
     pl.savefig(f"figures/fig1.png", dpi=100)
 
 
-
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    calib = sc.loadobj('results/multical_apr20.obj')
-    plot_fig1(locations, calib, n_results=20)
+    locations = loc.locations
+    calib = sc.loadobj('results/constrained/multical_may19.obj')
+    plot_fig1(locations, calib, n_results=50)
 
     print('Done.')

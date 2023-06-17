@@ -1,4 +1,5 @@
 ﻿year,name,genotype,value
-2015,cancerous_genotype_dist,16,0.442
-2015,cancerous_genotype_dist,18,0.182
-2015,cancerous_genotype_dist,hrhpv,0.376
+2015,cancerous_genotype_dist,16,0.49
+2015,cancerous_genotype_dist,18,0.13
+2015,cancerous_genotype_dist,hi5,0.28
+2015,cancerous_genotype_dist,ohr,0.1

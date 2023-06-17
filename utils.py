@@ -9,7 +9,7 @@ import hpvsim.utils as hpu
 import pandas as pd
 import numpy as np
 
-import settings as set
+import locations as set
 import pars_data as dp
 
 def set_font(size=None, font='Libertinus Sans'):
@@ -118,20 +118,23 @@ def make_layer_probs(location=None, marriage_scale=1):
 def make_datafiles(locations):
     ''' Get the relevant datafiles for the selected locations '''
     datafiles = dict()
-    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda']
-    cin3_type_locs      = ['guinea', 'nigeria', 'senegal', 'south africa', 'tanzania']
-    cin1_type_locs      = ['guinea', 'senegal', 'south africa']
+    cancer_type_locs    = ['ethiopia', 'guinea', 'kenya', 'mali', 'mozambique', 'nigeria', 'senegal', 'south africa', 'tanzania', 'uganda', 'zimbabwe']
+    cin3_type_locs      = ['guinea', 'kenya', 'nigeria', 'senegal', 'south africa', 'tanzania']
+    cin1_type_locs      = ['guinea', 'kenya', 'nigeria', 'senegal', 'south africa']
 
     for location in locations:
         dflocation = location.replace(' ','_')
-        datafiles[location] = [f'data/{dflocation}_cancer_cases.csv']
+        datafiles[location] = [
+            f'data/{dflocation}_cancer_cases.csv',
+            f'data/{dflocation}_asr_cancer_incidence.csv',
+        ]
 
         if location in cancer_type_locs:
             datafiles[location] += [f'data/{dflocation}_cancer_types.csv']
-        if location in cin3_type_locs:
-            datafiles[location] += [f'data/{dflocation}_cin3_types.csv']
-        if location in cin1_type_locs:
-            datafiles[location] += [f'data/{dflocation}_cin1_types.csv']
+        # if location in cin3_type_locs:
+        #     datafiles[location] += [f'data/{dflocation}_cin3_types.csv']
+        # if location in cin1_type_locs:
+        #     datafiles[location] += [f'data/{dflocation}_cin1_types.csv']
 
     return datafiles
 
@@ -169,12 +172,65 @@ class AFS(hpv.Analyzer):
                 num_inds_f = hpu.true(num_conditions_f)
                 self.prop_active_f[cohort_ind,bin_ind] = len(num_inds_f)/len(denom_inds_f)
 
-                conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin) * sim.people.level0
+                conditions_m = ~sim.people.is_female * sim.people.alive * (sim.people.age >= (bin-1)) * (sim.people.age < bin)
                 denom_inds_m = hpu.true(conditions_m)
                 num_conditions_m = conditions_m * (sim.people.n_rships.sum(axis=0)>0)
                 num_inds_m = hpu.true(num_conditions_m)
                 self.prop_active_m[ci,bin_ind] = len(num_inds_m)/len(denom_inds_m)
         return
+
+
+class dwelltime_by_genotype(hpv.Analyzer):
+    '''
+    Determine the age at which people with cervical cancer were causally infected and
+    time spent between infection and cancer.
+    '''
+
+    def __init__(self, start_year=None, **kwargs):
+        super().__init__(**kwargs)
+        self.start_year = start_year
+        self.years = None
+
+    def initialize(self, sim):
+        super().initialize(sim)
+        self.years = sim.yearvec
+        if self.start_year is None:
+            self.start_year = sim['start']
+        self.age_causal = []
+        self.age_cancer = []
+        self.dwelltime = dict()
+        for state in ['precin', 'cin1', 'cin2', 'cin3', 'total']:
+            self.dwelltime[state] = dict()
+            for gtype in range(sim['n_genotypes']):
+                self.dwelltime[state][gtype] = []
+
+    def apply(self, sim):
+        if sim.yearvec[sim.t] >= self.start_year:
+            cancer_genotypes, cancer_inds = (sim.people.date_cancerous == sim.t).nonzero()
+            if len(cancer_inds):
+                current_age = sim.people.age[cancer_inds]
+                date_exposed = sim.people.date_exposed[cancer_genotypes, cancer_inds]
+                date_cin1 = sim.people.date_cin1[cancer_genotypes, cancer_inds]
+                date_cin2 = sim.people.date_cin2[cancer_genotypes, cancer_inds]
+                date_cin3 = sim.people.date_cin3[cancer_genotypes, cancer_inds]
+                hpv_time = (date_cin1 - date_exposed) * sim['dt']
+                cin1_time = (date_cin2 - date_cin1) * sim['dt']
+                cin2_time = (date_cin3 - date_cin2) * sim['dt']
+                cin3_time = (sim.t - date_cin3) * sim['dt']
+                total_time = (sim.t - date_exposed) * sim['dt']
+                self.age_causal += (current_age - total_time).tolist()
+                self.age_cancer += current_age.tolist()
+                for gtype in range(sim['n_genotypes']):
+                    gtype_inds = hpv.true(cancer_genotypes == gtype)
+                    self.dwelltime['precin'][gtype] += hpv_time[gtype_inds].tolist()
+                    self.dwelltime['cin1'][gtype] += cin1_time[gtype_inds].tolist()
+                    self.dwelltime['cin2'][gtype] += cin2_time[gtype_inds].tolist()
+                    self.dwelltime['cin3'][gtype] += cin3_time[gtype_inds].tolist()
+                    self.dwelltime['total'][gtype] += total_time[gtype_inds].tolist()
+        return
+
+    def finalize(self, sim=None):
+        super().initialize(sim)
 
 
 class prop_married(hpv.Analyzer):

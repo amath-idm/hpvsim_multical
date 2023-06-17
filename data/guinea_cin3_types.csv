@@ -1,4 +1,5 @@
 ﻿year,name,genotype,value
-2015,cin3_genotype_dist,16,0.2
-2015,cin3_genotype_dist,18,0.067
-2015,cin3_genotype_dist,hrhpv,0.733
+2015,cin1_prevalence_by_genotype,16,0.2
+2015,cin1_prevalence_by_genotype,18,0.67
+2015,cin1_prevalence_by_genotype,hi5,0.6
+2015,cin1_prevalence_by_genotype,ohr,0.067
