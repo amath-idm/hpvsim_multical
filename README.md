@@ -16,5 +16,5 @@ This repository includes the code for generating the figures and results in the 
 
 ## Installating and running
 - Ensure you have Python installed (if you haven't installed Python already, the easiest is to use Anaconda).
-- Install HPVsim (hpvsim.org)
+- Install [HPVsim](http://hpvsim.org/)
 - Clone this repository and run the scripts as desired.
