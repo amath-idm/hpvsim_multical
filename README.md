@@ -1,5 +1,11 @@
 # Inferring the natural history of HPV from global cancer registries: insights from a multi-country calibration
 
+## Summary
+This repository includes the code for generating the figures and results in the manuscript "Inferring the natural history of HPV from global cancer registries: insights from a multi-country calibration". The citation for the manuscript is:
+
+> Inferring the natural history of HPV from global cancer registries: insights from a multi-country calibration (preprint). Stuart RM, Cohen JA, Abeysuriya RG, Sanz-Leon P, Kerr CC, Klein DJ.
+
+
 ## Structure
 - The scripts prefixed `run_` are used for running simulations and calibrations.
 - The scripts prefixed `plot_` are used for plotting figures. The numbering of the figures corresponds to the numbering in the manuscript.
