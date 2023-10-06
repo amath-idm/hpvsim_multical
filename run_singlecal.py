@@ -34,7 +34,7 @@ debug = False  # If True, this will do smaller runs that can be run locally for 
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [1400, 10][debug]  # How many trials to run for calibration
+n_trials = [2000, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -58,10 +58,14 @@ def make_priors(add_1618=True):
 
     if add_1618:
         default['hpv16'] = dict(
+            dur_precin=dict(par1=[4, 3, 7, 0.5], par2=[20, 15, 25, 1]),
+            dur_cin=dict(par1=[12, 10, 15, 0.5], par2=[30, 20, 35, 1]),
             cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             cancer_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
         )
         default['hpv18'] = dict(
+            dur_precin=dict(par1=[4, 3, 7, 0.5], par2=[20, 15, 25, 1]),
+            dur_cin=dict(par1=[12, 10, 15, 0.5], par2=[30, 20, 35, 1]),
             cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             cancer_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             rel_beta=[0.75, 0.7, 0.95, 0.05]
@@ -141,7 +145,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['nigeria', 'tanzania'] #loc.locations
+    locations = ['tanzania'] #loc.locations
     filestem = '_oct06'
 
     if cal_type == 'immunovarying':
