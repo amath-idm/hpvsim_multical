@@ -112,6 +112,13 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['m'][1]*=.4
         layer_probs['m'][1][7:]*=.5
 
+    # Increasing numbers of casual partners for women in Tanzania as they get older
+    if location == 'tanzania':
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.7, 0.8, 0.6, 0.6, 0.5, 0.6, 0.7, 0.5, 0.4, 0.1, 0.1, 0.05, 0.01
+        ])
+
     return layer_probs
 
 

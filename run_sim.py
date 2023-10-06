@@ -150,9 +150,11 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = loc.locations
+    locations = ['tanzania']  # loc.locations
     for location in locations:
-        msim = run_parsets(location=location, save_results=True)
+
+        sim = run_sim(location=location)
+        # msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')
 
