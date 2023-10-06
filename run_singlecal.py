@@ -45,11 +45,15 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 def make_priors(add_1618=True):
     default = dict(
         hi5=dict(
+            dur_precin=dict(par1=[4, 3, 7, 0.5], par2=[20, 15, 25, 1]),
+            dur_cin=dict(par1=[12, 10, 15, 0.5], par2=[30, 20, 35, 1]),
             cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             cancer_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             rel_beta=[0.75, 0.7, 1.25, 0.05]
         ),
         ohr=dict(
+            dur_precin=dict(par1=[4, 3, 7, 0.5], par2=[20, 15, 25, 1]),
+            dur_cin=dict(par1=[12, 10, 15, 0.5], par2=[30, 20, 35, 1]),
             cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             cancer_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
             rel_beta=[0.75, 0.7, 1.25, 0.05]
@@ -89,7 +93,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         # cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
         # cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
         # cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
-        sev_dist=dict(par1=[1.0, 0.75, 1.5, 0.05])
+        # sev_dist=dict(par1=[1.0, 0.75, 1.5, 0.05])
     )
 
     if mc_gpars is None: add_1618 = True
