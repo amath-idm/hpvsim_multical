@@ -154,11 +154,13 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = ['angola', 'benin', 'burkina faso', 'burundi', 'cameroon']  # loc.locations
+    locations = ['tanzania']  # loc.locations
+
+    cp = sc.loadobj('results/unconstrained/tanzania_pars_oct06_iv.obj')
     # sims = run_sims(locations=locations, do_save=True)
     for location in locations:
 
-        sim = run_sim(location=location)
+        sim = run_sim(location=location, calib_pars=cp)
     #     msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')

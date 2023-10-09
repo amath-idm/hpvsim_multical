@@ -105,9 +105,12 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['m'][1][9:]*=.15
     if location in ['guinea', 'nigeria', 'senegal', 'sierra leone', 'sudan']:
         layer_probs['m'][1]*=.7
-    if location in ['kenya', 'madagascar', 'malawi', 'mozambique', 'rwanda', 'tanzania', 'togo', 'uganda', 'zambia', 'zimbabwe']:
+    if location in ['kenya', 'madagascar', 'malawi', 'mozambique', 'rwanda', 'togo', 'uganda', 'zambia', 'zimbabwe']:
         layer_probs['m'][1]*=.5
         layer_probs['m'][1][9:]*=.15
+    if location=='tanzania':
+        layer_probs['m'][1]*=.5
+        # layer_probs['m'][1][9:]*=.15
     if location=='south africa':
         layer_probs['m'][1]*=.4
         layer_probs['m'][1][7:]*=.5
