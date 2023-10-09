@@ -276,7 +276,7 @@ def plot_sb(dist_type='lognormal'):
             ax.set_xlabel('')
 
         fig.tight_layout()
-        pl.savefig(f"figures/1_SMs/fig_sb_{sex.lower()}.png", dpi=100)
+        pl.savefig(f"figures/SMs/fig_sb_{sex.lower()}.png", dpi=100)
 
     return
 
@@ -331,7 +331,7 @@ def plot_prop_married():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_prop_married.png", dpi=100)
+    pl.savefig(f"figures/SMs/fig_prop_married.png", dpi=100)
 
     return
 
@@ -377,7 +377,7 @@ def plot_age_diffs():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_age_diffs.png", dpi=100)
+    pl.savefig(f"figures/SMs/fig_age_diffs.png", dpi=100)
 
     return
 
@@ -409,17 +409,17 @@ def plot_casuals():
         else:
             ax = axes
 
+        # Plot model
+        dfplot_m = casual_df.loc[(casual_df['country']==country) & (casual_df['partners'] > 0)]
+        dfplot_m['shares'] = dfplot_m['shares'].apply(lambda x: x * 100)
+        dfpm = pd.DataFrame({'bins':dfplot_m.bins.unique(), 'shares':dfplot_m.groupby(['bins', 'country']).sum()['shares'].values})
+        sns.barplot(data=dfpm, x="bins", y="shares", ax=ax, color='b', alpha=0.5)  #hue="partners", ax=ax)
+        ax.legend([], [], frameon=False)
+
         # Plot data
         data_country = ut.map_sb_loc(country)
         dfplot_d = data_df.loc[data_df['Country']==data_country]
-        sns.scatterplot(data=dfplot_d, x="AgeStr", y="Percentage", ax=ax, marker="D", color="k")
-
-        # Plot model
-        dfplot_m = casual_df.loc[casual_df['country']==country]
-        dfplot_m['shares'] = dfplot_m['shares'].apply(lambda x: x * 100)
-        sns.barplot(data=dfplot_m.loc[dfplot_m['partners'] > 0], x="bins", y="shares", hue="partners", ax=ax)
-        if pn != n_countries-1:
-            ax.legend([], [], frameon=False)
+        sns.scatterplot(data=dfplot_d, x="AgeStr", y="Percentage", ax=ax, marker="D", color="k", s=50)
 
         title_country = country.title()
         if title_country == 'Drc':
@@ -431,7 +431,7 @@ def plot_casuals():
         ax.tick_params(axis='both', which='major', labelsize=10)
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_casual.png", dpi=100)
+    pl.savefig(f"figures/SMs/fig_casual.png", dpi=100)
 
     return
 
@@ -454,9 +454,9 @@ if __name__ == '__main__':
         )
 
     # Plotting functions
-    plot_sb(dist_type=dist_type)
-    plot_prop_married()
-    plot_age_diffs()
-    plot_casuals()
+    # plot_sb(dist_type=dist_type)
+    # plot_prop_married()
+    # plot_age_diffs()
+    # plot_casuals()
 
     print('Done.')

@@ -71,7 +71,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 # %% Simulation running functions
 def run_sim(
         location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
-        do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0, 0],
+        do_save=True, dist_type='lognormal', marriage_scale=1, debut_bias=[0, 0],
         calib_par_stem=None, ressubfolder=None, calib_pars=None,
 ):
     if analyzers is None:
@@ -117,7 +117,7 @@ def run_sim(
 
 def run_sims(
         locations=None, age_pyr=True, debug=False, verbose=-1, analyzers=None, dist_type='lognormal',
-        marriage_scale=1, debut_bias=[0, 0], calib_par_stem=None, *args, **kwargs
+        marriage_scale=1, debut_bias=[0, 0], calib_par_stem=None, do_save=False, *args, **kwargs
 ):
     """ Run multiple simulations in parallel """
 
@@ -126,6 +126,10 @@ def run_sims(
                            kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location: sim for location, sim in zip(locations, simlist)})  # Convert from a list to a dict
+
+    # if do_save:
+    #     for loc,sim in sims.items():
+    #         sim.save(f'results/{loc}.sim')
 
     return sims
 
@@ -150,11 +154,12 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = ['tanzania']  # loc.locations
+    locations = ['angola', 'benin', 'burkina faso', 'burundi', 'cameroon']  # loc.locations
+    # sims = run_sims(locations=locations, do_save=True)
     for location in locations:
 
         sim = run_sim(location=location)
-        # msim = run_parsets(location=location, save_results=True)
+    #     msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')
 
