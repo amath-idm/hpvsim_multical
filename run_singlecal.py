@@ -135,7 +135,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['ethiopia'] #loc.locations
+    locations = ['tanzania', 'nigeria'] #loc.locations
     filestem = '_oct16'
 
     if cal_type == 'immunovarying':
