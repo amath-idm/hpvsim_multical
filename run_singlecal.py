@@ -49,7 +49,7 @@ def make_priors(add_1618=True):
         cin_fn=dict(
             k=[0.2, 0.1, 0.6, 0.01],
         ),
-        cancer_fn=dict(ld50=[30, 10, 50, 1]),
+        cancer_fn=dict(ld50=[15, 10, 20, 1]),
         rel_beta=[0.75, 0.7, 1.25, 0.05]
     )
 
