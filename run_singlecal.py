@@ -44,14 +44,12 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 ########################################################################
 def make_priors(add_1618=True):
     default = dict(
-        dur_precin=dict(par1=[2, 2, 5, 0.1], par2=[10, 10, 30, 0.5]),
-        dur_cin=dict(par1=[4, 2, 15, 0.1], par2=[10, 10, 30, 0.5]),
-        cancer_fn=dict(
+        dur_precin=dict(par1=[2, 1, 5, 0.5], par2=[4, 2, 10, 0.5]),
+        dur_cin=dict(par1=[4, 2, 5, 0.1], par2=[4, 2, 10, 0.5]),
+        cin_fn=dict(
             k=[0.15, 0.1, 0.6, 0.01],
-            x_infl=[10, 7, 15, 1],
-            y_max=[1, 0.4, 1, 0.1],
-
         ),
+        cancer_fn=dict(ld50=[30, 20, 40, 1]),
         rel_beta=[0.75, 0.7, 1.25, 0.05]
     )
 
@@ -137,8 +135,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['tanzania'] #loc.locations
-    filestem = '_oct06'
+    locations = ['ethiopia'] #loc.locations
+    filestem = '_oct16'
 
     if cal_type == 'immunovarying':
         mc_gpars = dict(
