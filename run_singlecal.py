@@ -72,7 +72,6 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta=[0.2, 0.1, 0.3, 0.02],
-        acts=dict(c=dict(par1=[20, 10, 50, 1])),
         # cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
         # cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
         # cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
