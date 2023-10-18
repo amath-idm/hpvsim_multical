@@ -58,6 +58,13 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         verbose=0.0,
     )
 
+    pars['genotype_pars'] = dict(
+        hpv16=dict(dur_precin=dict(dist='lognormal', par1=38, par2=1500)),
+        hpv18=dict(dur_precin=dict(dist='lognormal', par1=19, par2=730)),
+        hi5=dict(dur_precin=dict(dist='lognormal', par1=22, par2=2000)),
+        ohr=dict(dur_precin=dict(dist='lognormal', par1=22, par2=2000))
+    )
+
     if calib_pars is not None:
         pars = sc.mergedicts(pars, calib_pars)
 

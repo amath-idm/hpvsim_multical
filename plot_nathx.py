@@ -94,17 +94,18 @@ def plot_stacked(sim=None):
     df["prob_progressed"] = (res["progressed"]+ res["cancer"]) / total_alive * 100
 
     df2 = pd.DataFrame()
-    total_persisted_alive = res["total"] - res["dead"] - res["cleared"]
+    total_persisted = res["total"] - res["cleared"]
     df2["years"] = years
-    df2["prob_persisted"] = (res["persisted"]) / total_persisted_alive * 100
-    df2["prob_progressed"] = (res["progressed"]) / total_persisted_alive * 100
-    df2["prob_cancer"] = (res["cancer"]) / total_persisted_alive * 100
+    df2["prob_persisted"] = (res["persisted"]) / total_persisted * 100
+    df2["prob_progressed"] = (res["progressed"]) / total_persisted * 100
+    df2["prob_cancer"] = (res["cancer"]) / total_persisted * 100
+    df2["prob_dead"] = (res["dead"]) / total_persisted * 100
 
     ####################
     # Make figure, set fonts and colors
     ####################
     set_font(size=16)
-    colors = sc.gridcolors(5)
+    colors = sc.gridcolors(6)
     fig, axes = pl.subplots(1, 2, figsize=(11, 9))
 
     # Panel 1, all outcomes
@@ -123,14 +124,14 @@ def plot_stacked(sim=None):
 
     # Panel 2, conditional on being alive and not cleared
     bottom = np.zeros(len(df["years"]))
-    layers = ["prob_persisted", "prob_progressed", "prob_cancer"]
-    labels = ["Persistence", "Progression", "Cancer"]
+    layers = ["prob_persisted", "prob_progressed", "prob_cancer", "prob_dead"]
+    labels = ["Persistence", "Progression", "Cancer", "Dead"]
     for ln, layer in enumerate(layers):
         axes[1].fill_between(
             df2["years"],
             bottom,
             bottom + df2[layer],
-            color=colors[ln+2],
+            color=colors[ln+1],
             label=labels[ln],
         )
         bottom += df2[layer]
