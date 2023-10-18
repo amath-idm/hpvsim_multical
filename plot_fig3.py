@@ -105,10 +105,10 @@ def plot_nh(sim=None):
 # %% Run as a script
 if __name__ == '__main__':
 
-    location = 'nigeria'
+    location = 'cote divoire'
     make_sim = True
     if make_sim:
-        sim = rs.run_sim(location, ressubfolder='constrained', calib_par_stem='_multical_may19_pars',
+        sim = rs.run_sim(location, ressubfolder='unconstrained', calib_par_stem='cote_divoire_pars_oct16_iv_all',
                          analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
     else:
         sim = sc.loadobj(f'results/{location}.sim')

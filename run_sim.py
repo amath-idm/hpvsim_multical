@@ -89,7 +89,7 @@ def run_sim(
         analyzers += [ap]
 
     if calib_pars is None and calib_par_stem is not None:
-        calib_pars = sc.loadobj(f'results/{ressubfolder}/{location + calib_par_stem}.obj')
+        calib_pars = sc.loadobj(f'results/{ressubfolder}/{dflocation + calib_par_stem}.obj')
 
     # Make sim
     sim = make_sim(
