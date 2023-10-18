@@ -95,7 +95,7 @@ def make_layer_probs(location=None, marriage_scale=1):
     if location=='congo':
         layer_probs['m'][1]*=.5
     if location=='cote divoire':
-        layer_probs['m'][1]*=.5
+        layer_probs['m'][1]*=.7
     if location=='drc':
         layer_probs['m'][1]*=.7
         # layer_probs['m'][1][9:] *= .15
