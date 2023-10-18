@@ -133,7 +133,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = loc.locations[10]
+    locations = [loc.locations[9]]
     filestem = '_oct16'
 
     if cal_type == 'immunovarying':
