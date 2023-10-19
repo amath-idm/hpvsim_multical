@@ -34,7 +34,7 @@ debug = False  # If True, this will do smaller runs that can be run locally for 
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [3000, 10][debug]  # How many trials to run for calibration
+n_trials = [2000, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -82,11 +82,11 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta=[0.2, 0.1, 0.3, 0.02],
-        cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
-        cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
-        sev_dist=dict(par2=[0.2, 0.15, 0.25, 0.05])
+        # cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
+        # cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
+        # sev_dist=dict(par2=[0.2, 0.15, 0.25, 0.05])
     )
 
     if mc_gpars is None: add_1618 = True
@@ -142,7 +142,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['cote divoire']
+    locations = ['congo']
     filestem = '_oct16'
 
     if cal_type == 'immunovarying':
