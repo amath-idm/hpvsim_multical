@@ -152,7 +152,7 @@ def make_layer_probs(location=None, marriage_scale=1):
     if location == 'congo':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.85, 0.9, 0.6, 0.6, 0.5, 0.3, 0.3, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05
+            0,   0, 0.1, 0.5, 0.5, 0.5, 0.6, 0.6, 0.6, 0.5, 0.3, 0.2, 0.1, 0.05, 0.05, 0.05
         ])
     if location == 'cote divoire':
         layer_probs['c'][1] = np.array([
