@@ -46,7 +46,7 @@ def make_priors(add_1618=True):
     default = dict(
         dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 10, 0.5]),
         cin_fn=dict(k=[0.1, 0.05, 0.25, 0.01]),
-        cancer_fn=dict(ld50=[20, 15, 30, 1]),
+        cancer_fn=dict(ld50=[20, 15, 50, 1]),
         rel_beta=[0.75, 0.7, 1., 0.05]
     )
 
@@ -59,12 +59,12 @@ def make_priors(add_1618=True):
         hpv16 = dict(
             dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
             cin_fn=dict(k=[0.25, 0.1, 0.3, 0.01]),
-            cancer_fn=dict(ld50=[15, 12, 30, 1]),
+            cancer_fn=dict(ld50=[15, 12, 40, 1]),
         )
         hpv18 = dict(
             dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
-            cin_fn=dict(k=[0.25, 0.2, 0.3, 0.01]),
-            cancer_fn=dict(ld50=[15, 12, 30, 1]),
+            cin_fn=dict(k=[0.25, 0.1, 0.3, 0.01]),
+            cancer_fn=dict(ld50=[15, 12, 40, 1]),
             rel_beta=[0.75, 0.7, 1., 0.05]
         )
         genotype_pars['hpv16'] = hpv16
