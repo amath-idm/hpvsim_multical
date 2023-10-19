@@ -45,8 +45,8 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 def make_priors(add_1618=True):
     default = dict(
         dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 10, 0.5]),
-        cin_fn=dict(k=[0.15, 0.1, 0.25, 0.01]),
-        cancer_fn=dict(ld50=[20, 15, 25, 1]),
+        cin_fn=dict(k=[0.1, 0.05, 0.25, 0.01]),
+        cancer_fn=dict(ld50=[20, 15, 30, 1]),
         rel_beta=[0.75, 0.7, 1., 0.05]
     )
 
@@ -56,15 +56,19 @@ def make_priors(add_1618=True):
     )
 
     if add_1618:
-        genotype_pars['hpv16'] = sc.dcp(default)
-        genotype_pars['hpv18'] = sc.dcp(default)
-        del genotype_pars['hpv16']['rel_beta']
-        genotype_pars['hpv16']['dur_cin'] = dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5])
-        genotype_pars['hpv16']['cin_fn'] = dict(k=[0.25, 0.2, 0.3, 0.01])
-        genotype_pars['hpv16']['cancer_fn'] = dict(ld50=[15, 12, 20, 1])
-        genotype_pars['hpv18']['dur_cin'] = dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5])
-        genotype_pars['hpv18']['cin_fn'] = dict(k=[0.25, 0.2, 0.3, 0.01])
-        genotype_pars['hpv18']['cancer_fn'] = dict(ld50=[15, 12, 20, 1])
+        hpv16 = dict(
+            dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
+            cin_fn=dict(k=[0.25, 0.1, 0.3, 0.01]),
+            cancer_fn=dict(ld50=[15, 12, 30, 1]),
+        )
+        hpv18 = dict(
+            dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
+            cin_fn=dict(k=[0.25, 0.2, 0.3, 0.01]),
+            cancer_fn=dict(ld50=[15, 12, 30, 1]),
+            rel_beta=[0.75, 0.7, 1., 0.05]
+        )
+        genotype_pars['hpv16'] = hpv16
+        genotype_pars['hpv18'] = hpv18
 
     return genotype_pars
 
