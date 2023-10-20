@@ -174,7 +174,7 @@ def make_layer_probs(location=None, marriage_scale=1):
     if location == 'guinea':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.3, 0.4, 0.5, 0.7, 0.7, 0.6, 0.5, 0.4, 0.2, 0.1, 0.01, 0.01, 0.01
+            0,   0, 0.1, 0.3, 0.3, 0.3, 0.6, 0.7, 0.7, 0.6, 0.4, 0.2, 0.1, 0.01, 0.01, 0.01
         ])
     if location == 'kenya':
         layer_probs['c'][1] = np.array([
