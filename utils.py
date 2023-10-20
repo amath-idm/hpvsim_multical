@@ -81,8 +81,8 @@ def make_layer_probs(location=None, marriage_scale=1):
     if location=='angola':
         layer_probs['m'][1]*=.5
         layer_probs['m'][1][9:]*=.15
-    if location=='benin':
-        layer_probs['m'][1][9:] *= .15
+    # if location=='benin':
+    #     layer_probs['m'][1][9:] *= .15
     if location=='burundi':
         layer_probs['m'][1][4:]*=.7
     if location=='cameroon':
@@ -125,7 +125,7 @@ def make_layer_probs(location=None, marriage_scale=1):
     if location == 'benin':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.8, 0.6, 0.3, 0.2, 0.2, 0.2, 0.25, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01
+            0,   0, 0.1, 0.7, 0.5, 0.3, 0.2, 0.2, 0.2, 0.25, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
         ])
     if location == 'burkina faso':
         layer_probs['c'][1] = np.array([
