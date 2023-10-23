@@ -22,16 +22,16 @@ import utils as ut
 # Imports from this repository
 import run_sim as rs
 import calibration as cal
-import locations as set
+import locations as loc
 
 # Comment out to not run
 to_run = [
-    # 'run_calibration',
-    'plot_calibration',
+    'run_calibration',
+    # 'plot_calibration',
 ]
 
 
-debug = False # Smaller runs
+debug = False  # Smaller runs
 do_save = True
 
 
@@ -50,7 +50,7 @@ def make_unique_priors(locations=None):
     for location in locations:
         unique_pars[location] = dict(
             calib_pars = dict(
-                beta=[0.2, 0.1, 0.3, 0.01],
+                beta=[0.2, 0.1, 0.3, 0.02],
                 cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
                 cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
                 cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
@@ -58,20 +58,16 @@ def make_unique_priors(locations=None):
             ),
             genotype_pars = dict(
                 hi5=dict(
-                    transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-                    sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
-                    dur_episomal=dict(
-                        par1=[2.5, 2, 3, 0.5],
-                        par2=[7, 4, 10, 0.5]),
-                    rel_beta=[0.75, 0.7, 1.25, 0.05]
+                    dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 12, 0.5]),
+                    cin_fn=dict(k=[0.1, 0.05, 0.3, 0.01]),
+                    cancer_fn=dict(ld50=[20, 15, 50, 1]),
+                    rel_beta=[0.75, 0.7, 1., 0.05]
                 ),
                 ohr=dict(
-                    transform_prob=[3e-10, 2e-10, 5e-10, 1e-10],
-                    sev_fn=dict(k=[0.05, 0.04, 0.8, 0.01]),
-                    dur_episomal=dict(
-                        par1=[2.5, 2, 3, 0.5],
-                        par2=[7, 4, 10, 0.5]),
-                    rel_beta=[0.75, 0.7, 1.25, 0.05]
+                    dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 12, 0.5]),
+                    cin_fn=dict(k=[0.1, 0.05, 0.3, 0.01]),
+                    cancer_fn=dict(ld50=[20, 15, 50, 1]),
+                    rel_beta=[0.75, 0.7, 1., 0.05]
                 ),
             )
         )
@@ -87,24 +83,16 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                transform_prob=[10e-10, 4e-10, 20e-10, 1e-10],
-                sev_fn=dict(
-                    k=[0.25, 0.15, 0.4, 0.05],
-                ),
-                dur_episomal=dict(
-                    par1=[2.5, 1.5, 5, 0.5],
-                    par2=[7, 4, 15, 0.5])
+                dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
+                cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
+                cancer_fn=dict(ld50=[15, 12, 40, 1]),
             ),
             hpv18=dict(
-                transform_prob=[6e-10, 4e-10, 10e-10, 1e-10],
-                sev_fn=dict(
-                    k=[0.2, 0.1, 0.35, 0.05],
-                ),
-                dur_episomal=dict(
-                    par1=[2.5, 1.5, 3, 0.5],
-                    par2=[7, 4, 15, 0.5]),
-                rel_beta=[0.75, 0.7, 0.95, 0.05]
-            ),
+                dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
+                cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
+                cancer_fn=dict(ld50=[15, 12, 40, 1]),
+                rel_beta=[0.75, 0.7, 1., 0.05]
+            )
         )
     )
 
@@ -120,10 +108,10 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
         sims,
         common_pars=common_pars,
         unique_pars=unique_pars,
-        name=f'multical0105',
+        name=f'multical1031',
         datafiles=ut.make_datafiles(locations),
         load_if_exists=True,
-        db_name='multical0105.db',
+        db_name='multical1031.db',
         total_trials=n_trials,
         n_workers=n_workers,
         storage=storage,
@@ -148,12 +136,12 @@ def run_calib(locations=None, n_trials=None, n_workers=None,
 ########################################################################
 def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_pars=True):
 
-    calib = sc.load(f'results/6_mc2/multical{filestem}.obj')
+    calib = sc.load(f'results/constrained/multical{filestem}.obj')
 
     if save_pars:
         sims = []
         for location in locations:
-            pars_file = f'results/6_mc2/{location}_multical{filestem}_pars.obj'
+            pars_file = f'results/constrained/{location}_multical{filestem}_pars.obj'
             calib_pars = calib.trial_pars_to_sim_pars(slabel=location, which_pars=which_pars)
             sc.save(pars_file, calib_pars)
 
@@ -164,7 +152,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
             fig = calib.plot(slabel=location, res_to_plot=50, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/7_may19mc2/multical{filestem}_{location}.png')
+            fig.savefig(f'figures/constrained/multical{filestem}_{location}.png')
 
 
     return calib, sims
@@ -174,8 +162,8 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_may19'
-    locations = set.locations #['nigeria', 'ethiopia', 'drc', 'tanzania', 'south africa', 'kenya', 'uganda', 'angola', 'mozambique', 'ghana']
+    filestem = '_oct24'
+    locations = loc.locations
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
