@@ -108,12 +108,13 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['m'][1]*=.5
         # layer_probs['m'][1][9:]*=.15
     if location=='tanzania':
-        layer_probs['m'][1]*=.5
-        layer_probs['m'][1][9:]=.35
+        layer_probs['m'][1]*=.7
+        # layer_probs['m'][1][9:]=.35
         # layer_probs['m'][1][9:]*=.15
     if location=='south africa':
         layer_probs['m'][1]*=.8
         # layer_probs['m'][1][7:]*=.5
+
 
     # Increasing numbers of casual partners for women in Tanzania as they get older
     if location == 'angola':
