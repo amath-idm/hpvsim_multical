@@ -197,15 +197,15 @@ if __name__ == '__main__':
                 cross_imm_sus_med=thisdf.cross_imm_sus_med.iloc[0],
                 genotype_pars=dict(
                     hi5=dict(
-                        cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0]),
-                        cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0]),
-                        dur_cin=dict(par1=thisdf.hi5_dur_cin_par1.iloc[0], par2=thisdf.hi5_dur_cin_par2.iloc[0]),
+                        cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
+                        cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0], method='cin_integral', **dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
+                        dur_cin=dict(dist='lognormal', par1=thisdf.hi5_dur_cin_par1.iloc[0], par2=thisdf.hi5_dur_cin_par2.iloc[0]),
                         rel_beta=thisdf.hi5_rel_beta.iloc[0]
                     ),
                     ohr=dict(
-                        cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0]),
-                        cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0]),
-                        dur_cin=dict(par1=thisdf.ohr_dur_cin_par1.iloc[0], par2=thisdf.ohr_dur_cin_par2.iloc[0]),
+                        cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
+                        cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0], method='cin_integral', **dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
+                        dur_cin=dict(dist='lognormal', par1=thisdf.ohr_dur_cin_par1.iloc[0], par2=thisdf.ohr_dur_cin_par2.iloc[0]),
                         rel_beta=thisdf.ohr_rel_beta.iloc[0]
                     )
                 )
