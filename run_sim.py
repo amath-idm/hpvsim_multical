@@ -68,6 +68,8 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
     if calib_pars is not None:
         pars = sc.mergedicts(pars, calib_pars)
         for gtype, precin_vals in precin_pars.items():
+            if gtype not in pars['genotype_pars'].keys():
+                pars['genotype_pars'][gtype] = dict()
             pars['genotype_pars'][gtype]['dur_precin'] = precin_vals
 
     interventions = sc.autolist()
