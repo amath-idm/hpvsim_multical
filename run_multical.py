@@ -36,7 +36,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [8000, 2][debug]  # How many trials to run for calibration
+n_trials    = [5000, 2][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
 
@@ -74,33 +74,49 @@ def make_unique_priors(locations=None):
 
     return unique_pars
 
+def make_posterior_df(locations=None, n_results=50):
+    dfs = sc.autolist()
+    for location in locations:
+        dflocation = location.replace(' ', '_')
+        calib = sc.loadobj(f'results/unconstrained/{dflocation}_calib_oct16.obj')
+        df = sc.dcp(calib.df[:n_results])
+        df['location'] = location
+        dfs += df
+    alldf = pd.concat(dfs)
+    sc.saveobj(f'results/calib_dfs_sc.obj', alldf)
+    return alldf
 
 
-def run_calib(locations=None, n_trials=None, n_workers=None,
+def run_calib(locations=None, sc_pars=None, n_trials=None, n_workers=None,
               do_plot=False, do_save=True, filestem=''):
 
     # Define shared calibration parameters - same values used across sims
     common_pars = dict(
         genotype_pars=dict(
             hpv16=dict(
-                dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
-                cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
-                cancer_fn=dict(ld50=[15, 12, 40, 1]),
+                dur_cin=dict(par1=[5, 7, 10, 0.5], par2=[10, 7, 18, 0.5]),
+                cin_fn=dict(k=[0.28, 0.2, 0.4, 0.02]),
+                cancer_fn=dict(ld50=[21, 12, 40, 1]),
             ),
             hpv18=dict(
-                dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
-                cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
-                cancer_fn=dict(ld50=[15, 12, 40, 1]),
+                dur_cin=dict(par1=[6.5, 3, 10, 0.5], par2=[9, 4, 19, 0.5]),
+                cin_fn=dict(k=[0.25, 0.1, 0.4, 0.02]),
+                cancer_fn=dict(ld50=[21, 12, 40, 1]),
                 rel_beta=[0.75, 0.7, 1., 0.05]
             )
         )
     )
 
-    unique_pars = make_unique_priors(locations)
+    if sc_pars is None:
+        unique_pars = make_unique_priors(locations)
+    else:
+        unique_pars = None
 
     sims = []
     for location in locations:
-        sim = rs.make_sim(location)
+        if sc_pars is not None:
+            calib_pars = sc_pars[location]
+        sim = rs.make_sim(location, calib_pars=calib_pars)
         sim.label = location
         sims.append(sim)
 
@@ -167,7 +183,34 @@ if __name__ == '__main__':
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
-        sims, calib = run_calib(locations=locations, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
+
+        # Get the parameters from the single cals
+        # alldf = make_posterior_df(locations, n_results=1)
+        alldf = sc.loadobj('results/calib_dfs_sc.obj')
+        sc_pars = dict()
+        for location in locations:
+            thisdf = alldf[alldf.location == location]
+            sc_pars[location] = dict(
+                cross_imm_sev_high=thisdf.cross_imm_sev_high.iloc[0],
+                cross_imm_sev_med=thisdf.cross_imm_sev_med.iloc[0],
+                cross_imm_sus_high=thisdf.cross_imm_sus_high.iloc[0],
+                cross_imm_sus_med=thisdf.cross_imm_sus_med.iloc[0],
+                genotype_pars=dict(
+                    hi5=dict(
+                        cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0]),
+                        cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0]),
+                        dur_cin=dict(par1=thisdf.hi5_dur_cin_par1.iloc[0], par2=thisdf.hi5_dur_cin_par2.iloc[0]),
+                        rel_beta=thisdf.hi5_rel_beta.iloc[0]
+                    ),
+                    ohr=dict(
+                        cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0]),
+                        cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0]),
+                        dur_cin=dict(par1=thisdf.ohr_dur_cin_par1.iloc[0], par2=thisdf.ohr_dur_cin_par2.iloc[0]),
+                        rel_beta=thisdf.ohr_rel_beta.iloc[0]
+                    )
+                )
+            )
+        sims, calib = run_calib(locations=locations, sc_pars=sc_pars, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:

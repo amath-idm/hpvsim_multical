@@ -88,7 +88,7 @@ def plot_fig1(locations, calib, n_results=20):
 if __name__ == '__main__':
 
     locations = loc.locations
-    calib = sc.loadobj('results/constrained/multical_may19.obj')
+    calib = sc.loadobj('results/constrained/multical_oct24.obj')
     plot_fig1(locations, calib, n_results=50)
 
     print('Done.')

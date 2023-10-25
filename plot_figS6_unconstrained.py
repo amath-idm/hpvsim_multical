@@ -88,7 +88,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
 
 # %% Run as a script
 if __name__ == '__main__':
-    filestem = 'may08'
+    filestem = 'oct16'
     locations = loc.locations
     plot_single_cals(locations, n_results=50, filestem=filestem)
 
