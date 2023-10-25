@@ -120,11 +120,6 @@ def run_calib(locations=None, sc_pars=None, n_trials=None, n_workers=None,
         sim.label = location
         sims.append(sim)
 
-    import traceback;
-    traceback.print_exc();
-    import pdb;
-    pdb.set_trace()
-
     calib = cal.MultiCal(
         sims,
         common_pars=common_pars,
