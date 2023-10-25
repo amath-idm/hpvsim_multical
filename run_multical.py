@@ -120,6 +120,11 @@ def run_calib(locations=None, sc_pars=None, n_trials=None, n_workers=None,
         sim.label = location
         sims.append(sim)
 
+    import traceback;
+    traceback.print_exc();
+    import pdb;
+    pdb.set_trace()
+
     calib = cal.MultiCal(
         sims,
         common_pars=common_pars,
@@ -191,10 +196,6 @@ if __name__ == '__main__':
         for location in locations:
             thisdf = alldf[alldf.location == location]
             sc_pars[location] = dict(
-                cross_imm_sev_high=thisdf.cross_imm_sev_high.iloc[0],
-                cross_imm_sev_med=thisdf.cross_imm_sev_med.iloc[0],
-                cross_imm_sus_high=thisdf.cross_imm_sus_high.iloc[0],
-                cross_imm_sus_med=thisdf.cross_imm_sus_med.iloc[0],
                 genotype_pars=dict(
                     hi5=dict(
                         cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
@@ -210,6 +211,12 @@ if __name__ == '__main__':
                     )
                 )
             )
+            if ~np.isnan(thisdf.cross_imm_sev_high.iloc[0]):
+                sc_pars[location]['cross_imm_sev_high'] = thisdf.cross_imm_sev_high.iloc[0]
+                sc_pars[location]['cross_imm_sev_med'] = thisdf.cross_imm_sev_med.iloc[0]
+                sc_pars[location]['cross_imm_sus_high'] = thisdf.cross_imm_sus_high.iloc[0]
+                sc_pars[location]['cross_imm_sus_med'] = thisdf.cross_imm_sus_med.iloc[0]
+
         sims, calib = run_calib(locations=locations, sc_pars=sc_pars, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
