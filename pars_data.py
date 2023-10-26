@@ -44,7 +44,6 @@ for location in loc.locations:
 default_partners = dict(
         m=dict(dist='poisson', par1=0.1),
         c=dict(dist='poisson', par1=0.5),
-        o=dict(dist='poisson', par1=0.0),
 )
 for location in loc.locations:
     partners[location] = default_partners
