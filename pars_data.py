@@ -60,6 +60,11 @@ def make_layer_probs(location=None, marriage_scale=1):
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.3, 0.3, 0.3, 0.3, 0.3, 0.2, 0.25, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
         ])
+    if location == 'burkina faso':
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.4, 0.5, 0.4, 0.3, 0.2, 0.2, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01
+        ])
 
     # if location=='benin':
     #     layer_probs['m'][1][9:] *= .15
@@ -101,11 +106,6 @@ def make_layer_probs(location=None, marriage_scale=1):
 
 
     # Increasing numbers of casual partners for women in Tanzania as they get older
-    if location == 'burkina faso':
-        layer_probs['c'][1] = np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.4, 0.4, 0.4, 0.2, 0.1, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
-        ])
     if location == 'burundi':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
