@@ -29,12 +29,6 @@ default_layer_probs = dict(
         [0, 0, 0.10, 0.70, 0.80, 0.60, 0.60, 0.50, 0.20, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01],  # Females
         [0, 0, 0.05, 0.70, 0.80, 0.60, 0.60, 0.50, 0.50, 0.40, 0.30, 0.10, 0.05, 0.01, 0.01, 0.01]],  # Males
     ),
-    o=np.array([
-        # Share of people of each age in one-off partnerships
-        [0, 5,   10,   15,   20,   25,   30,   35,   40,   45,   50,   55,   60,   65,   70,   75],
-        [0, 0, 0.01, 0.05, 0.05, 0.04, 0.03, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01],  # Females
-        [0, 0, 0.01, 0.01, 0.01, 0.02, 0.03, 0.04, 0.05, 0.05, 0.03, 0.02, 0.01, 0.01, 0.01, 0.01]],  # Males
-    ),
 )
 
 for location in loc.locations:
@@ -78,6 +72,6 @@ default_mixing_all = np.array([
 ])
 
 default_mixing = dict()
-for k in ['m', 'c', 'o']: default_mixing[k] = default_mixing_all
+for k in ['m', 'c']: default_mixing[k] = default_mixing_all
 for location in loc.locations:
     mixing[location] = default_mixing
