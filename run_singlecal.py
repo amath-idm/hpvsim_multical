@@ -26,15 +26,15 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][0]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [2000, 10][debug]  # How many trials to run for calibration
+n_trials = [1600, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -46,7 +46,7 @@ def make_priors(add_1618=True):
     default = dict(
         dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 12, 0.5]),
         cin_fn=dict(k=[0.1, 0.05, 0.3, 0.01]),
-        cancer_fn=dict(ld50=[20, 15, 50, 1]),
+        cancer_fn=dict(ld50=[20, 15, 30, 1]),
         rel_beta=[0.75, 0.7, 1., 0.05]
     )
 
@@ -82,11 +82,11 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta=[0.2, 0.1, 0.3, 0.02],
-        # kenya?
-        cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
-        cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
-        cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
+        # # kenya?
+        # cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
+        # cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
+        # cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
         # sev_dist=dict(par2=[0.2, 0.15, 0.25, 0.05])
     )
 
@@ -143,8 +143,8 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['zimbabwe']  #loc.locations[20:]
-    filestem = '_oct16'
+    locations = loc.locations[:10]
+    filestem = '_oct26'
 
     if cal_type == 'immunovarying':
         mc_gpars = dict(
