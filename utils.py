@@ -9,13 +9,15 @@ import hpvsim.utils as hpu
 import pandas as pd
 import numpy as np
 
-import locations as set
+import locations as loc
+
 
 def set_font(size=None, font='Libertinus Sans'):
     ''' Set a custom font '''
     sc.fonts(add=sc.thisdir(aspath=True) / 'assets' / 'LibertinusSans-Regular.otf')
     sc.options(font=font, fontsize=size)
     return
+
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
@@ -37,7 +39,7 @@ def rev_map_sb_loc(location):
 def make_sb_data(location=None, dist_type='lognormal', debut_bias=[0,0]):
 
     # Deal with missing countries and different spelling conventions
-    if location in set.nosbdata_locations:
+    if location in loc.nosbdata_locations:
         sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
     else:
         sb_location = map_sb_loc(location)
