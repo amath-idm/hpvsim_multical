@@ -46,7 +46,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         location=location,
         debut=ut.make_sb_data(location=location, dist_type=dist_type, debut_bias=debut_bias),
         mixing=dp.mixing[location],
-        layer_probs=ut.make_layer_probs(location=location, marriage_scale=marriage_scale),
+        layer_probs=dp.make_layer_probs(location=location, marriage_scale=marriage_scale),
         partners=dp.partners[location],
         init_hpv_dist=dp.init_genotype_dist[location],
         init_hpv_prev={
