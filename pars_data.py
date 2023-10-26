@@ -9,6 +9,7 @@ import numpy as np
 import locations as loc
 import utils as ut
 import pandas as pd
+import sciris as sc
 
 # Initialize objects with per-country results
 layer_probs = dict()
