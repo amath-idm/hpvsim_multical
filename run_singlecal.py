@@ -83,10 +83,10 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     calib_pars = dict(
         beta=[0.2, 0.1, 0.3, 0.02],
         # # kenya?
-        # cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
-        # cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
-        # cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
-        # cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
+        cross_imm_sus_med=[0.3, 0.2, 0.6, 0.05],
+        cross_imm_sus_high=[0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_med=[0.5, 0.3, 0.7, 0.05],
+        cross_imm_sev_high=[0.7, 0.5, 0.9, 0.05],
         # sev_dist=dict(par2=[0.2, 0.15, 0.25, 0.05])
     )
 
