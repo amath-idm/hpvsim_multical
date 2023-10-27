@@ -47,6 +47,8 @@ def make_layer_probs(location=None, marriage_scale=1):
     layer_probs = sc.dcp(default_layer_probs)
     layer_probs['m'][1][3:10] = vals/100
     layer_probs['m'][1]*=marriage_scale
+    layer_probs['m'][2][3:10] = vals/100
+    layer_probs['m'][2]*=marriage_scale
 
     # Make individual country adjustments
     if location == 'angola':
@@ -84,12 +86,17 @@ def make_layer_probs(location=None, marriage_scale=1):
             0,   0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.5, 0.6, 0.6, 0.4, 0.2, 0.1, 0.05, 0.05, 0.05
         ])
         layer_probs['c'][2] = layer_probs['c'][1]
+    if location=='cote divoire':
+        layer_probs['m'][1:]*=.7
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 0.3, 0.1, 0.05, 0.05, 0.05, 0.05
+        ])
+        layer_probs['c'][2] = layer_probs['c'][1]
 
     if location=='chad':
         layer_probs['m'][1]*=.7
         layer_probs['m'][1][9:]*=.15
-    if location=='cote divoire':
-        layer_probs['m'][1]*=.7
     if location=='drc':
         layer_probs['m'][1]*=.7
         # layer_probs['m'][1][9:] *= .15
@@ -120,11 +127,6 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
-        ])
-    if location == 'cote divoire':
-        layer_probs['c'][1] = np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 0.3, 0.1, 0.05, 0.05, 0.05, 0.05
         ])
     if location == 'drc':
         layer_probs['c'][1] = np.array([
