@@ -79,34 +79,33 @@ def make_layer_probs(location=None, marriage_scale=1):
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.5, 0.5, 0.5, 0.6, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
         ])
+    # if location=='chad':
+    #     layer_probs['m'][1]*=.7
+    #     layer_probs['m'][1][9:]*=.15
     if location=='congo':
         layer_probs['m'][1]*=.7
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.5, 0.6, 0.6, 0.4, 0.2, 0.1, 0.05, 0.05, 0.05
         ])
-        layer_probs['c'][2] = layer_probs['c'][1]
     if location=='cote divoire':
         layer_probs['m'][1:]*=.7
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.5, 0.3, 0.1, 0.05, 0.05, 0.05, 0.05
         ])
-        layer_probs['c'][2] = layer_probs['c'][1]
     if location=='drc':
         layer_probs['m'][1:]*=.7
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.4, 0.3, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01
         ])
-        layer_probs['c'][2] = layer_probs['c'][1]
-
-    if location=='chad':
-        layer_probs['m'][1]*=.7
-        layer_probs['m'][1][9:]*=.15
     if location=='ethiopia':
         layer_probs['m'][1]*=.7
-        # layer_probs['m'][1][9:]*=.15
+        layer_probs['c'][1] = 3*np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.07, 0.1, 0.1, 0.1, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
+        ])
     if location=='ghana':
         layer_probs['m'][1]*=.6
     if location in ['guinea', 'nigeria', 'senegal', 'sierra leone', 'sudan']:
@@ -131,11 +130,6 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
-        ])
-    if location == 'ethiopia':
-        layer_probs['c'][1] = 3*np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.07, 0.1, 0.1, 0.1, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
         ])
     if location == 'ghana':
         layer_probs['c'][1] = np.array([
@@ -234,6 +228,9 @@ def make_layer_probs(location=None, marriage_scale=1):
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.15, 0.2, 0.3, 0.3, 0.25, 0.25, 0.2, 0.1, 0.1, 0.01, 0.01, 0.01, 0.01
         ])
+
+    # Adjust male participation for all to be the same as for women
+    layer_probs['c'][2] = layer_probs['c'][1]
 
     return layer_probs
 
