@@ -143,7 +143,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['ghana']  # loc.locations[10:20]
+    locations = ['guinea']  # loc.locations[10:20]
     filestem = '_oct26'
 
     if cal_type == 'immunovarying':
