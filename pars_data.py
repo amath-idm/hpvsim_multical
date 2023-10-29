@@ -79,9 +79,12 @@ def make_layer_probs(location=None, marriage_scale=1):
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.5, 0.5, 0.5, 0.6, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
         ])
-    # if location=='chad':
-    #     layer_probs['m'][1]*=.7
-    #     layer_probs['m'][1][9:]*=.15
+    if location=='chad':
+        layer_probs['m'][1]*=.7
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0, 0, 0.1, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
+        ])
     if location=='congo':
         layer_probs['m'][1]*=.7
         layer_probs['c'][1] = np.array([
@@ -108,6 +111,11 @@ def make_layer_probs(location=None, marriage_scale=1):
         ])
     if location=='ghana':
         layer_probs['m'][1]*=.6
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.3, 0.3, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
+        ])
+
     if location in ['guinea', 'nigeria', 'senegal', 'sierra leone', 'sudan']:
         layer_probs['m'][1]*=.7
     if location in ['zambia']:
@@ -126,16 +134,6 @@ def make_layer_probs(location=None, marriage_scale=1):
         # layer_probs['m'][1][7:]*=.5
 
 
-    if location == 'chad':
-        layer_probs['c'][1] = np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01
-        ])
-    if location == 'ghana':
-        layer_probs['c'][1] = np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.65, 0.6, 0.5, 0.5, 0.5, 0.3, 0.3, 0.1, 0.05, 0.01, 0.01, 0.01, 0.01
-        ])
     if location == 'guinea':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
