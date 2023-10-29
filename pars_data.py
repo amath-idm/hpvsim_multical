@@ -122,6 +122,12 @@ def make_layer_probs(location=None, marriage_scale=1):
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
             0,   0, 0.1, 0.3, 0.3, 0.3, 0.4, 0.5, 0.6, 0.6, 0.5, 0.3, 0.1, 0.01, 0.01, 0.01
         ])
+    if location == 'kenya':
+        layer_probs['m'][1]*=.5
+        layer_probs['c'][1] = np.array([
+            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
+            0,   0, 0.1, 0.3, 0.3, 0.3, 0.4, 0.5, 0.6, 0.6, 0.6, 0.6, 0.1, 0.01, 0.01, 0.01
+        ])
 
     if location in ['nigeria', 'senegal', 'sierra leone', 'sudan']:
         layer_probs['m'][1]*=.7
@@ -129,23 +135,14 @@ def make_layer_probs(location=None, marriage_scale=1):
         layer_probs['m'][1]*=.9
     if location in ['uganda', 'zimbabwe']:
         layer_probs['m'][1]*=.7
-    if location in ['kenya', 'madagascar', 'malawi', 'mozambique', 'rwanda', 'togo']:
+    if location in ['madagascar', 'malawi', 'mozambique', 'rwanda', 'togo']:
         layer_probs['m'][1]*=.5
-        # layer_probs['m'][1][9:]*=.15
     if location=='tanzania':
         layer_probs['m'][1]*=.7
-        # layer_probs['m'][1][9:]=.35
-        # layer_probs['m'][1][9:]*=.15
     if location=='south africa':
         layer_probs['m'][1]*=.8
-        # layer_probs['m'][1][7:]*=.5
 
 
-    if location == 'kenya':
-        layer_probs['c'][1] = np.array([
-            # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
-            0,   0, 0.1, 0.3, 0.3, 0.3, 0.4, 0.5, 0.6, 0.6, 0.6, 0.6, 0.1, 0.01, 0.01, 0.01
-        ])
     if location == 'madagascar':
         layer_probs['c'][1] = np.array([
             # 0, 5,  10,  15,  20,  25,  30,  35,  40,  45,  50,  55,  60,  65,   70,   75
