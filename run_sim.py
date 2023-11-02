@@ -57,23 +57,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         ms_agent_ratio=100,
         verbose=0.0,
     )
-
-    precin_pars = dict(
-        hpv16=dict(dist='lognormal', par1=4, par2=20),
-        hpv18=dict(dist='lognormal', par1=3, par2=15),
-        hi5=dict(dist='lognormal', par1=2, par2=8),
-        ohr=dict(dist='lognormal', par1=2, par2=6)
-    )
-
-    if calib_pars is not None:
-        pars = sc.mergedicts(pars, calib_pars)
-        for gtype, precin_vals in precin_pars.items():
-            if gtype not in pars['genotype_pars'].keys():
-                pars['genotype_pars'][gtype] = dict()
-            pars['genotype_pars'][gtype]['dur_precin'] = precin_vals
-
     interventions = sc.autolist()
-
     sim = hpv.Sim(pars=pars, interventions=interventions, analyzers=analyzers, datafile=datafile, rand_seed=seed)
 
     return sim
