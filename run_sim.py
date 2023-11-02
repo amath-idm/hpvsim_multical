@@ -118,7 +118,7 @@ def run_sim(
     # Run
     sim['verbose'] = verbose
     sim.run()
-    sim.shrink()
+    # sim.shrink()
 
     if do_save:
         sim.save(f'results/{dflocation}.sim')
@@ -165,43 +165,46 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = ['tanzania']  # loc.locations
+    locations = ['uganda']  # loc.locations
+    for location in locations:
+        calib_pars = sc.loadobj('results/unconstrained/uganda_pars_oct26_iv.obj')
+        sim = run_sim(location=location, calib_pars=calib_pars)
 
     # cp = sc.loadobj('results/unconstrained/tanzania_pars_oct06_iv.obj')
     # sims = run_sims(locations=locations, do_save=True)
 
-    alldf = sc.loadobj('results/calib_dfs_sc.obj')
-    sc_pars = dict()
-    for location in locations:
-        thisdf = alldf[alldf.location == location]
-        sc_pars[location] = dict(
-            cross_imm_sev_high=thisdf.cross_imm_sev_high.iloc[0],
-            cross_imm_sev_med=thisdf.cross_imm_sev_med.iloc[0],
-            cross_imm_sus_high=thisdf.cross_imm_sus_high.iloc[0],
-            cross_imm_sus_med=thisdf.cross_imm_sus_med.iloc[0],
-            genotype_pars=dict(
-                hi5=dict(
-                    cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
-                    cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0], method='cin_integral',
-                                   **dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
-                    dur_cin=dict(dist='lognormal', par1=thisdf.hi5_dur_cin_par1.iloc[0],
-                                 par2=thisdf.hi5_dur_cin_par2.iloc[0]),
-                    rel_beta=thisdf.hi5_rel_beta.iloc[0]
-                ),
-                ohr=dict(
-                    cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
-                    cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0], method='cin_integral',
-                                   **dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
-                    dur_cin=dict(dist='lognormal', par1=thisdf.ohr_dur_cin_par1.iloc[0],
-                                 par2=thisdf.ohr_dur_cin_par2.iloc[0]),
-                    rel_beta=thisdf.ohr_rel_beta.iloc[0]
-                )
-            )
-        )
+    # alldf = sc.loadobj('results/calib_dfs_sc.obj')
+    # sc_pars = dict()
+    # for location in locations:
+    #     thisdf = alldf[alldf.location == location]
+    #     sc_pars[location] = dict(
+    #         cross_imm_sev_high=thisdf.cross_imm_sev_high.iloc[0],
+    #         cross_imm_sev_med=thisdf.cross_imm_sev_med.iloc[0],
+    #         cross_imm_sus_high=thisdf.cross_imm_sus_high.iloc[0],
+    #         cross_imm_sus_med=thisdf.cross_imm_sus_med.iloc[0],
+    #         genotype_pars=dict(
+    #             hi5=dict(
+    #                 cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
+    #                 cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0], method='cin_integral',
+    #                                **dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
+    #                 dur_cin=dict(dist='lognormal', par1=thisdf.hi5_dur_cin_par1.iloc[0],
+    #                              par2=thisdf.hi5_dur_cin_par2.iloc[0]),
+    #                 rel_beta=thisdf.hi5_rel_beta.iloc[0]
+    #             ),
+    #             ohr=dict(
+    #                 cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
+    #                 cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0], method='cin_integral',
+    #                                **dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
+    #                 dur_cin=dict(dist='lognormal', par1=thisdf.ohr_dur_cin_par1.iloc[0],
+    #                              par2=thisdf.ohr_dur_cin_par2.iloc[0]),
+    #                 rel_beta=thisdf.ohr_rel_beta.iloc[0]
+    #             )
+    #         )
+    #     )
 
-    for location in locations:
-
-        sim = run_sim(location=location, calib_pars=sc_pars[location])
+    # for location in locations:
+    #
+    #     sim = run_sim(location=location, calib_pars=sc_pars[location])
     #     msim = run_parsets(location=location, save_results=True)
 
     T.toc('Done')
