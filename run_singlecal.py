@@ -76,7 +76,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     # Define the calibration parameters
     calib_pars = dict(
         beta=[0.2, 0.1, 0.34, 0.02],
-        m_cross_layer=[0.3, 0.1, 0.5, 0.05],
+        m_cross_layer=[0.3, 0.1, 0.7, 0.05],
         m_partners=dict(
             c=dict(par1=[0.2, 0.1, 0.5, 0.01])
         ),
