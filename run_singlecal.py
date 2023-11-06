@@ -94,7 +94,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
                             name=f'{location}_calib_final',
                             datafiles=datafiles,
                             total_trials=n_trials, n_workers=n_workers,
-                            storage=storage
+                            storage=f"{storage}"
                             )
     calib.calibrate()
     filename = f'{location}_calib{filestem}'
