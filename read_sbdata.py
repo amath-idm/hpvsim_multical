@@ -203,7 +203,7 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
         for ab in bins:
             conditions[ab] = (ppl.age >= ab) * (ppl.age < ab + binspan) * general_conditions
 
-        casual_partners = {(0,1): sc.autolist(), (1,2):sc.autolist(), (2,3):sc.autolist(), (3,5):sc.autolist()}
+        casual_partners = {(0,1): sc.autolist(), (1,2):sc.autolist(), (2,3):sc.autolist(), (3,5):sc.autolist(), (5,50):sc.autolist()}
         for cp in casual_partners.keys():
             for ab,age_cond in conditions.items():
                 this_condition = conditions[ab] * (ppl.current_partners[1,:]>=cp[0]) * (ppl.current_partners[1,:]<cp[1])
