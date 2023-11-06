@@ -153,13 +153,13 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = loc.locations
-    # for location in locations:
-    #     calib_pars = sc.loadobj('results/unconstrained/kenya_pars_nov06_iv.obj')
-    #     sim = run_sim(location=location, calib_pars=calib_pars)
+    locations = ['kenya']  #loc.locations
+    for location in locations:
+        calib_pars = sc.loadobj('results/unconstrained/kenya_pars_nov06_iv.obj')
+        sim = run_sim(location=location, calib_pars=calib_pars)
 
     # cp = sc.loadobj('results/unconstrained/tanzania_pars_oct06_iv.obj')
-    sims = run_sims(locations=locations, do_save=True)
+    # sims = run_sims(locations=locations, do_save=True)
 
     # alldf = sc.loadobj('results/calib_dfs_sc.obj')
     # sc_pars = dict()
