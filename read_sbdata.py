@@ -215,10 +215,10 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
 
         # Construct dataframe
         n_bins = len(bins)
-        partners = np.repeat([0, 1, 2, 3], n_bins)
-        allbins = np.tile(bins,4)
+        partners = np.repeat([0, 1, 2, 3, 5], n_bins)
+        allbins = np.tile(bins, 5)
         counts = np.concatenate([val for val in casual_partners.values()])
-        allpopsize = np.tile(popsize, 4)
+        allpopsize = np.tile(popsize, 5)
         shares = counts / allpopsize
         datadict = dict(bins=allbins, partners=partners, counts=counts, popsize=allpopsize, shares=shares)
         df = pd.DataFrame.from_dict(datadict)
