@@ -26,8 +26,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][0]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
@@ -78,11 +78,11 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         beta=[0.2, 0.1, 0.34, 0.02],
         m_cross_layer=[0.3, 0.1, 0.7, 0.05],
         m_partners=dict(
-            c=dict(par1=[0.2, 0.1, 0.5, 0.01])
+            c=dict(par1=[0.2, 0.1, 0.6, 0.02])
         ),
         f_cross_layer=[0.1, 0.05, 0.5, 0.05],
         f_partners=dict(
-            c=dict(par1=[0.2, 0.1, 0.5, 0.01])
+            c=dict(par1=[0.2, 0.1, 0.6, 0.02])
         )
     )
 
