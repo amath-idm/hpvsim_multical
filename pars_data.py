@@ -266,7 +266,7 @@ for location in loc.locations:
     )
     f_partners = dict(
         m=dict(dist='poisson1', par1=0.01),
-        c=dict(dist='neg_binomial', par1=1, par2=.2),
+        c=dict(dist='poisson1', par1=0.2),
     )
 
 #%% MIXING

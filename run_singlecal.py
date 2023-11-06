@@ -82,7 +82,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         ),
         f_cross_layer=[0.1, 0.05, 0.5, 0.05],
         f_partners=dict(
-            c=dict(par1=[1, .5, 2, .1], par2=[.2, .1, 1, .05])
+            c=dict(par1=[0.2, 0.1, 0.5, 0.01])
         )
     )
 
@@ -94,7 +94,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
                             name=f'{location}_calib_final',
                             datafiles=datafiles,
                             total_trials=n_trials, n_workers=n_workers,
-                            storage=f"{storage}"
+                            storage=storage+location[:3]
                             )
     calib.calibrate()
     filename = f'{location}_calib{filestem}'
