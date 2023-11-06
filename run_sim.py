@@ -153,9 +153,9 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = ['kenya']  #loc.locations
+    locations = ['nigeria']  #, 'ethiopia', 'drc']  #loc.locations
     for location in locations:
-        calib_pars = sc.loadobj('results/unconstrained/kenya_pars_nov06_iv.obj')
+        calib_pars = sc.loadobj(f'results/unconstrained/{location}_pars_nov06_iv.obj')
         sim = run_sim(location=location, calib_pars=calib_pars)
 
     # cp = sc.loadobj('results/unconstrained/tanzania_pars_oct06_iv.obj')
