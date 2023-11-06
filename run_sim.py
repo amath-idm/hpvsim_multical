@@ -47,7 +47,8 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         debut=ut.make_sb_data(location=location, dist_type=dist_type, debut_bias=debut_bias),
         mixing=dp.mixing[location],
         layer_probs=dp.make_layer_probs(location=location, marriage_scale=marriage_scale),
-        partners=dp.partners[location],
+        f_partners=dp.f_partners,
+        m_partners=dp.m_partners,
         init_hpv_dist=dp.init_genotype_dist[location],
         init_hpv_prev={
             'age_brackets': np.array([12, 17, 24, 34, 44, 64, 80, 150]),

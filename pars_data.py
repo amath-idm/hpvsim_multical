@@ -260,13 +260,15 @@ for location in loc.locations:
 
 
 #%% PARTNERS
-default_partners = dict(
-        m=dict(dist='poisson1', par1=0.1),
-        c=dict(dist='poisson1', par1=0.5),
-)
 for location in loc.locations:
-    partners[location] = default_partners
-
+    m_partners = dict(
+        m=dict(dist='poisson1', par1=0.01),
+        c=dict(dist='poisson1', par1=0.2),
+    )
+    f_partners = dict(
+        m=dict(dist='poisson1', par1=0.01),
+        c=dict(dist='poisson', par1=1),
+    )
 
 #%% MIXING
 default_mixing_all = np.array([
