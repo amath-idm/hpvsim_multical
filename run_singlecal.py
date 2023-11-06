@@ -44,10 +44,8 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 ########################################################################
 def make_priors(add_1618=True):
     default = dict(
-        dur_cin=dict(par1=[4, 2, 6, 0.1], par2=[4, 2, 12, 0.5]),
-        cin_fn=dict(k=[0.1, 0.05, 0.3, 0.01]),
-        cancer_fn=dict(ld50=[20, 15, 30, 1]),
-        rel_beta=[0.75, 0.7, 1., 0.05]
+        cin_fn=dict(k=[.15, .1, .25, 0.01]),
+        rel_beta=[0.9, 0.8, 1.2, 0.05]
     )
 
     genotype_pars = dict(
@@ -57,15 +55,11 @@ def make_priors(add_1618=True):
 
     if add_1618:
         hpv16 = dict(
-            dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
-            cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
-            cancer_fn=dict(ld50=[15, 12, 40, 1]),
+            cin_fn=dict(k=[.25, .2, .3, 0.01]),
         )
         hpv18 = dict(
-            dur_cin=dict(par1=[5, 3, 8, 0.1], par2=[5, 3, 12, 0.5]),
-            cin_fn=dict(k=[0.25, 0.1, 0.4, 0.01]),
-            cancer_fn=dict(ld50=[15, 12, 40, 1]),
-            rel_beta=[0.75, 0.7, 1., 0.05]
+            cin_fn=dict(k=[.25, .2, .3, 0.01]),
+            rel_beta=[0.9, 0.8, 1.2, 0.05]
         )
         genotype_pars['hpv16'] = hpv16
         genotype_pars['hpv18'] = hpv18
@@ -81,7 +75,15 @@ def run_calib(location=None, n_trials=None, n_workers=None,
 
     # Define the calibration parameters
     calib_pars = dict(
-        beta=[0.2, 0.1, 0.3, 0.02],
+        beta=[0.2, 0.1, 0.34, 0.02],
+        m_cross_layer=[0.3, 0.1, 0.5, 0.05],
+        m_partners=dict(
+            c=dict(par1=[0.2, 0.1, 0.5, 0.01])
+        ),
+        f_cross_layer=[0.1, 0.05, 0.5, 0.05],
+        f_partners=dict(
+            c=dict(par1=[1, .5, 2, .1])
+        )
     )
 
     if mc_gpars is None: add_1618 = True
@@ -137,7 +139,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    locations = ['uganda']  #loc.locations[20:]
+    locations = ['kenya']  #loc.locations[20:]
     filestem = '_nov06'
 
     if cal_type == 'immunovarying':

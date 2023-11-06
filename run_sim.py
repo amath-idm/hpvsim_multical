@@ -57,8 +57,11 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         ms_agent_ratio=100,
         verbose=0.0,
     )
-    interventions = sc.autolist()
-    sim = hpv.Sim(pars=pars, interventions=interventions, analyzers=analyzers, datafile=datafile, rand_seed=seed)
+
+    if calib_pars is not None:
+        pars = sc.mergedicts(pars, calib_pars)
+
+    sim = hpv.Sim(pars=pars, analyzers=analyzers, datafile=datafile, rand_seed=seed)
 
     return sim
 
