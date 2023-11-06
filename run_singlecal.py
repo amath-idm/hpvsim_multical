@@ -34,7 +34,7 @@ debug = False  # If True, this will do smaller runs that can be run locally for 
 do_save = True
 
 # Run settings for calibration (dependent on debug)
-n_trials = [1000, 10][debug]  # How many trials to run for calibration
+n_trials = [2000, 10][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -44,7 +44,7 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 ########################################################################
 def make_priors(add_1618=True):
     default = dict(
-        cin_fn=dict(k=[.15, .1, .35, 0.01]),
+        cin_fn=dict(k=[.2, .15, .35, 0.01]),
         rel_beta=[0.9, 0.8, 1.2, 0.05]
     )
 
@@ -55,10 +55,10 @@ def make_priors(add_1618=True):
 
     if add_1618:
         hpv16 = dict(
-            cin_fn=dict(k=[.25, .2, .35, 0.01]),
+            cin_fn=dict(k=[.3, .2, .4, 0.01]),
         )
         hpv18 = dict(
-            cin_fn=dict(k=[.25, .2, .35, 0.01]),
+            cin_fn=dict(k=[.3, .2, .4, 0.01]),
             rel_beta=[0.9, 0.8, 1.2, 0.05]
         )
         genotype_pars['hpv16'] = hpv16
