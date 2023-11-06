@@ -82,7 +82,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         ),
         f_cross_layer=[0.1, 0.05, 0.5, 0.05],
         f_partners=dict(
-            c=dict(par1=[1, .5, 2, .1])
+            c=dict(par1=[1, .5, 2, .1], par2=[.2, .1, 1, .05])
         )
     )
 
