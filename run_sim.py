@@ -69,7 +69,7 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
 
 # %% Simulation running functions
 def run_sim(
-        location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
+        location=None, age_pyr=True, analyzers=None, debug=0, seed=1, verbose=0.2,
         do_save=True, dist_type='lognormal', marriage_scale=1, debut_bias=[0, 0],
         calib_par_stem=None, ressubfolder=None, calib_pars=None,
 ):
