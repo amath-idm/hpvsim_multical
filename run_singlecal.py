@@ -44,7 +44,7 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 ########################################################################
 def make_priors(add_1618=True):
     default = dict(
-        cin_fn=dict(k=[.15, .1, .25, 0.01]),
+        cin_fn=dict(k=[.15, .1, .35, 0.01]),
         rel_beta=[0.9, 0.8, 1.2, 0.05]
     )
 
@@ -55,10 +55,10 @@ def make_priors(add_1618=True):
 
     if add_1618:
         hpv16 = dict(
-            cin_fn=dict(k=[.25, .2, .3, 0.01]),
+            cin_fn=dict(k=[.25, .2, .35, 0.01]),
         )
         hpv18 = dict(
-            cin_fn=dict(k=[.25, .2, .3, 0.01]),
+            cin_fn=dict(k=[.25, .2, .35, 0.01]),
             rel_beta=[0.9, 0.8, 1.2, 0.05]
         )
         genotype_pars['hpv16'] = hpv16
