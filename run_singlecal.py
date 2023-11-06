@@ -90,9 +90,13 @@ def run_calib(location=None, n_trials=None, n_workers=None,
     else: add_1618 = False
     genotype_pars = make_priors(add_1618=add_1618)
 
+    # Save some extra sim results
+    extra_sim_result_keys = ['cancers', 'cancer_incidence', 'asr_cancer_incidence']
+
     calib = hpv.Calibration(sim, calib_pars=calib_pars, genotype_pars=genotype_pars,
                             name=f'{location}_calib_final',
                             datafiles=datafiles,
+                            extra_sim_result_keys=extra_sim_result_keys,
                             total_trials=n_trials, n_workers=n_workers,
                             storage=storage
                             )
