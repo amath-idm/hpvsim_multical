@@ -126,9 +126,9 @@ def run_sims(
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location: sim for location, sim in zip(locations, simlist)})  # Convert from a list to a dict
 
-    # if do_save:
-    #     for loc,sim in sims.items():
-    #         sim.save(f'results/{loc}.sim')
+    if do_save:
+        for loc,sim in sims.items():
+            sim.save(f'results/{loc}.sim')
 
     return sims
 
@@ -159,7 +159,7 @@ if __name__ == '__main__':
         sim = run_sim(location=location, calib_pars=calib_pars)
 
     # cp = sc.loadobj('results/unconstrained/tanzania_pars_oct06_iv.obj')
-    # sims = run_sims(locations=locations, do_save=True)
+    sims = run_sims(locations=locations, do_save=True)
 
     # alldf = sc.loadobj('results/calib_dfs_sc.obj')
     # sc_pars = dict()
