@@ -45,7 +45,7 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 ########################################################################
 def make_priors(add_1618=True):
     default = dict(
-        cin_fn=dict(k=[.2, .15, .25, 0.01]),
+        cin_fn=dict(k=[.2, .15, .35, 0.01]),
     )
 
     genotype_pars = dict(
