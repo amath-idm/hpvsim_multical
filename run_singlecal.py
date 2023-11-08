@@ -55,10 +55,10 @@ def make_priors(add_1618=True):
 
     if add_1618:
         hpv16 = dict(
-            cin_fn=dict(k=[.3, .2, .4, 0.01]),
+            cin_fn=dict(k=[.35, .25, .45, 0.01]),
         )
         hpv18 = dict(
-            cin_fn=dict(k=[.3, .2, .4, 0.01]),
+            cin_fn=dict(k=[.35, .25, .45, 0.01]),
         )
         genotype_pars['hpv16'] = hpv16
         genotype_pars['hpv18'] = hpv18
