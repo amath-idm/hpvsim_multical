@@ -26,8 +26,8 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][0]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
@@ -45,7 +45,6 @@ storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage fo
 def make_priors(add_1618=True):
     default = dict(
         cin_fn=dict(k=[.2, .15, .25, 0.01]),
-        # rel_beta=[0.9, 0.8, 1.2, 0.05]
     )
 
     genotype_pars = dict(
@@ -59,7 +58,6 @@ def make_priors(add_1618=True):
         )
         hpv18 = dict(
             cin_fn=dict(k=[.3, .2, .4, 0.01]),
-            # rel_beta=[0.9, 0.8, 1.2, 0.05]
         )
         genotype_pars['hpv16'] = hpv16
         genotype_pars['hpv18'] = hpv18
