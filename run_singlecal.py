@@ -32,7 +32,7 @@ to_run = [
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
-locations = ['kenya']  # loc.locations[10:20]
+locations = ['nigeria']  # loc.locations[10:20]
 
 # Run settings for calibration (dependent on debug)
 n_trials = [3000, 10][debug]  # How many trials to run for calibration
@@ -126,7 +126,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
         fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'figures/{figsubfolder}/{filename}_sc.png')
+        fig.savefig(f'figures/{figsubfolder}/{filename}_iv.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)
