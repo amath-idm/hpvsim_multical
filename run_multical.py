@@ -14,9 +14,7 @@ os.environ.update(
 
 # Standard imports
 import sciris as sc
-import hpvsim as hpv
 import pandas as pd
-import numpy as np
 import utils as ut
 
 # Imports from this repository
@@ -30,15 +28,14 @@ to_run = [
     # 'plot_calibration',
 ]
 
-
 debug = False  # Smaller runs
 do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [7500, 2][debug]  # How many trials to run for calibration
+n_trials    = [40, 1][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
-storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug] # Storage for calibrations
+storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
 ########################################################################
 # Run calibration
