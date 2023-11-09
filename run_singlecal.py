@@ -29,10 +29,10 @@ to_run = [
     'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
     # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
-cal_type = ['unconstrained', 'immunovarying'][0]  # Whether to run the unconstrained or immunovarying calibration
+cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
-locations = ['zimbabwe']  # loc.locations[10:20]
+locations = ['kenya']  # loc.locations[10:20]
 
 # Run settings for calibration (dependent on debug)
 n_trials = [3000, 10][debug]  # How many trials to run for calibration
@@ -82,7 +82,8 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         f_cross_layer=[0.1, 0.05, 0.5, 0.05],
         f_partners=dict(
             c=dict(par1=[0.2, 0.1, 0.6, 0.02])
-        )
+        ),
+        sev_dist=dict(par1=[1, 0.5, 1.5, 0.01])
     )
 
     if mc_gpars is None: add_1618 = True
@@ -145,14 +146,14 @@ if __name__ == '__main__':
     filestem = '_nov06'
 
     if cal_type == 'immunovarying':
+        filestem += '_iv'
         mc_gpars = dict(
             genotype_pars=dict(
                 hpv16=dict(
-                    cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
+                    cin_fn=dict(form='logf2', k=0.35, x_infl=0, ttc=50),
                 ),
                 hpv18=dict(
-                    cin_fn=dict(k=[0.3, 0.1, 0.5, 0.01]),
-                    rel_beta=0.95
+                    cin_fn=dict(form='logf2', k=0.4, x_infl=0, ttc=50),
                 ),
             )
         )
