@@ -109,6 +109,8 @@ def run_calib(locations=None, sc_pars=None, n_trials=None, n_workers=None,
     for location in locations:
         if sc_pars is not None:
             calib_pars = sc_pars[location]
+        else:
+            calib_pars = None
         sim = rs.make_sim(location, calib_pars=calib_pars)
         sim.label = location
         sims.append(sim)
