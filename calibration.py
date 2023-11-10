@@ -403,16 +403,16 @@ class MultiCal(sc.prettyobj):
                 sim.fit += mismatch
                 sim_results[rkey] = model_output
 
+            # Add this sim fit to total fit
+            total_fit += sim.fit
+
             # Store results in temporary files
             if save:
                 results = dict(sim=sim_results, age=age_results, calib_pars=calib_pars, genotype_pars=genotype_pars,
-                               mismatch=total_fit)
+                               mismatch=sim.fit)
                 fileslabel = slabel.replace(' ', '_')
                 filename = self.tmp_filename % (fileslabel, trial.number)
                 sc.save(filename, results)
-
-            # Add this sim fit to total fit
-            total_fit += sim.fit
 
         return total_fit
 

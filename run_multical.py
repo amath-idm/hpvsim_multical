@@ -33,7 +33,7 @@ do_save = True
 
 
 # Run settings for calibration (dependent on debug)
-n_trials    = [40, 1][debug]  # How many trials to run for calibration
+n_trials    = [120, 1][debug]  # How many trials to run for calibration
 n_workers   = [40, 1][debug]    # How many cores to use
 storage     = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     filestem = '_nov06'
-    locations = loc.locations
+    locations = ['angola', 'benin']  # loc.locations
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

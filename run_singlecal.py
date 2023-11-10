@@ -35,8 +35,8 @@ do_save = True
 locations = ['zimbabwe']  #,
 
 # Run settings for calibration (dependent on debug)
-n_trials = [3000, 1][debug]  # How many trials to run for calibration
-n_workers = [40, 1][debug]  # How many cores to use
+n_trials = [3000, 4][debug]  # How many trials to run for calibration
+n_workers = [40, 4][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
 
