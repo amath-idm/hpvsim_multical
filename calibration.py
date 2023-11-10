@@ -154,7 +154,20 @@ class MultiCal(sc.prettyobj):
                 raise ValueError(errormsg)
         return new_pars
 
-    def update_dict_pars_init_and_bounds(self, initial_pars, par_bounds, target_pars, slabel=None):
+    @staticmethod
+    def update_dict_pars_from_trial(name_pars, value_pars, slabel=None):
+        ''' Function to update parameters from nested dict to trial parameter's value '''
+        # new_pars = sc.dcp(name_pars)
+        new_pars = {}
+        name_pars_keys = sc.flattendict(name_pars).keys()
+        for key in name_pars_keys:
+            name = '_'.join(key)
+            if slabel is not None: name = slabel + '_' + name
+            sc.setnested(new_pars, list(key), value_pars[name])
+        return new_pars
+
+    @staticmethod
+    def update_dict_pars_init_and_bounds(initial_pars, par_bounds, target_pars, slabel=None):
         ''' Function to update initial parameters and parameter bounds from a trial pars dict'''
         target_pars_keys = sc.flattendict(target_pars)
         for key, val in target_pars_keys.items():
@@ -211,19 +224,19 @@ class MultiCal(sc.prettyobj):
         """
 
         # Initialize
-        calib_pars = {}
-        genotype_pars = sc.objdict()
         sim = self.sims[slabel]
+        calib_pars = sc.objdict()
+        genotype_pars = sc.objdict()
 
         # Deal with trial parameters
         if trial_pars is None:
             try:
-                if which_pars is None or which_pars == 0:
+                if which_pars is None or which_pars==0:
                     trial_pars = self.best_pars
                 else:
                     ddict = self.df.to_dict(orient='records')[which_pars]
-                    trial_pars = {k: v for k, v in ddict.items() if k not in ['index', 'mismatch']}
-            except Exception:
+                    trial_pars = {k:v for k,v in ddict.items() if k not in ['index','mismatch']}
+            except:
                 errormsg = 'No trial parameters provided.'
                 raise ValueError(errormsg)
 
@@ -232,28 +245,11 @@ class MultiCal(sc.prettyobj):
 
             # Handle regular sim parameters
             if self.common_pars.get('calib_pars'):
-                for name, par in self.common_pars['calib_pars'].items():
-                    if isinstance(par, dict):
-                        simpar = sim.pars[name]
-                        for parkey in par.keys():
-                            simpar[parkey] = trial_pars[f'{name}_{parkey}']
-                        calib_pars[name] = simpar
-                    else:
-                        calib_pars[name] = trial_pars[name]
+                calib_pars = self.update_dict_pars_from_trial(self.common_pars['calib_pars'], trial_pars)
 
             # Handle genotype parameters
             if self.common_pars.get('genotype_pars'):
-                for gname, gpars in self.common_pars['genotype_pars'].items():
-                    this_genotype_pars = dict()
-                    for gpar, gval in gpars.items():
-                        if isinstance(gval, dict):
-                            this_genotype_pars[gpar] = dict()
-                            for gparkey in gval.keys():
-                                this_genotype_pars[gpar][gparkey] = trial_pars[
-                                    f'{gname}_{gpar}_{gparkey}']  # Update with values from trial pars
-                        else:
-                            this_genotype_pars[gpar] = trial_pars[f'{gname}_{gpar}']
-                    genotype_pars[gname] = this_genotype_pars
+                genotype_pars = self.update_dict_pars_from_trial(self.common_pars['genotype_pars'], trial_pars)
 
         # Handle unique parameters
         if self.unique_pars is not None and self.unique_pars.get(slabel):
@@ -261,33 +257,28 @@ class MultiCal(sc.prettyobj):
 
             # Handle regular sim parameters
             if upars.get('calib_pars'):
-                for name, par in upars['calib_pars'].items():
-                    if isinstance(par, dict):
-                        simpar = sim.pars[name]
-                        for parkey in par.keys():
-                            simpar[parkey] = trial_pars[f'{slabel}_{name}_{parkey}']
-                        calib_pars[name] = simpar
-                    else:
-                        calib_pars[name] = trial_pars[f'{slabel}_{name}']
+                calib_pars = sc.mergedicts(calib_pars, self.update_dict_pars_from_trial(upars['calib_pars'], trial_pars, slabel=slabel))
 
             # Handle genotype parameters
             if upars.get('genotype_pars'):
-                for gname, gpars in upars['genotype_pars'].items():
-                    this_genotype_pars = dict()
-                    # this_genotype_pars = hppar.get_genotype_pars(gname) # Get default values
-                    for gpar, gval in gpars.items():
-                        if isinstance(gval, dict):
-                            this_genotype_pars[gpar] = dict()
-                            for gparkey in gval.keys():
-                                this_genotype_pars[gpar][gparkey] = trial_pars[
-                                    f'{slabel}_{gname}_{gpar}_{gparkey}']  # Update with values from trial pars
-                        else:
-                            this_genotype_pars[gpar] = trial_pars[f'{slabel}_{gname}_{gpar}']
-                    if genotype_pars.get(gname):
-                        # noinspection PyTypeChecker
-                        genotype_pars[gname] = sc.mergedicts(genotype_pars[gname], this_genotype_pars)
-                    else:
-                        genotype_pars[gname] = this_genotype_pars
+                genotype_pars = sc.mergedicts(genotype_pars, self.update_dict_pars_from_trial(upars['genotype_pars'], trial_pars, slabel=slabel))
+
+                # for gname, gpars in upars['genotype_pars'].items():
+                #     this_genotype_pars = dict()
+                #     # this_genotype_pars = hppar.get_genotype_pars(gname) # Get default values
+                #     for gpar, gval in gpars.items():
+                #         if isinstance(gval, dict):
+                #             this_genotype_pars[gpar] = dict()
+                #             for gparkey in gval.keys():
+                #                 this_genotype_pars[gpar][gparkey] = trial_pars[
+                #                     f'{slabel}_{gname}_{gpar}_{gparkey}']  # Update with values from trial pars
+                #         else:
+                #             this_genotype_pars[gpar] = trial_pars[f'{slabel}_{gname}_{gpar}']
+                #     if genotype_pars.get(gname):
+                #         # noinspection PyTypeChecker
+                #         genotype_pars[gname] = sc.mergedicts(genotype_pars[gname], this_genotype_pars)
+                #     else:
+                #         genotype_pars[gname] = this_genotype_pars
 
         # Return
         if return_full:
