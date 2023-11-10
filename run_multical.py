@@ -28,7 +28,7 @@ to_run = [
     # 'plot_calibration',
 ]
 
-debug = False  # Smaller runs
+debug = True  # Smaller runs
 do_save = True
 
 
@@ -46,7 +46,7 @@ def make_unique_priors(locations=None):
     unique_pars = dict()
     for location in locations:
         unique_pars[location] = dict(
-            calib_pars = dict(
+            calib_pars=dict(
                 beta=[0.2, 0.1, 0.34, 0.02],
                 m_cross_layer=[0.3, 0.1, 0.7, 0.05],
                 m_partners=dict(
@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     filestem = '_nov06'
-    locations = ['angola', 'benin']  # loc.locations
+    locations = loc.locations
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:

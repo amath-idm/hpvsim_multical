@@ -83,7 +83,7 @@ class MultiCal(sc.prettyobj):
         age_results = sc.objdict({sim_label: sc.objdict() for sim_label in self.sim_labels})
         self.result_args = sc.objdict({sim_label: sc.objdict() for sim_label in self.sim_labels})
 
-        for slabel, sim in self.sims.items():
+        for slabel in self.sim_labels:
             for targ in self.target_data[slabel]:
                 targ_keys = targ.name.unique()
                 if len(targ_keys) > 1:
@@ -100,8 +100,8 @@ class MultiCal(sc.prettyobj):
                     )
 
             ar = hpa.age_results(result_args=age_results[slabel])
-            sim['analyzers'] += [ar]
-            sim.initialize()  # Initialize the sim so that the par structure is there
+            self.sims[slabel]['analyzers'] = ar
+            self.sims[slabel].initialize()  # Initialize the sim so that the par structure is there
 
             sresults = sim_results[slabel]
             for rkey in sresults.keys():
