@@ -263,23 +263,6 @@ class MultiCal(sc.prettyobj):
             if upars.get('genotype_pars'):
                 genotype_pars = sc.mergedicts(genotype_pars, self.update_dict_pars_from_trial(upars['genotype_pars'], trial_pars, slabel=slabel))
 
-                # for gname, gpars in upars['genotype_pars'].items():
-                #     this_genotype_pars = dict()
-                #     # this_genotype_pars = hppar.get_genotype_pars(gname) # Get default values
-                #     for gpar, gval in gpars.items():
-                #         if isinstance(gval, dict):
-                #             this_genotype_pars[gpar] = dict()
-                #             for gparkey in gval.keys():
-                #                 this_genotype_pars[gpar][gparkey] = trial_pars[
-                #                     f'{slabel}_{gname}_{gpar}_{gparkey}']  # Update with values from trial pars
-                #         else:
-                #             this_genotype_pars[gpar] = trial_pars[f'{slabel}_{gname}_{gpar}']
-                #     if genotype_pars.get(gname):
-                #         # noinspection PyTypeChecker
-                #         genotype_pars[gname] = sc.mergedicts(genotype_pars[gname], this_genotype_pars)
-                #     else:
-                #         genotype_pars[gname] = this_genotype_pars
-
         # Return
         if return_full:
             all_pars = self.get_full_pars(sim=sim, calib_pars=calib_pars, genotype_pars=genotype_pars)
