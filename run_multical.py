@@ -28,7 +28,7 @@ to_run = [
     # 'plot_calibration',
 ]
 
-debug = True  # Smaller runs
+debug = False  # Smaller runs
 do_save = True
 
 
@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     filestem = '_nov06'
-    locations = loc.locations
+    locations = ['angola', 'benin'] # loc.locations
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
