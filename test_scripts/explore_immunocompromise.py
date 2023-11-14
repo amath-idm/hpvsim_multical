@@ -47,7 +47,7 @@ df = pd.merge(rs, hiv, on='country')
 # Plot
 best = -np.inf
 bestyear = np.nan
-fig, (ax0, ax1) = pl.subplots(2,1, figsize=(10,10))
+fig, (ax0, ax1) = pl.subplots(2,1, figsize=(8,8))
 for year in years:
     
     # Handle top plot
@@ -57,9 +57,11 @@ for year in years:
     inds = sc.getvalidinds(x)
     x = x[inds]
     y = df.relsev[inds]
-    m = df.code[inds]
-    c = (x/y).values
+    m = df.country[inds]
     out = sc.linregress(x, y, full=True)
+    est = out.m*x + out.b
+    resids = abs(y - est)
+    c = sc.vectocolor(resids, cmap='turbo')
     r2 = out.corr**2
     xmin = 0
     xmax = df.max()[3:].max()
@@ -74,7 +76,7 @@ for year in years:
     pl.scatter(x, y, c=c, s=100, alpha=0.5)
     for ix, iy, im, ic in zip(x, y, m, c):
         if not np.isnan(ix):
-            pl.text(ix, iy, im)
+            pl.text(ix, iy, im, fontdict=dict(color=ic))
     pl.xlabel('HIV prevalence')
     pl.ylabel('Relative severity')
     pl.xlim(xlim)
@@ -85,7 +87,7 @@ for year in years:
     # Handle bottom plot
     pl.sca(ax1)
     pl.scatter(int(year), r2)
-    pl.xlabel('Year')
+    pl.xlabel('Year of HIV prevalence data')
     pl.ylabel('R²')
     # pl.ylim(bottom=0)
     pl.xlim([start-1, end+1])
