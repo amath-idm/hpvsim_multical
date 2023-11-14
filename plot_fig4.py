@@ -52,6 +52,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     sns.boxplot(data=df, x="country", y="Mean immunocompromise level", ax=ax, order=grp_order)
     ax.yaxis.grid(True)
     pl.xticks(rotation=90)
+    pl.legend([], [], frameon=False)
     ax.set_xlabel('')
     ax.set_ylabel('')
     ax.set_ylim([0.4, 1.6])
@@ -88,6 +89,6 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
 if __name__ == '__main__':
 
     locations = loc.locations
-    df2 = plot_rel_sevs(locations, make=True, filestem='_calib_nov06_iv')
+    df2 = plot_rel_sevs(locations, make=False, filestem='_calib_nov06_iv')
 
     print('Done.')
