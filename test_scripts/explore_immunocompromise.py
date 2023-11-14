@@ -13,10 +13,17 @@ T = sc.timer()
 sc.options(dpi=150)
 
 # Settings
+save  = True
+animate = True
 start = 1990 # Earliest year data available
 end   = 2020
 years = [str(y) for y in sc.inclusiverange(start, end, dtype=int)]
-exclude = ['ZAF', 'ZWE'] # Optionally exclude outliers
+exclude = [  # Optionally exclude outliers
+    'South Africa',
+    'Zimbabwe',
+    'Nigeria',
+    'Madagascar',
+]
 use_exclude = True
 
 # Paths
@@ -39,7 +46,7 @@ hiv = hiv.rename(columns={'Country Name':'country', 'Country Code':'code'})
 keep = ['country', 'code'] + years
 hiv = hiv[keep]
 if use_exclude:
-    hiv = hiv[~hiv.code.isin(exclude)]
+    hiv = hiv[~hiv.country.isin(exclude)]
 
 # Merge
 df = pd.merge(rs, hiv, on='country')
@@ -82,17 +89,19 @@ for year in years:
     pl.xlim(xlim)
     pl.ylim(ylim)
     pl.title(f'{year}, R²={r2:0.2f}, best={bestyear} (R²={best:0.2f})')
-    pl.pause(0.2) # Animate
+    if animate:
+        pl.pause(0.2) # Animate
     
     # Handle bottom plot
     pl.sca(ax1)
-    pl.scatter(int(year), r2)
+    pl.scatter(int(year), r2, c='k')
     pl.xlabel('Year of HIV prevalence data')
     pl.ylabel('R²')
-    # pl.ylim(bottom=0)
     pl.xlim([start-1, end+1])
     
     sc.figlayout()
     
 
+if save:
+    sc.savefig('relsev-hiv-scatter.png')
 T.toc()
