@@ -26,17 +26,17 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = True  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
-locations = ['zimbabwe']  #,
+locations = ['nigeriea']
 
 # Run settings for calibration (dependent on debug)
-n_trials = [3000, 4][debug]  # How many trials to run for calibration
-n_workers = [40, 4][debug]  # How many cores to use
+n_trials = [3000, 1][debug]  # How many trials to run for calibration
+n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
 

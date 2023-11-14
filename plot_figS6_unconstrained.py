@@ -62,7 +62,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
             bins += x.tolist()
             values += list(run[resname][date])
         modeldf = pd.DataFrame({'bins': bins, 'values': values})
-        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b', boxprops=dict(alpha=.4))
 
         # Set title and labels
         title_country = location.title()
@@ -88,7 +88,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
 
 # %% Run as a script
 if __name__ == '__main__':
-    filestem = 'oct26'
+    filestem = 'nov06'
     locations = loc.locations
     plot_single_cals(locations, n_results=50, filestem=filestem)
 

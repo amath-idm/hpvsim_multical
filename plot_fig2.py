@@ -11,9 +11,7 @@ import seaborn as sns
 
 
 # Imports from this repository
-import run_sim as rs
-import run_multical as rm
-import locations as set
+import locations as loc
 import utils as ut
 
 
@@ -36,7 +34,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
         ax = axes[plot_count]
 
         dflocation = location.replace(' ', '_')
-        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}.obj')
+        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv.obj')
         reslist = sccalib.analyzer_results
         target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
@@ -62,7 +60,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
             bins += x.tolist()
             values += list(run[resname][date])
         modeldf = pd.DataFrame({'bins': bins, 'values': values})
-        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b', boxprops=dict(alpha=.4))
 
         # Set title and labels
         # ax.set_xlabel('Age group')
@@ -88,7 +86,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    plot_fig2(locations, filestem='jun15', n_results=50)
+    locations = loc.locations
+    plot_fig2(locations, filestem='nov06', n_results=50)
 
     print('Done.')

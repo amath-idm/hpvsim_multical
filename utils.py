@@ -225,6 +225,70 @@ class prop_married(hpv.Analyzer):
         self.df = pd.concat(self.dfs)
 
 
+class outcomes_by_year(hpv.Analyzer):
+    def __init__(self, start_year=None, **kwargs):
+        super().__init__(**kwargs)
+        self.start_year = start_year
+        self.interval = 1
+        self.durations = np.arange(0, 41, self.interval)
+        result_keys = ['cleared', 'persisted', 'progressed', 'cancer', 'dead', 'dead_cancer', 'dead_other', 'total']
+        self.results = {rkey: np.zeros_like(self.durations) for rkey in result_keys}
+
+    def initialize(self, sim):
+        super().initialize(sim)
+        if self.start_year is None:
+            self.start_year = sim['start']
+
+    def apply(self, sim):
+        if sim.yearvec[sim.t] == self.start_year:
+            idx = ((sim.people.date_exposed == sim.t) & (sim.people.sex==0) & (sim.people.n_infections==1)).nonzero()  # Get people exposed on this step
+            inf_inds = idx[-1]
+            if len(inf_inds):
+                scale = sim.people.scale[inf_inds]
+                time_to_clear = (sim.people.date_clearance[idx] - sim.t)*sim['dt']
+                time_to_cancer = (sim.people.date_cancerous[idx] - sim.t)*sim['dt']
+                time_to_cin = (sim.people.date_cin[idx] - sim.t)*sim['dt']
+
+                # Count deaths. Note that there might be more people with a defined
+                # cancer death date than with a defined cancer date because this is
+                # counting all death, not just deaths resulting from infections on this
+                # time step.
+                time_to_cancer_death = (sim.people.date_dead_cancer[inf_inds] - sim.t)*sim['dt']
+                time_to_other_death = (sim.people.date_dead_other[inf_inds] - sim.t)*sim['dt']
+
+                for idd, dd in enumerate(self.durations):
+
+                    dead_cancer = (time_to_cancer_death <= (dd+self.interval)) & ~(time_to_other_death <= (dd + self.interval))
+                    dead_other = ~(time_to_cancer_death <= (dd + self.interval)) & (time_to_other_death <= (dd + self.interval))
+                    dead = (time_to_cancer_death <= (dd + self.interval)) | (time_to_other_death <= (dd + self.interval))
+                    cleared = ~dead & (time_to_clear <= (dd+self.interval))
+                    persisted = ~dead & ~cleared & ~(time_to_cin <= (dd+self.interval)) # Haven't yet cleared or progressed
+                    progressed = ~dead & ~cleared & (time_to_cin <= (dd+self.interval)) & ((time_to_clear>(dd+self.interval)) | (time_to_cancer > (dd+self.interval)))  # USing the ~ means that we also count nans
+                    cancer = ~dead & (time_to_cancer <= (dd+self.interval))
+
+                    dead_cancer_inds = hpv.true(dead_cancer)
+                    dead_other_inds = hpv.true(dead_other)
+                    dead_inds = hpv.true(dead)
+                    cleared_inds = hpv.true(cleared)
+                    persisted_inds = hpv.true(persisted)
+                    progressed_inds = hpv.true(progressed)
+                    cancer_inds = hpv.true(cancer)
+                    derived_total = len(cleared_inds) + len(persisted_inds) + len(progressed_inds) + len(cancer_inds) + len(dead_inds)
+
+                    if derived_total != len(inf_inds):
+                        errormsg = "Something is wrong!"
+                        raise ValueError(errormsg)
+                    scaled_total = scale.sum()
+                    self.results['cleared'][idd] += scale[cleared_inds].sum()#len(hpv.true(cleared))
+                    self.results['persisted'][idd] += scale[persisted_inds].sum()#len(hpv.true(persisted_no_progression))
+                    self.results['progressed'][idd] += scale[progressed_inds].sum()#len(hpv.true(persisted_with_progression))
+                    self.results['cancer'][idd] += scale[cancer_inds].sum()#len(hpv.true(cancer))
+                    self.results['dead'][idd] += scale[dead_inds].sum()
+                    self.results['dead_cancer'][idd] += scale[dead_cancer_inds].sum()#len(hpv.true(dead))
+                    self.results['dead_other'][idd] += scale[dead_other_inds].sum()  # len(hpv.true(dead))
+                    self.results['total'][idd] += scaled_total#derived_total
+
+
 def lognorm_params(par1, par2):
     """
     Given the mean and std. dev. of the log-normal distribution, this function

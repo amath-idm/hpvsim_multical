@@ -59,7 +59,7 @@ def plot_fig1(locations, calib, n_results=20):
             bins += x.tolist()
             values += list(run[resname][date])
         modeldf = pd.DataFrame({'bins': bins, 'values': values})
-        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b', boxprops=dict(alpha=.4))
 
         # Set title and labels
         # ax.set_xlabel('Age group')
@@ -88,7 +88,7 @@ def plot_fig1(locations, calib, n_results=20):
 if __name__ == '__main__':
 
     locations = loc.locations
-    calib = sc.loadobj('results/constrained/multical_oct24.obj')
+    calib = sc.loadobj('results/constrained/multical_nov13.obj')
     plot_fig1(locations, calib, n_results=50)
 
     print('Done.')

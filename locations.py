@@ -37,3 +37,8 @@ locations = [
 ]
 
 nosbdata_locations = ["cote d'ivoire", "cote divoire", "somalia", "south sudan"]
+
+cancer_type_locs = [
+    'ethiopia', 'guinea', 'kenya', 'mali', 'mozambique', 'nigeria',
+    'senegal', 'south africa', 'tanzania', 'uganda', 'zimbabwe'
+]

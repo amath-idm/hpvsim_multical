@@ -24,8 +24,8 @@ import locations as loc
 
 # Comment out to not run
 to_run = [
-    'run_calibration',
-    # 'plot_calibration',
+    # 'run_calibration',
+    'plot_calibration',
 ]
 
 debug = False  # Smaller runs
@@ -169,7 +169,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_nov06'
+    filestem = '_nov13'
     locations = loc.locations
 
     # Run calibration - usually on VMs
