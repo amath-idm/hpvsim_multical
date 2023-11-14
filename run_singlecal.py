@@ -32,7 +32,7 @@ to_run = [
 cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
 debug = True  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
-locations = ['nigeriea']
+locations = ['nigeria']
 
 # Run settings for calibration (dependent on debug)
 n_trials = [3000, 1][debug]  # How many trials to run for calibration
