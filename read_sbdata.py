@@ -133,7 +133,7 @@ def read_marriage_data():
 
 
 def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
-                     verbose=-1, debug=False):
+                     verbose=-1, calib_par_stem=None, ressubfolder=None, debug=False):
     '''
     Run sims with the sexual debut parameters inferred from DHA data, and save
     the proportion of people of each age who've ever had sex
@@ -143,6 +143,8 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
     countries_to_run = locations
     sims = rs.run_sims(
         locations=countries_to_run,
+        calib_par_stem=calib_par_stem,
+        ressubfolder=ressubfolder,
         age_pyr=True,
         analyzers=[ut.AFS(),ut.prop_married(),hpv.snapshot(timepoints=['2020'])],
         debug=debug,
@@ -450,7 +452,9 @@ if __name__ == '__main__':
             marriage_scale=1,
             debut_bias=[-1,-1],
             debug=False,
-            verbose=0.1
+            verbose=0.1,
+            calib_par_stem='_pars_nov06_iv_iv',
+            ressubfolder='immunovarying'
         )
 
     # Plotting functions
