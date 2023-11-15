@@ -444,7 +444,7 @@ if __name__ == '__main__':
     # countries, dff, df2, rvs = read_debut_data(dist_type=dist_type)
 
     dist_type = 'lognormal'
-    do_run = False
+    do_run = True
 
     if do_run:
         sims, afs_df, pm_df, agediff_df, casual_df = get_sb_from_sims(
@@ -461,6 +461,6 @@ if __name__ == '__main__':
     # plot_sb(dist_type=dist_type)
     # plot_prop_married()
     # plot_age_diffs()
-    plot_casuals()
+    # plot_casuals()
 
     print('Done.')
