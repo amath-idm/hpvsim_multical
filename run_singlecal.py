@@ -26,16 +26,16 @@ import locations as loc
 
 # CONFIGURATIONS TO BE SET BY USERS BEFORE RUNNING
 to_run = [
-    # 'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
-    'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
+    'run_calibration',  # Make sure this is uncommented if you want to _run_ the calibrations (usually on VMs)
+    # 'plot_calibration',  # Make sure this is uncommented if you want to _plot_ the calibrations (usually locally)
 ]
-cal_type = ['unconstrained', 'immunovarying'][1]  # Whether to run the unconstrained or immunovarying calibration
+cal_type = ['unconstrained', 'immunovarying'][0]  # Whether to run the unconstrained or immunovarying calibration
 debug = False  # If True, this will do smaller runs that can be run locally for debugging
 do_save = True
-locations = ['nigeria']
+locations = ['tanzania']
 
 # Run settings for calibration (dependent on debug)
-n_trials = [3000, 1][debug]  # How many trials to run for calibration
+n_trials = [1000, 1][debug]  # How many trials to run for calibration
 n_workers = [40, 1][debug]  # How many cores to use
 storage = ["mysql://hpvsim_user@localhost/hpvsim_db", None][debug]  # Storage for calibrations
 
@@ -83,7 +83,7 @@ def run_calib(location=None, n_trials=None, n_workers=None,
         f_partners=dict(
             c=dict(par1=[0.2, 0.1, 0.6, 0.02])
         ),
-        sev_dist=dict(par1=[1, 0.5, 1.5, 0.01])
+        # sev_dist=dict(par1=[1, 0.5, 1.5, 0.01])
     )
 
     if mc_gpars is None: add_1618 = True
@@ -143,7 +143,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
 if __name__ == '__main__':
 
     T = sc.timer()
-    filestem = '_nov06'
+    filestem = '_nov13'
 
     if cal_type == 'immunovarying':
         filestem += '_iv'
