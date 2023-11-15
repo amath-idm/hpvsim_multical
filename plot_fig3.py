@@ -17,10 +17,10 @@ import run_sim as rs
 
 # %% Functions
 
-def plot_nh(sim=None):
+def plot_nh(sim=None, alldf=None):
+
     # Make sims
     genotypes = ['hpv16', 'hpv18']  # , 'hi5', 'ohr']
-    dur_episomal = sc.autolist()
     cancer_fns = sc.autolist()
     dur_precins = sc.autolist()
     for gi, genotype in enumerate(genotypes):
@@ -61,41 +61,36 @@ def plot_nh(sim=None):
     axes[0].legend()
 
     # Panel B: transform prob
-    res = sim.analyzers[1].results
-    years = sim.analyzers[1].durations
-
-    df = pd.DataFrame()
-    persisted = res["total"] - res["cleared"] - res["dead_other"]
-    df["years"] = years
-    df["prob_persisted"] = (res["persisted"]+res["progressed"]) / persisted
-    df["prob_cancer"] = (res["cancer"]+res["dead_cancer"]) / persisted
-    prob_cancer = (res["cancer"]+res["dead_cancer"]) / persisted
-
-    def moving_average(a, n=3):
-        ret = np.cumsum(a, dtype=float)
-        ret[n:] = ret[n:] - ret[:-n]
-        return ret[n - 1:] / n
+    mean_cancer_prob = alldf.groupby('years')['prob_cancer'].agg('mean')
+    ind = 41
+    bottom = np.zeros(ind)
+    years = np.arange(ind)
+    axes[1].fill_between(years, bottom, 1-mean_cancer_prob, label='Persistant infection')
+    axes[1].fill_between(years, 1-mean_cancer_prob, np.ones(ind), label='Cancer')
+    axes[1].legend(loc="lower left")
+    axes[1].set_title('Cancer probabilities')
+    axes[1].set_xlabel("Years since infection")
+    #
+    # res = sim.analyzers[1].results
+    # years = sim.analyzers[1].durations
+    #
+    # df = pd.DataFrame()
+    # persisted = res["total"] - res["cleared"] - res["dead_other"]
+    # df["years"] = years
+    # df["prob_persisted"] = (res["persisted"]+res["progressed"]) / persisted
+    # df["prob_cancer"] = (res["cancer"]+res["dead_cancer"]) / persisted
+    # prob_cancer = (res["cancer"]+res["dead_cancer"]) / persisted
+    #
+    # def moving_average(a, n=3):
+    #     ret = np.cumsum(a, dtype=float)
+    #     ret[n:] = ret[n:] - ret[:-n]
+    #     return ret[n - 1:] / n
 
     # axes[1].plot(years[1:-1], moving_average(prob_cancer), lw=2, color='k')
     # axes[1].set_title("Share of all infections\n progressed to cancer")
     # axes[1].set_ylabel("Probability")
     # axes[1].set_ylim([0,1])
 
-    ind = 31
-    bottom = np.zeros(len(df["years"][:ind]))
-    layers = ["prob_persisted", "prob_cancer"]
-    labels = ["Persistant infection", "Cancer"]
-    for ln, layer in enumerate(layers):
-        axes[1].fill_between(
-            df["years"][:ind],
-            bottom,
-            bottom + df[layer][:ind],
-            label=labels[ln],
-        )
-        bottom += df[layer][:ind]
-    axes[1].legend(loc="lower left")
-    axes[1].set_title('Cancer probabilities')
-    axes[1].set_xlabel("Years since infection")
 
     # for gi, genotype in enumerate(genotypes):
     #     cancer = hppar.compute_severity(x, pars=cancer_fns[gi])
@@ -131,14 +126,33 @@ def plot_nh(sim=None):
 # %% Run as a script
 if __name__ == '__main__':
 
-    location = 'angola' #.replace(' ', '_')
-    make_sim = False
-    if make_sim:
-        sim = rs.run_sim(location, ressubfolder='unconstrained', calib_par_stem=f'_pars_nov06_un',
-                         analyzers=[ut.dwelltime_by_genotype(), ut.outcomes_by_year(start_year=2000)], age_pyr=True, verbose=0.1, do_save=True)
-    else:
-        sim = sc.loadobj(f"results/{location.replace(' ', '_')}.sim")
+    import locations as loc
+    locations = loc.locations
+    make_sims = False
+    if make_sims:
+        dfs = sc.autolist()
+        for location in locations:
+            sim = rs.run_sim(location, ressubfolder='unconstrained', calib_par_stem=f'_pars_nov06_un',
+                             analyzers=[ut.dwelltime_by_genotype(), ut.outcomes_by_year(start_year=2000)], age_pyr=True, verbose=0.1, do_save=True)
 
-    plot_nh(sim)
+            res = sim.analyzers[1].results
+            years = sim.analyzers[1].durations
+
+            df = pd.DataFrame()
+            persisted = res["total"] - res["cleared"] - res["dead_other"]
+            df["years"] = years
+            df["prob_persisted"] = (res["persisted"] + res["progressed"]) / persisted
+            df["prob_cancer"] = (res["cancer"] + res["dead_cancer"]) / persisted
+            df["location"] = location
+            dfs += df
+
+        alldf = pd.concat(dfs)
+        sc.saveobj('results/model_cancer_probs.obj', alldf)
+
+    else:
+        alldf = sc.loadobj("results/model_cancer_probs.obj")
+        sim = sc.loadobj("results/sims/angola.sim")
+
+    plot_nh(sim=sim, alldf=alldf)
 
     print('Done.')

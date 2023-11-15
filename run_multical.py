@@ -28,7 +28,7 @@ to_run = [
     # 'plot_calibration',
 ]
 
-debug = False  # Smaller runs
+debug = True  # Smaller runs
 do_save = True
 
 # Run settings for calibration (dependent on debug)
@@ -170,7 +170,7 @@ if __name__ == '__main__':
 
     T = sc.timer()
     filestem = '_nov13'
-    locations = loc.locations
+    locations = loc.locations[:2]
 
     # Run calibration - usually on VMs
     if 'run_calibration' in to_run:
