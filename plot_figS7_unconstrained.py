@@ -30,7 +30,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
 
         dflocation = location.replace(' ', '_')
 
-        calib = sc.loadobj(f'results/unconstrained/{dflocation}_calib_{filestem}.obj')
+        calib = sc.loadobj(f'results/unconstrained/{dflocation}_calib_{filestem}_reduced.obj')
 
         # Plot settings
         ax = axes[plot_count]
@@ -46,9 +46,10 @@ def plot_single_cals(locations, n_results=20, filestem=None):
                       range(len(baseres['bins']) - 1)]
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
-        # Pull out results to plot
-        plot_indices = calib.df.iloc[0:n_results, 0].values
-        res = [reslist[i] for i in plot_indices]
+        # Pull out results to plot - Legacy lines commented out
+        # plot_indices = calib.df.iloc[0:n_results, 0].values
+        # res = [reslist[i] for i in plot_indices]
+        res = reslist
 
         # Plot data
         x = np.arange(len(age_labels))
@@ -90,8 +91,23 @@ def plot_single_cals(locations, n_results=20, filestem=None):
 
 # %% Run as a script
 if __name__ == '__main__':
+
     filestem = 'nov06'
     locations = loc.locations
+
+    # Complete this step if you've rerun the calibrations
+    # This step takes the huge calibration files and reduces them to something small enough
+    # to be easily loaded and saved to the repo
+    do_shrink = False
+    if do_shrink:
+
+        for pn, location in enumerate(locations):
+
+            dflocation = location.replace(' ', '_')
+            calib = sc.loadobj(f'results/unconstrained/{dflocation}_calib_{filestem}.obj')
+            cal = ut.shrink_calib(calib, n_results=50)
+            sc.saveobj(f'results/unconstrained/{dflocation}_calib_{filestem}_reduced.obj', cal)
+
     plot_single_cals(locations, n_results=50, filestem=filestem)
 
     print('Done.')
