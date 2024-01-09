@@ -301,3 +301,23 @@ def lognorm_params(par1, par2):
     scale = np.exp(mean)
     shape = sigma
     return shape, scale
+
+
+def shrink_mc_calib(calib, n_results=100):
+    cal = sc.objdict()
+    locations = calib.age_results.keys()
+    plot_indices = calib.df.iloc[0:n_results, 0].values
+    cal.age_results = dict()
+    cal.target_data = dict()
+    for location in locations:
+
+        # Only keep the first n_results
+        cal.age_results[location] = [calib.age_results[location][i] for i in plot_indices]
+
+        # Keep target data
+        cal.target_data[location] = calib.target_data[location]
+
+        # Store df just for plotting convenience
+        cal.df = calib.df.iloc[0:n_results, ]
+
+    return cal

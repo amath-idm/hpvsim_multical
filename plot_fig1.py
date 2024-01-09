@@ -44,8 +44,9 @@ def plot_fig1(locations, calib, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        plot_indices = calib.df.iloc[0:n_results, 0].values
-        res = [reslist[i] for i in plot_indices]
+        # plot_indices = calib.df.iloc[0:n_results, 0].values
+        # res = [reslist[i] for i in plot_indices]
+        res = reslist
 
         # Plot data
         x = np.arange(len(age_labels))
@@ -89,8 +90,17 @@ def plot_fig1(locations, calib, n_results=20):
 #%% Run as a script
 if __name__ == '__main__':
 
+    # Complete this step if you've rerun the calibration
+    # This step takes the huge calibration file and reduces it to something small enough
+    # to be easily loaded and saved to the repo
+    do_shrink = False
+    if do_shrink:
+        calib = sc.loadobj('results/constrained/multical_nov13.obj')  # Warning, this takes awhile!
+        cal = ut.shrink_mc_calib(calib, n_results=50)
+        sc.saveobj('results/constrained/multical_reduced.obj', cal)
+
     locations = loc.locations
-    calib = sc.loadobj('results/constrained/multical_nov13.obj')
+    calib = sc.loadobj('results/constrained/multical_reduced.obj')
     plot_fig1(locations, calib, n_results=50)
 
     print('Done.')
