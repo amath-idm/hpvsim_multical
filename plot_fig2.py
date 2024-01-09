@@ -34,7 +34,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
         ax = axes[plot_count]
 
         dflocation = location.replace(' ', '_')
-        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv.obj')
+        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv_reduced.obj')
         reslist = sccalib.analyzer_results
         target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
@@ -45,8 +45,9 @@ def plot_fig2(locations, filestem=None, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        plot_indices = sccalib.df.iloc[0:n_results, 0].values
-        res = [reslist[i] for i in plot_indices]
+        # plot_indices = sccalib.df.iloc[0:n_results, 0].values
+        # res = [reslist[i] for i in plot_indices]
+        res = reslist
 
         # Plot data
         x = np.arange(len(age_labels))
@@ -89,6 +90,21 @@ def plot_fig2(locations, filestem=None, n_results=20):
 if __name__ == '__main__':
 
     locations = loc.locations
-    plot_fig2(locations, filestem='nov06', n_results=50)
+    filestem = 'nov06'
+
+    # Complete this step if you've rerun the calibrations
+    # This step takes the huge calibration files and reduces them to something small enough
+    # to be easily loaded and saved to the repo
+    do_shrink = False
+    if do_shrink:
+
+        for pn, location in enumerate(locations):
+
+            dflocation = location.replace(' ', '_')
+            sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv.obj')
+            cal = ut.shrink_calib(sccalib, n_results=50)
+            sc.saveobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv_reduced.obj', cal)
+
+    plot_fig2(locations, filestem=filestem, n_results=50)
 
     print('Done.')

@@ -303,6 +303,15 @@ def lognorm_params(par1, par2):
     return shape, scale
 
 
+def shrink_calib(calib, n_results=100):
+    cal = sc.objdict()
+    plot_indices = calib.df.iloc[0:n_results, 0].values
+    cal.analyzer_results = [calib.analyzer_results[i] for i in plot_indices]
+    cal.target_data = calib.target_data
+    cal.df = calib.df.iloc[0:n_results, ]
+    return cal
+
+
 def shrink_mc_calib(calib, n_results=100):
     cal = sc.objdict()
     locations = calib.age_results.keys()
