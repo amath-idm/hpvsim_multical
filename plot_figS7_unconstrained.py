@@ -74,6 +74,8 @@ def plot_single_cals(locations, n_results=20, filestem=None):
         ax.set_ylabel('')
         ax.set_xlabel('')
         # ax.legend()
+        if pn in [0, 5, 10, 15, 20, 25]:
+            ax.set_ylabel('# cancers')
         if pn in [25, 26, 27, 28, 29]:
             stride = np.arange(0, len(baseres['bins']), 2)
             ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
