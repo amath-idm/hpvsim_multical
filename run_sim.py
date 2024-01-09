@@ -138,7 +138,8 @@ def run_parsets(
     ''' Run multiple simulations in parallel '''
 
     dflocation = location.replace(' ', '_')
-    parsets = sc.loadobj(f'results/immunovarying/{dflocation}_pars_nov06_iv_iv_all.obj')
+    parsets = sc.loadobj(f'results/unconstrained/{dflocation}_pars_nov13_iv_all.obj')
+    # parsets = sc.loadobj(f'results/immunovarying/{dflocation}_pars_nov06_iv_iv_all.obj')
     kwargs = sc.mergedicts(dict(location=location, debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
     msim = hpv.MultiSim(simlist)
@@ -153,7 +154,7 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    for location in loc.locations:
+    for location in ['tanzania']: #loc.locations:
 
         # sim = run_sim(location=location, calib_pars=sc_pars[location])
         msim = run_parsets(location=location, save_results=True)
