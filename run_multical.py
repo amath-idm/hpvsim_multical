@@ -3,15 +3,6 @@ Calibrate HPVsim to high-burden countries and run analyses to produce estimates
 of burden of cervical cancer over 2020-2060.
 '''
 
-# Additions to handle numpy multithreading
-import os
-os.environ.update(
-    OMP_NUM_THREADS = '1',
-    OPENBLAS_NUM_THREADS = '1',
-    NUMEXPR_NUM_THREADS = '1',
-    MKL_NUM_THREADS = '1',
-)
-
 # Standard imports
 import sciris as sc
 import pandas as pd
@@ -159,7 +150,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
             fig = calib.plot(slabel=location, res_to_plot=50, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/constrained/multical{filestem}_{location}.png')
+            sc.savefig(f'figures/constrained/multical{filestem}_{location}.png')
 
 
     return calib, sims
@@ -176,35 +167,6 @@ if __name__ == '__main__':
     if 'run_calibration' in to_run:
         sc_pars = None
         sims, calib = run_calib(locations=locations, sc_pars=sc_pars, n_trials=n_trials, n_workers=n_workers, do_save=do_save, do_plot=False, filestem=filestem)
-
-        # Get the parameters from the single cals
-        # alldf = make_posterior_df(locations, n_results=1)
-        # alldf = sc.loadobj('results/calib_dfs_sc.obj')
-        # sc_pars = dict()
-        # for location in locations:
-        #     thisdf = alldf[alldf.location == location]
-        #     sc_pars[location] = dict(
-        #         genotype_pars=dict(
-        #             hi5=dict(
-        #                 cin_fn=dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
-        #                 cancer_fn=dict(ld50=thisdf.hi5_cancer_fn_ld50.iloc[0], method='cin_integral', **dict(k=thisdf.hi5_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
-        #                 dur_cin=dict(dist='lognormal', par1=thisdf.hi5_dur_cin_par1.iloc[0], par2=thisdf.hi5_dur_cin_par2.iloc[0]),
-        #                 rel_beta=thisdf.hi5_rel_beta.iloc[0]
-        #             ),
-        #             ohr=dict(
-        #                 cin_fn=dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50),
-        #                 cancer_fn=dict(ld50=thisdf.ohr_cancer_fn_ld50.iloc[0], method='cin_integral', **dict(k=thisdf.ohr_cin_fn_k.iloc[0], form='logf2', x_infl=0, ttc=50)),
-        #                 dur_cin=dict(dist='lognormal', par1=thisdf.ohr_dur_cin_par1.iloc[0], par2=thisdf.ohr_dur_cin_par2.iloc[0]),
-        #                 rel_beta=thisdf.ohr_rel_beta.iloc[0]
-        #             )
-        #         )
-        #     )
-        #     if ~np.isnan(thisdf.cross_imm_sev_high.iloc[0]):
-        #         sc_pars[location]['cross_imm_sev_high'] = thisdf.cross_imm_sev_high.iloc[0]
-        #         sc_pars[location]['cross_imm_sev_med'] = thisdf.cross_imm_sev_med.iloc[0]
-        #         sc_pars[location]['cross_imm_sus_high'] = thisdf.cross_imm_sus_high.iloc[0]
-        #         sc_pars[location]['cross_imm_sus_med'] = thisdf.cross_imm_sus_med.iloc[0]
-
 
     # Load the calibration, plot it, and save the best parameters -- usually locally
     if 'plot_calibration' in to_run:

@@ -58,7 +58,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     ax.set_ylim([0.4, 1.6])
     ax.annotate('More immunocompromised', xy=(5, 1.1), xytext=(5, 1.5), horizontalalignment="center", arrowprops=dict(arrowstyle='<-',lw=1))
     fig.tight_layout()
-    pl.savefig(f"figures/fig4.png", dpi=100)
+    sc.savefig(f"figures/fig4.png", dpi=100)
 
     # Correlation plots
     fig, ax = pl.subplots(1, 1, figsize=(8, 6))
@@ -74,7 +74,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     ax.set_xlabel('HIV prevalence among women 15-49')
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_hiv_scatter.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_hiv_scatter.png", dpi=100)
 
     # ax = axes[1]
     # sns.regplot(data=df2, x="le", y="Mean immunocompromise level", ax=axes[1])

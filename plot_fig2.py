@@ -83,7 +83,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig2.png", dpi=100)
+    sc.savefig(f"figures/fig2.png", dpi=100)
 
 
 #%% Run as a script

@@ -1,5 +1,7 @@
 """
 This script plots the type distributions
+
+Requires run_multical.py to be run first.
 """
 
 # Import packages
@@ -87,7 +89,7 @@ def plot_types(locations, mc_calib=None, n_results=20, filestem=None, which='unc
         ax.set_xticks(np.arange(4), glabels)
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_types_{which}.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_types_{which}.png", dpi=100)
 
  
 # %% Run as a script

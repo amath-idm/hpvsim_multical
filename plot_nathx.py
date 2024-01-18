@@ -5,7 +5,7 @@ import hpvsim as hpv
 import hpvsim.parameters as hppar
 import pylab as pl
 import pandas as pd
-from scipy.stats import lognorm, norm
+from scipy.stats import lognorm
 import numpy as np
 import sciris as sc
 import seaborn as sns
@@ -142,7 +142,7 @@ def plot_stacked(sim=None):
     axes[0].set_xlabel("Time since infection")
     axes[1].set_xlabel("Time since infection")
     fig.tight_layout()
-    fig.savefig(f"dist_infections.png")
+    sc.savefig("dist_infections.png")
     fig.show()
 
     return
@@ -170,7 +170,6 @@ def plot_nh(sim=None):
     colors = sc.gridcolors(len(genotypes))
     fig, axes = pl.subplots(2, 3, figsize=(11, 9))
     axes = axes.flatten()
-    cmap = pl.cm.Oranges([0.25, 0.5, 0.75, 1])
 
     ####################
     # Make plots
@@ -179,7 +178,6 @@ def plot_nh(sim=None):
     this_precinx = np.arange(dt, 15+dt, dt)
     years = np.arange(1, 16, 1)
     this_cinx = np.arange(dt, 30+dt, dt)
-    n_samples = 10
 
     width = .3
     multiplier = 0
@@ -267,7 +265,7 @@ def plot_nh(sim=None):
     axes[4].set_title('Age of causal infection\nand cancer')
 
     fig.tight_layout()
-    fig.savefig(f'nathx.png')
+    sc.savefig('nathx.png')
     fig.show()
 
     return
