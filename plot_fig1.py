@@ -84,7 +84,7 @@ def plot_fig1(locations, calib, n_results=20):
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig1.png", dpi=100)
+    sc.savefig(f"figures/fig1.png", dpi=100)
 
 
 #%% Run as a script

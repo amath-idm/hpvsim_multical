@@ -86,7 +86,7 @@ def plot_single_cals(locations, n_results=20, filestem=None):
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_fit_sc.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_fit_sc.png", dpi=100)
 
 
 # %% Run as a script

@@ -118,7 +118,7 @@ def plot_nh(sim=None, alldf=None):
     #
     fig.tight_layout()
 
-    pl.savefig(f"figures/fig3.png", dpi=100)
+    sc.savefig(f"figures/fig3.png", dpi=100)
 
     return
 

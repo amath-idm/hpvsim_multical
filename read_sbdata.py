@@ -278,7 +278,7 @@ def plot_sb(dist_type='lognormal'):
             ax.set_xlabel('')
 
         fig.tight_layout()
-        pl.savefig(f"figures/SMs/fig_sb_{sex.lower()}.png", dpi=100)
+        sc.savefig(f"figures/SMs/fig_sb_{sex.lower()}.png", dpi=100)
 
     return
 
@@ -333,7 +333,7 @@ def plot_prop_married():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_prop_married.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_prop_married.png", dpi=100)
 
     return
 
@@ -379,7 +379,7 @@ def plot_age_diffs():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_age_diffs.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_age_diffs.png", dpi=100)
 
     return
 
@@ -433,7 +433,7 @@ def plot_casuals():
         ax.tick_params(axis='both', which='major', labelsize=10)
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_casual.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_casual.png", dpi=100)
 
     return
 
