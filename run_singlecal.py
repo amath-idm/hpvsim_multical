@@ -126,7 +126,7 @@ def load_calib(location=None, do_plot=True, which_pars=0, save_pars=True, filest
         fig = calib.plot(res_to_plot=200, plot_type='sns.boxplot', do_save=False)
         fig.suptitle(f'Calibration results, {location.capitalize()}')
         fig.tight_layout()
-        fig.savefig(f'figures/{figsubfolder}/{filename}_iv.png')
+        sc.savefig(f'figures/{figsubfolder}/{filename}_iv.png')
 
     if save_pars:
         calib_pars = calib.trial_pars_to_sim_pars(which_pars=which_pars)

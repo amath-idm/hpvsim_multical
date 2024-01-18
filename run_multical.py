@@ -150,7 +150,7 @@ def load_calib(filestem=None, locations=None, do_plot=True, which_pars=0, save_p
             fig = calib.plot(slabel=location, res_to_plot=50, plot_type='sns.boxplot')
             fig.suptitle(f'Calibration results, {location.capitalize()}')
             fig.tight_layout()
-            fig.savefig(f'figures/constrained/multical{filestem}_{location}.png')
+            sc.savefig(f'figures/constrained/multical{filestem}_{location}.png')
 
 
     return calib, sims
