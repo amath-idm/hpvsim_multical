@@ -1,5 +1,7 @@
 """
 This script plots the type distributions
+
+Requires run_multical.py to be run first.
 """
 
 # Import packages
