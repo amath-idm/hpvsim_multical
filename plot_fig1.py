@@ -44,8 +44,9 @@ def plot_fig1(locations, calib, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        plot_indices = calib.df.iloc[0:n_results, 0].values
-        res = [reslist[i] for i in plot_indices]
+        # plot_indices = calib.df.iloc[0:n_results, 0].values
+        # res = [reslist[i] for i in plot_indices]
+        res = reslist
 
         # Plot data
         x = np.arange(len(age_labels))
@@ -59,7 +60,7 @@ def plot_fig1(locations, calib, n_results=20):
             bins += x.tolist()
             values += list(run[resname][date])
         modeldf = pd.DataFrame({'bins': bins, 'values': values})
-        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b', boxprops=dict(alpha=.4))
 
         # Set title and labels
         # ax.set_xlabel('Age group')
@@ -72,6 +73,8 @@ def plot_fig1(locations, calib, n_results=20):
         ax.set_ylabel('')
         ax.set_xlabel('')
         # ax.legend()
+        if pn in [0, 5, 10, 15, 20, 25]:
+            ax.set_ylabel('# cancers')
         if pn in [25, 26, 27, 28, 29]:
             stride = np.arange(0, len(baseres['bins']), 2)
             ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
@@ -81,14 +84,23 @@ def plot_fig1(locations, calib, n_results=20):
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig1.png", dpi=100)
+    sc.savefig(f"figures/fig1.png", dpi=100)
 
 
 #%% Run as a script
 if __name__ == '__main__':
 
+    # Complete this step if you've rerun the calibration
+    # This step takes the huge calibration file and reduces it to something small enough
+    # to be easily loaded and saved to the repo
+    do_shrink = False
+    if do_shrink:
+        calib = sc.loadobj('results/constrained/multical_nov13.obj')  # Warning, this takes awhile!
+        cal = ut.shrink_mc_calib(calib, n_results=50)
+        sc.saveobj('results/constrained/multical_reduced.obj', cal)
+
     locations = loc.locations
-    calib = sc.loadobj('results/constrained/multical_may19.obj')
+    calib = sc.loadobj('results/constrained/multical_reduced.obj')
     plot_fig1(locations, calib, n_results=50)
 
     print('Done.')

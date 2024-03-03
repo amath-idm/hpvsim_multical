@@ -1,4 +1,8 @@
-""" Plot age pyramids """
+"""
+Plot age pyramids.
+
+Requires run_sim.py to be run for all locations first.
+"""
 
 # Import packages
 import sciris as sc

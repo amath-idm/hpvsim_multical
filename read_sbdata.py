@@ -133,7 +133,7 @@ def read_marriage_data():
 
 
 def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
-                     verbose=-1, debug=False):
+                     verbose=-1, calib_par_stem=None, ressubfolder=None, debug=False):
     '''
     Run sims with the sexual debut parameters inferred from DHA data, and save
     the proportion of people of each age who've ever had sex
@@ -143,6 +143,8 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
     countries_to_run = locations
     sims = rs.run_sims(
         locations=countries_to_run,
+        calib_par_stem=calib_par_stem,
+        ressubfolder=ressubfolder,
         age_pyr=True,
         analyzers=[ut.AFS(),ut.prop_married(),hpv.snapshot(timepoints=['2020'])],
         debug=debug,
@@ -203,7 +205,7 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
         for ab in bins:
             conditions[ab] = (ppl.age >= ab) * (ppl.age < ab + binspan) * general_conditions
 
-        casual_partners = {(0,1): sc.autolist(), (1,2):sc.autolist(), (2,3):sc.autolist(), (3,5):sc.autolist()}
+        casual_partners = {(0,1): sc.autolist(), (1,2):sc.autolist(), (2,3):sc.autolist(), (3,5):sc.autolist(), (5,50):sc.autolist()}
         for cp in casual_partners.keys():
             for ab,age_cond in conditions.items():
                 this_condition = conditions[ab] * (ppl.current_partners[1,:]>=cp[0]) * (ppl.current_partners[1,:]<cp[1])
@@ -215,10 +217,10 @@ def get_sb_from_sims(dist_type='lognormal', marriage_scale=1, debut_bias=[0,0],
 
         # Construct dataframe
         n_bins = len(bins)
-        partners = np.repeat([0, 1, 2, 3], n_bins)
-        allbins = np.tile(bins,4)
+        partners = np.repeat([0, 1, 2, 3, 5], n_bins)
+        allbins = np.tile(bins, 5)
         counts = np.concatenate([val for val in casual_partners.values()])
-        allpopsize = np.tile(popsize, 4)
+        allpopsize = np.tile(popsize, 5)
         shares = counts / allpopsize
         datadict = dict(bins=allbins, partners=partners, counts=counts, popsize=allpopsize, shares=shares)
         df = pd.DataFrame.from_dict(datadict)
@@ -276,7 +278,7 @@ def plot_sb(dist_type='lognormal'):
             ax.set_xlabel('')
 
         fig.tight_layout()
-        pl.savefig(f"figures/1_SMs/fig_sb_{sex.lower()}.png", dpi=100)
+        sc.savefig(f"figures/SMs/fig_sb_{sex.lower()}.png", dpi=100)
 
     return
 
@@ -331,7 +333,7 @@ def plot_prop_married():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_prop_married.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_prop_married.png", dpi=100)
 
     return
 
@@ -377,7 +379,7 @@ def plot_age_diffs():
         ax.set_xlabel('')
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_age_diffs.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_age_diffs.png", dpi=100)
 
     return
 
@@ -409,17 +411,17 @@ def plot_casuals():
         else:
             ax = axes
 
+        # Plot model
+        dfplot_m = casual_df.loc[(casual_df['country']==country) & (casual_df['partners'] > 0)]
+        dfplot_m['shares'] = dfplot_m['shares'].apply(lambda x: x * 100)
+        dfpm = pd.DataFrame({'bins':dfplot_m.bins.unique(), 'shares':dfplot_m.groupby(['bins', 'country']).sum()['shares'].values})
+        sns.barplot(data=dfpm, x="bins", y="shares", ax=ax, color='b', alpha=0.5)  #hue="partners", ax=ax)
+        ax.legend([], [], frameon=False)
+
         # Plot data
         data_country = ut.map_sb_loc(country)
         dfplot_d = data_df.loc[data_df['Country']==data_country]
-        sns.scatterplot(data=dfplot_d, x="AgeStr", y="Percentage", ax=ax, marker="D", color="k")
-
-        # Plot model
-        dfplot_m = casual_df.loc[casual_df['country']==country]
-        dfplot_m['shares'] = dfplot_m['shares'].apply(lambda x: x * 100)
-        sns.barplot(data=dfplot_m.loc[dfplot_m['partners'] > 0], x="bins", y="shares", hue="partners", ax=ax)
-        if pn != n_countries-1:
-            ax.legend([], [], frameon=False)
+        sns.scatterplot(data=dfplot_d, x="AgeStr", y="Percentage", ax=ax, marker="D", color="k", s=50)
 
         title_country = country.title()
         if title_country == 'Drc':
@@ -431,7 +433,7 @@ def plot_casuals():
         ax.tick_params(axis='both', which='major', labelsize=10)
 
     fig.tight_layout()
-    pl.savefig(f"figures/1_SMs/fig_casual.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_casual.png", dpi=100)
 
     return
 
@@ -450,13 +452,15 @@ if __name__ == '__main__':
             marriage_scale=1,
             debut_bias=[-1,-1],
             debug=False,
-            verbose=0.1
+            verbose=0.1,
+            calib_par_stem='_pars_nov06_iv_iv',
+            ressubfolder='immunovarying'
         )
 
     # Plotting functions
-    plot_sb(dist_type=dist_type)
-    plot_prop_married()
-    plot_age_diffs()
+    # plot_sb(dist_type=dist_type)
+    # plot_prop_married()
+    # plot_age_diffs()
     plot_casuals()
 
     print('Done.')

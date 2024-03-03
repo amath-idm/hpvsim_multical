@@ -9,14 +9,15 @@ import hpvsim.utils as hpu
 import pandas as pd
 import numpy as np
 
-import locations as set
-import pars_data as dp
+import locations as loc
+
 
 def set_font(size=None, font='Libertinus Sans'):
     ''' Set a custom font '''
     sc.fonts(add=sc.thisdir(aspath=True) / 'assets' / 'LibertinusSans-Regular.otf')
     sc.options(font=font, fontsize=size)
     return
+
 
 def map_sb_loc(location):
     ''' Map between different representations of country names '''
@@ -38,7 +39,7 @@ def rev_map_sb_loc(location):
 def make_sb_data(location=None, dist_type='lognormal', debut_bias=[0,0]):
 
     # Deal with missing countries and different spelling conventions
-    if location in set.nosbdata_locations:
+    if location in loc.nosbdata_locations:
         sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
     else:
         sb_location = map_sb_loc(location)
@@ -63,56 +64,6 @@ def make_sb_data(location=None, dist_type='lognormal', debut_bias=[0,0]):
     )
 
     return debut
-
-def make_layer_probs(location=None, marriage_scale=1):
-    # Deal with missing countries and different spelling conventions
-    if location in set.nosbdata_locations:
-        sb_location = 'Ethiopia' # Use assumptions for Ethiopia for Sudan, South Sudan, CDI and Somalia
-    else:
-        sb_location = map_sb_loc(location)
-
-    # Read in data and write to layer_probs
-    prop_married = pd.read_csv(f'data/prop_married.csv')
-    vals = np.array(prop_married.loc[prop_married["Country"] == sb_location, ["15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49"]])[0]
-    layer_probs = dp.layer_probs[location]
-    layer_probs['m'][1][3:10] = vals/100
-    layer_probs['m'][1]*=marriage_scale
-
-    if location=='angola':
-        layer_probs['m'][1]*=.5
-        layer_probs['m'][1][9:]*=.15
-    if location=='benin':
-        layer_probs['m'][1][9:] *= .15
-    if location=='burundi':
-        layer_probs['m'][1][4:]*=.5
-        layer_probs['m'][1][9:]*=.15
-    if location=='cameroon':
-        layer_probs['m'][1]*=.5
-        layer_probs['m'][1][9:]*=.15
-    if location=='chad':
-        layer_probs['m'][1]*=.7
-        layer_probs['m'][1][9:]*=.15
-    if location=='cote divoire':
-        layer_probs['m'][1]*=.5
-    if location=='drc':
-        layer_probs['m'][1]*=.5
-        layer_probs['m'][1][9:] *= .15
-    if location=='ethiopia':
-        layer_probs['m'][1]*=.7
-        layer_probs['m'][1][9:]*=.15
-    if location=='ghana':
-        layer_probs['m'][1]*=.6
-        layer_probs['m'][1][9:]*=.15
-    if location in ['guinea', 'nigeria', 'senegal', 'sierra leone', 'sudan']:
-        layer_probs['m'][1]*=.7
-    if location in ['kenya', 'madagascar', 'malawi', 'mozambique', 'rwanda', 'tanzania', 'togo', 'uganda', 'zambia', 'zimbabwe']:
-        layer_probs['m'][1]*=.5
-        layer_probs['m'][1][9:]*=.15
-    if location=='south africa':
-        layer_probs['m'][1]*=.4
-        layer_probs['m'][1][7:]*=.5
-
-    return layer_probs
 
 
 def make_datafiles(locations):
@@ -196,10 +147,14 @@ class dwelltime_by_genotype(hpv.Analyzer):
         self.years = sim.yearvec
         if self.start_year is None:
             self.start_year = sim['start']
-        self.age_causal = []
-        self.age_cancer = []
+        self.age_causal = dict()
+        self.age_cancer = dict()
         self.dwelltime = dict()
-        for state in ['precin', 'cin1', 'cin2', 'cin3', 'total']:
+        self.median_age_causal = dict()
+        for gtype in range(sim['n_genotypes']):
+            self.age_causal[gtype] = []
+            self.age_cancer[gtype] = []
+        for state in ['precin', 'cin', 'total']:
             self.dwelltime[state] = dict()
             for gtype in range(sim['n_genotypes']):
                 self.dwelltime[state][gtype] = []
@@ -210,27 +165,22 @@ class dwelltime_by_genotype(hpv.Analyzer):
             if len(cancer_inds):
                 current_age = sim.people.age[cancer_inds]
                 date_exposed = sim.people.date_exposed[cancer_genotypes, cancer_inds]
-                date_cin1 = sim.people.date_cin1[cancer_genotypes, cancer_inds]
-                date_cin2 = sim.people.date_cin2[cancer_genotypes, cancer_inds]
-                date_cin3 = sim.people.date_cin3[cancer_genotypes, cancer_inds]
-                hpv_time = (date_cin1 - date_exposed) * sim['dt']
-                cin1_time = (date_cin2 - date_cin1) * sim['dt']
-                cin2_time = (date_cin3 - date_cin2) * sim['dt']
-                cin3_time = (sim.t - date_cin3) * sim['dt']
+                dur_precin = sim.people.dur_precin[cancer_genotypes, cancer_inds]
+                dur_cin = sim.people.dur_cin[cancer_genotypes, cancer_inds]
                 total_time = (sim.t - date_exposed) * sim['dt']
-                self.age_causal += (current_age - total_time).tolist()
-                self.age_cancer += current_age.tolist()
                 for gtype in range(sim['n_genotypes']):
                     gtype_inds = hpv.true(cancer_genotypes == gtype)
-                    self.dwelltime['precin'][gtype] += hpv_time[gtype_inds].tolist()
-                    self.dwelltime['cin1'][gtype] += cin1_time[gtype_inds].tolist()
-                    self.dwelltime['cin2'][gtype] += cin2_time[gtype_inds].tolist()
-                    self.dwelltime['cin3'][gtype] += cin3_time[gtype_inds].tolist()
+                    self.dwelltime['precin'][gtype] += dur_precin[gtype_inds].tolist()
+                    self.dwelltime['cin'][gtype] += dur_cin[gtype_inds].tolist()
                     self.dwelltime['total'][gtype] += total_time[gtype_inds].tolist()
+                    self.age_causal[gtype] += (current_age[gtype_inds] - total_time[gtype_inds]).tolist()
+                    self.age_cancer[gtype] += (current_age[gtype_inds]).tolist()
         return
 
     def finalize(self, sim=None):
-        super().initialize(sim)
+        ''' Convert things to arrays '''
+        for gtype in range(sim['n_genotypes']):
+            self.median_age_causal[gtype] = np.quantile(self.age_causal[gtype], 0.5)
 
 
 class prop_married(hpv.Analyzer):
@@ -275,6 +225,70 @@ class prop_married(hpv.Analyzer):
         self.df = pd.concat(self.dfs)
 
 
+class outcomes_by_year(hpv.Analyzer):
+    def __init__(self, start_year=None, **kwargs):
+        super().__init__(**kwargs)
+        self.start_year = start_year
+        self.interval = 1
+        self.durations = np.arange(0, 41, self.interval)
+        result_keys = ['cleared', 'persisted', 'progressed', 'cancer', 'dead', 'dead_cancer', 'dead_other', 'total']
+        self.results = {rkey: np.zeros_like(self.durations) for rkey in result_keys}
+
+    def initialize(self, sim):
+        super().initialize(sim)
+        if self.start_year is None:
+            self.start_year = sim['start']
+
+    def apply(self, sim):
+        if sim.yearvec[sim.t] == self.start_year:
+            idx = ((sim.people.date_exposed == sim.t) & (sim.people.sex==0) & (sim.people.n_infections==1)).nonzero()  # Get people exposed on this step
+            inf_inds = idx[-1]
+            if len(inf_inds):
+                scale = sim.people.scale[inf_inds]
+                time_to_clear = (sim.people.date_clearance[idx] - sim.t)*sim['dt']
+                time_to_cancer = (sim.people.date_cancerous[idx] - sim.t)*sim['dt']
+                time_to_cin = (sim.people.date_cin[idx] - sim.t)*sim['dt']
+
+                # Count deaths. Note that there might be more people with a defined
+                # cancer death date than with a defined cancer date because this is
+                # counting all death, not just deaths resulting from infections on this
+                # time step.
+                time_to_cancer_death = (sim.people.date_dead_cancer[inf_inds] - sim.t)*sim['dt']
+                time_to_other_death = (sim.people.date_dead_other[inf_inds] - sim.t)*sim['dt']
+
+                for idd, dd in enumerate(self.durations):
+
+                    dead_cancer = (time_to_cancer_death <= (dd+self.interval)) & ~(time_to_other_death <= (dd + self.interval))
+                    dead_other = ~(time_to_cancer_death <= (dd + self.interval)) & (time_to_other_death <= (dd + self.interval))
+                    dead = (time_to_cancer_death <= (dd + self.interval)) | (time_to_other_death <= (dd + self.interval))
+                    cleared = ~dead & (time_to_clear <= (dd+self.interval))
+                    persisted = ~dead & ~cleared & ~(time_to_cin <= (dd+self.interval)) # Haven't yet cleared or progressed
+                    progressed = ~dead & ~cleared & (time_to_cin <= (dd+self.interval)) & ((time_to_clear>(dd+self.interval)) | (time_to_cancer > (dd+self.interval)))  # USing the ~ means that we also count nans
+                    cancer = ~dead & (time_to_cancer <= (dd+self.interval))
+
+                    dead_cancer_inds = hpv.true(dead_cancer)
+                    dead_other_inds = hpv.true(dead_other)
+                    dead_inds = hpv.true(dead)
+                    cleared_inds = hpv.true(cleared)
+                    persisted_inds = hpv.true(persisted)
+                    progressed_inds = hpv.true(progressed)
+                    cancer_inds = hpv.true(cancer)
+                    derived_total = len(cleared_inds) + len(persisted_inds) + len(progressed_inds) + len(cancer_inds) + len(dead_inds)
+
+                    if derived_total != len(inf_inds):
+                        errormsg = "Something is wrong!"
+                        raise ValueError(errormsg)
+                    scaled_total = scale.sum()
+                    self.results['cleared'][idd] += scale[cleared_inds].sum()#len(hpv.true(cleared))
+                    self.results['persisted'][idd] += scale[persisted_inds].sum()#len(hpv.true(persisted_no_progression))
+                    self.results['progressed'][idd] += scale[progressed_inds].sum()#len(hpv.true(persisted_with_progression))
+                    self.results['cancer'][idd] += scale[cancer_inds].sum()#len(hpv.true(cancer))
+                    self.results['dead'][idd] += scale[dead_inds].sum()
+                    self.results['dead_cancer'][idd] += scale[dead_cancer_inds].sum()#len(hpv.true(dead))
+                    self.results['dead_other'][idd] += scale[dead_other_inds].sum()  # len(hpv.true(dead))
+                    self.results['total'][idd] += scaled_total#derived_total
+
+
 def lognorm_params(par1, par2):
     """
     Given the mean and std. dev. of the log-normal distribution, this function
@@ -287,3 +301,32 @@ def lognorm_params(par1, par2):
     scale = np.exp(mean)
     shape = sigma
     return shape, scale
+
+
+def shrink_calib(calib, n_results=100):
+    cal = sc.objdict()
+    plot_indices = calib.df.iloc[0:n_results, 0].values
+    cal.analyzer_results = [calib.analyzer_results[i] for i in plot_indices]
+    cal.target_data = calib.target_data
+    cal.df = calib.df.iloc[0:n_results, ]
+    return cal
+
+
+def shrink_mc_calib(calib, n_results=100):
+    cal = sc.objdict()
+    locations = calib.age_results.keys()
+    plot_indices = calib.df.iloc[0:n_results, 0].values
+    cal.age_results = dict()
+    cal.target_data = dict()
+    for location in locations:
+
+        # Only keep the first n_results
+        cal.age_results[location] = [calib.age_results[location][i] for i in plot_indices]
+
+        # Keep target data
+        cal.target_data[location] = calib.target_data[location]
+
+        # Store df just for plotting convenience
+        cal.df = calib.df.iloc[0:n_results, ]
+
+    return cal

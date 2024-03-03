@@ -13,7 +13,7 @@ import seaborn as sns
 # Imports from this repository
 import run_sim as rs
 import run_multical as rm
-import locations as set
+import locations as loc
 import utils as ut
 
 
@@ -52,12 +52,13 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     sns.boxplot(data=df, x="country", y="Mean immunocompromise level", ax=ax, order=grp_order)
     ax.yaxis.grid(True)
     pl.xticks(rotation=90)
+    pl.legend([], [], frameon=False)
     ax.set_xlabel('')
     ax.set_ylabel('')
-    ax.set_ylim([0, 2])
-    ax.annotate('More immunocompromised', xy=(5, 1.2), xytext=(5, 1.6), horizontalalignment="center", arrowprops=dict(arrowstyle='<-',lw=1))
+    ax.set_ylim([0.4, 1.6])
+    ax.annotate('More immunocompromised', xy=(5, 1.1), xytext=(5, 1.5), horizontalalignment="center", arrowprops=dict(arrowstyle='<-',lw=1))
     fig.tight_layout()
-    pl.savefig(f"figures/fig4.png", dpi=100)
+    sc.savefig(f"figures/fig4.png", dpi=100)
 
     # Correlation plots
     fig, ax = pl.subplots(1, 1, figsize=(8, 6))
@@ -73,7 +74,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
     ax.set_xlabel('HIV prevalence among women 15-49')
 
     fig.tight_layout()
-    pl.savefig(f"figures/SMs/fig_hiv_scatter.png", dpi=100)
+    sc.savefig(f"figures/SMs/fig_hiv_scatter.png", dpi=100)
 
     # ax = axes[1]
     # sns.regplot(data=df2, x="le", y="Mean immunocompromise level", ax=axes[1])
@@ -87,7 +88,7 @@ def plot_rel_sevs(locations, make=False, filestem=None, n_results=50):
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    df2 = plot_rel_sevs(locations, make=False, filestem='_calib_jun15')
+    locations = loc.locations
+    df2 = plot_rel_sevs(locations, make=False, filestem='_calib_nov06_iv')
 
     print('Done.')

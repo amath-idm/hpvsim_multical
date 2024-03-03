@@ -1,15 +1,8 @@
 """
 Define the HPVsim simulation objects.
-"""
-# Additions to handle numpy multithreading
-import os
 
-os.environ.update(
-    OMP_NUM_THREADS='1',
-    OPENBLAS_NUM_THREADS='1',
-    NUMEXPR_NUM_THREADS='1',
-    MKL_NUM_THREADS='1',
-)
+Requires run_multical.py to be run first.
+"""
 
 # Standard imports
 import numpy as np
@@ -25,6 +18,7 @@ import locations as loc
 # Debug switch
 debug = 0  # Run with smaller population sizes and in serial
 do_shrink = True  # Do not keep people when running sims (saves memory)
+all_locations = False # Whether to run all locations
 
 # Save settings
 do_save = True
@@ -46,8 +40,9 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
         location=location,
         debut=ut.make_sb_data(location=location, dist_type=dist_type, debut_bias=debut_bias),
         mixing=dp.mixing[location],
-        layer_probs=ut.make_layer_probs(location=location, marriage_scale=marriage_scale),
-        partners=dp.partners[location],
+        layer_probs=dp.make_layer_probs(location=location, marriage_scale=marriage_scale),
+        f_partners=dp.f_partners,
+        m_partners=dp.m_partners,
         init_hpv_dist=dp.init_genotype_dist[location],
         init_hpv_prev={
             'age_brackets': np.array([12, 17, 24, 34, 44, 64, 80, 150]),
@@ -61,17 +56,15 @@ def make_sim(location=None, calib_pars=None, debug=0, analyzers=[], datafile=Non
     if calib_pars is not None:
         pars = sc.mergedicts(pars, calib_pars)
 
-    interventions = sc.autolist()
-
-    sim = hpv.Sim(pars=pars, interventions=interventions, analyzers=analyzers, datafile=datafile, rand_seed=seed)
+    sim = hpv.Sim(pars=pars, analyzers=analyzers, datafile=datafile, rand_seed=seed)
 
     return sim
 
 
 # %% Simulation running functions
 def run_sim(
-        location=None, age_pyr=True, analyzers=None, debug=0, seed=0, verbose=0.2,
-        do_save=False, dist_type='lognormal', marriage_scale=1, debut_bias=[0, 0],
+        location=None, age_pyr=True, analyzers=None, debug=0, seed=1, verbose=0.2,
+        do_save=True, dist_type='lognormal', marriage_scale=1, debut_bias=[0, 0],
         calib_par_stem=None, ressubfolder=None, calib_pars=None,
 ):
     if analyzers is None:
@@ -89,7 +82,7 @@ def run_sim(
         analyzers += [ap]
 
     if calib_pars is None and calib_par_stem is not None:
-        calib_pars = sc.loadobj(f'results/{ressubfolder}/{location + calib_par_stem}.obj')
+        calib_pars = sc.loadobj(f'results/{ressubfolder}/{dflocation + calib_par_stem}.obj')
 
     # Make sim
     sim = make_sim(
@@ -107,7 +100,7 @@ def run_sim(
     # Run
     sim['verbose'] = verbose
     sim.run()
-    sim.shrink()
+    # sim.shrink()
 
     if do_save:
         sim.save(f'results/{dflocation}.sim')
@@ -117,15 +110,19 @@ def run_sim(
 
 def run_sims(
         locations=None, age_pyr=True, debug=False, verbose=-1, analyzers=None, dist_type='lognormal',
-        marriage_scale=1, debut_bias=[0, 0], calib_par_stem=None, *args, **kwargs
+        marriage_scale=1, debut_bias=[0, 0], calib_par_stem=None, ressubfolder=None, do_save=False, *args, **kwargs
 ):
     """ Run multiple simulations in parallel """
 
     kwargs = sc.mergedicts(dict(debug=debug, verbose=verbose, analyzers=analyzers, dist_type=dist_type, age_pyr=age_pyr,
-                                marriage_scale=marriage_scale, calib_par_stem=calib_par_stem, debut_bias=debut_bias),
-                           kwargs)
+                                marriage_scale=marriage_scale, calib_par_stem=calib_par_stem, ressubfolder=ressubfolder,
+                                debut_bias=debut_bias), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(location=locations), kwargs=kwargs, serial=debug, die=True)
     sims = sc.objdict({location: sim for location, sim in zip(locations, simlist)})  # Convert from a list to a dict
+
+    if do_save:
+        for loc,sim in sims.items():
+            sim.save(f'results/{loc}.sim')
 
     return sims
 
@@ -135,7 +132,8 @@ def run_parsets(
     ''' Run multiple simulations in parallel '''
 
     dflocation = location.replace(' ', '_')
-    parsets = sc.loadobj(f'results/immunovarying/{dflocation}_pars_jun15_iv_all.obj')
+    parsets = sc.loadobj(f'results/unconstrained/{dflocation}_pars_nov13_iv_all.obj')
+    # parsets = sc.loadobj(f'results/immunovarying/{dflocation}_pars_nov06_iv_iv_all.obj')
     kwargs = sc.mergedicts(dict(location=location, debug=debug, verbose=verbose, analyzers=analyzers), kwargs)
     simlist = sc.parallelize(run_sim, iterkwargs=dict(calib_pars=parsets), kwargs=kwargs, serial=debug, die=True)
     msim = hpv.MultiSim(simlist)
@@ -150,7 +148,11 @@ def run_parsets(
 if __name__ == '__main__':
     T = sc.timer()
 
-    locations = loc.locations
+    if all_locations:
+        locations = loc.all_locations
+    else:
+        locations = ['tanzania']
+
     for location in locations:
         msim = run_parsets(location=location, save_results=True)
 

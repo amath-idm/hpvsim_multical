@@ -11,9 +11,7 @@ import seaborn as sns
 
 
 # Imports from this repository
-import run_sim as rs
-import run_multical as rm
-import locations as set
+import locations as loc
 import utils as ut
 
 
@@ -36,7 +34,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
         ax = axes[plot_count]
 
         dflocation = location.replace(' ', '_')
-        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}.obj')
+        sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv_reduced.obj')
         reslist = sccalib.analyzer_results
         target_data = sccalib.target_data[0]
         target_data = target_data[(target_data.name == resname)]
@@ -47,8 +45,9 @@ def plot_fig2(locations, filestem=None, n_results=20):
         age_labels.append(str(int(baseres['bins'][-1])) + '+')
 
         # Pull out results to plot
-        plot_indices = sccalib.df.iloc[0:n_results, 0].values
-        res = [reslist[i] for i in plot_indices]
+        # plot_indices = sccalib.df.iloc[0:n_results, 0].values
+        # res = [reslist[i] for i in plot_indices]
+        res = reslist
 
         # Plot data
         x = np.arange(len(age_labels))
@@ -62,7 +61,7 @@ def plot_fig2(locations, filestem=None, n_results=20):
             bins += x.tolist()
             values += list(run[resname][date])
         modeldf = pd.DataFrame({'bins': bins, 'values': values})
-        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b')
+        sns.boxplot(ax=ax, x='bins', y='values', data=modeldf, color='b', boxprops=dict(alpha=.4))
 
         # Set title and labels
         # ax.set_xlabel('Age group')
@@ -74,6 +73,8 @@ def plot_fig2(locations, filestem=None, n_results=20):
         ax.set_title(title_country)
         ax.set_ylabel('')
         ax.set_xlabel('')
+        if pn in [0, 5, 10, 15, 20, 25]:
+            ax.set_ylabel('# cancers')
         if pn in [25, 26, 27, 28, 29]:
             stride = np.arange(0, len(baseres['bins']), 2)
             ax.set_xticks(x[stride], baseres['bins'].astype(int)[stride])
@@ -82,13 +83,28 @@ def plot_fig2(locations, filestem=None, n_results=20):
         plot_count += 1
 
     fig.tight_layout()
-    pl.savefig(f"figures/fig2.png", dpi=100)
+    sc.savefig(f"figures/fig2.png", dpi=100)
 
 
 #%% Run as a script
 if __name__ == '__main__':
 
-    locations = set.locations
-    plot_fig2(locations, filestem='jun15', n_results=50)
+    locations = loc.locations
+    filestem = 'nov06'
+
+    # Complete this step if you've rerun the calibrations
+    # This step takes the huge calibration files and reduces them to something small enough
+    # to be easily loaded and saved to the repo
+    do_shrink = False
+    if do_shrink:
+
+        for pn, location in enumerate(locations):
+
+            dflocation = location.replace(' ', '_')
+            sccalib = sc.loadobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv.obj')
+            cal = ut.shrink_calib(sccalib, n_results=50)
+            sc.saveobj(f'results/immunovarying/{dflocation}_calib_{filestem}_iv_reduced.obj', cal)
+
+    plot_fig2(locations, filestem=filestem, n_results=50)
 
     print('Done.')

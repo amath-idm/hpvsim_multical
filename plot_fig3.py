@@ -17,26 +17,22 @@ import run_sim as rs
 
 # %% Functions
 
-def plot_nh(sim=None):
+def plot_nh(sim=None, alldf=None):
+
     # Make sims
     genotypes = ['hpv16', 'hpv18']  # , 'hi5', 'ohr']
-    dur_episomal = sc.autolist()
-    transform_probs = sc.autolist()
-    sev_fns = sc.autolist()
+    cancer_fns = sc.autolist()
     dur_precins = sc.autolist()
     for gi, genotype in enumerate(genotypes):
         dur_precins += sim['genotype_pars'][genotype]['dur_precin']
-        dur_episomal += sim['genotype_pars'][genotype]['dur_episomal']
-        transform_probs += sim['genotype_pars'][genotype]['transform_prob']
-        sev_fns += sim['genotype_pars'][genotype]['sev_fn']
-        # sims[location] = sim
+        cancer_fns += sim['genotype_pars'][genotype]['cancer_fn']
 
     ####################
     # Make figure, set fonts and colors
     ####################
     ut.set_font(size=16)
     colors = sc.gridcolors(len(genotypes))
-    fig, axes = pl.subplots(1, 3, figsize=(11, 5))
+    fig, axes = pl.subplots(1, 2, figsize=(11, 5))
     axes = axes.flatten()
 
     ####################
@@ -52,52 +48,77 @@ def plot_nh(sim=None):
     # Panel A: clearance rates
     for gi, genotype in enumerate(genotypes):
         offset = width * multiplier
-        sigma, scale = ut.lognorm_params(dur_episomal[gi]['par1'], dur_episomal[gi]['par2'])
+        sigma, scale = ut.lognorm_params(dur_precins[gi]['par1'], dur_precins[gi]['par2'])
         rv = lognorm(sigma, 0, scale)
-        axes[0].bar(annual_x + offset - width / 2, rv.cdf(annual_x), color=colors[gi], lw=2, label=genotype.upper(),
+        axes[0].bar(annual_x + offset - width / 2, rv.cdf(annual_x), color=colors[gi], lw=2, label=genotype[-2:],
                     width=width)
         multiplier += 1
-    axes[0].set_title("Proportion clearing\n within X years")
+    axes[0].set_title("Clearance probabilities")
     axes[0].set_xticks(annual_x)
     axes[0].set_ylabel("Probability")
-    axes[0].set_xlabel("Years")
-    # axes[0].legend()
+    axes[0].set_xlabel("Years since infection")
+    axes[0].set_ylim([0,1])
+    axes[0].legend()
 
     # Panel B: transform prob
-    for gi, genotype in enumerate(genotypes):
-        cum_dysp = np.zeros_like(x)
-        dysp_int = hppar.compute_severity_integral(x, pars=sev_fns[gi])
-        dysp_start_ind = sc.findnearest(x, dur_precins[gi]['par1'])
-        if dysp_start_ind > 0:
-            cum_dysp[dysp_start_ind:] = dysp_int[:-dysp_start_ind]
-        else:
-            cum_dysp[:] = dysp_int[:]
-        tp_array = hpu.transform_prob(transform_probs[gi], cum_dysp)
-        axes[1].plot(x, tp_array, color=colors[gi], lw=2, label=genotype.upper())
-    axes[1].set_title("Probability of cancer\n within X years")
-    axes[1].set_ylabel("Probability")
-    axes[1].set_xlabel("Years")
-    axes[1].legend()
+    mean_cancer_prob = alldf.groupby('years')['prob_cancer'].agg('mean')
+    ind = 41
+    bottom = np.zeros(ind)
+    years = np.arange(ind)
+    axes[1].fill_between(years, bottom, 1-mean_cancer_prob, label='Persistant infection')
+    axes[1].fill_between(years, 1-mean_cancer_prob, np.ones(ind), label='Cancer')
+    axes[1].legend(loc="lower left")
+    axes[1].set_title('Cancer probabilities')
+    axes[1].set_xlabel("Years since infection")
+    #
+    # res = sim.analyzers[1].results
+    # years = sim.analyzers[1].durations
+    #
+    # df = pd.DataFrame()
+    # persisted = res["total"] - res["cleared"] - res["dead_other"]
+    # df["years"] = years
+    # df["prob_persisted"] = (res["persisted"]+res["progressed"]) / persisted
+    # df["prob_cancer"] = (res["cancer"]+res["dead_cancer"]) / persisted
+    # prob_cancer = (res["cancer"]+res["dead_cancer"]) / persisted
+    #
+    # def moving_average(a, n=3):
+    #     ret = np.cumsum(a, dtype=float)
+    #     ret[n:] = ret[n:] - ret[:-n]
+    #     return ret[n - 1:] / n
 
-    # Panel C: total dwelltime
-    dd = pd.DataFrame()
-    dw = sc.autolist()
-    gen = sc.autolist()
-    for gi, genotype in enumerate(genotypes):
-        a = sim.get_analyzer('dwelltime_by_genotype')
-        dw += a.dwelltime['total'][gi]
-        gen += [genotype.upper()] * len(a.dwelltime['total'][gi])
-    dd['genotype'] = gen
-    dd['dwelltime'] = dw
-    sns.violinplot(data=dd, x="genotype", y="dwelltime", ax=axes[2], palette=colors)
-    axes[2].set_xlabel('')
-    axes[2].set_ylabel('')
-    axes[2].set_ylabel("Years")
-    axes[2].set_title('Total dwelltime\n from infection to cancer')
+    # axes[1].plot(years[1:-1], moving_average(prob_cancer), lw=2, color='k')
+    # axes[1].set_title("Share of all infections\n progressed to cancer")
+    # axes[1].set_ylabel("Probability")
+    # axes[1].set_ylim([0,1])
 
+
+    # for gi, genotype in enumerate(genotypes):
+    #     cancer = hppar.compute_severity(x, pars=cancer_fns[gi])
+    #     axes[1].plot(x, cancer, color=colors[gi], lw=2, label=genotype.upper())
+    # axes[1].set_title("Probability of cancer\n within X years")
+    # axes[1].set_ylabel("Probability")
+    # axes[1].set_xlabel("Years")
+    # axes[1].legend()
+
+    # # Panel C: total dwelltime
+    # dd = pd.DataFrame()
+    # dw = sc.autolist()
+    # gen = sc.autolist()
+    # for gi, genotype in enumerate(genotypes):
+    #     a = sim.get_analyzer('dwelltime_by_genotype')
+    #     dw += a.dwelltime['total'][gi]
+    #     gen += [genotype.upper()] * len(a.dwelltime['total'][gi])
+    # dd['genotype'] = gen
+    # dd['dwelltime'] = dw
+    # sns.violinplot(data=dd, x="genotype", y="dwelltime", ax=axes[2], palette=colors)
+    # axes[2].set_xlabel('')
+    # axes[2].set_ylabel('')
+    # axes[2].set_ylabel("Years")
+    # axes[2].set_title('Total dwelltime\n from infection to cancer')
+    #
     fig.tight_layout()
 
-    pl.savefig(f"figures/fig3.png", dpi=100)
+    sc.savefig(f"figures/fig3.png", dpi=100)
 
     return
 
@@ -105,14 +126,33 @@ def plot_nh(sim=None):
 # %% Run as a script
 if __name__ == '__main__':
 
-    location = 'nigeria'
-    make_sim = True
-    if make_sim:
-        sim = rs.run_sim(location, ressubfolder='constrained', calib_par_stem='_multical_may19_pars',
-                         analyzers=[ut.dwelltime_by_genotype()], age_pyr=True, verbose=0.1, do_save=True)
-    else:
-        sim = sc.loadobj(f'results/{location}.sim')
+    import locations as loc
+    locations = loc.locations
+    make_sims = False
+    if make_sims:
+        dfs = sc.autolist()
+        for location in locations:
+            sim = rs.run_sim(location, ressubfolder='unconstrained', calib_par_stem=f'_pars_nov06_un',
+                             analyzers=[ut.dwelltime_by_genotype(), ut.outcomes_by_year(start_year=2000)], age_pyr=True, verbose=0.1, do_save=True)
 
-    plot_nh(sim)
+            res = sim.analyzers[1].results
+            years = sim.analyzers[1].durations
+
+            df = pd.DataFrame()
+            persisted = res["total"] - res["cleared"] - res["dead_other"]
+            df["years"] = years
+            df["prob_persisted"] = (res["persisted"] + res["progressed"]) / persisted
+            df["prob_cancer"] = (res["cancer"] + res["dead_cancer"]) / persisted
+            df["location"] = location
+            dfs += df
+
+        alldf = pd.concat(dfs)
+        sc.saveobj('results/model_cancer_probs.obj', alldf)
+
+    else:
+        alldf = sc.loadobj("results/model_cancer_probs.obj")
+        sim = sc.loadobj("results/sims/angola.sim")
+
+    plot_nh(sim=sim, alldf=alldf)
 
     print('Done.')
